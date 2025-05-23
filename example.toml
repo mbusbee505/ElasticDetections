@@ -1,0 +1,25 @@
+
+
+[rule]
+
+description = """
+
+"""
+name = ""
+risk_score = 50
+severity = "medium"
+type = "eql"
+
+query = '''
+
+
+'''
+
+# if type = "threshold"
+# threshold = <something>
+
+
+
+
+
+
