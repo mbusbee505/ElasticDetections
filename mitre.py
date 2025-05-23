@@ -50,8 +50,7 @@ def get_tactics(technique):
 
 
 def main():
-    print(get_tactics('T1123'))
+    print(get_tactics('T1001.002'))
 
 if __name__ == "__main__":
     main()
-
