@@ -4,6 +4,7 @@ import uuid
 import toml
 import re
 import os
+import mitre
 
 DEFAULT_AUTHOR = ["AtomicRedTeam-Automation"]
 DEFAULT_FROM = "now-9m"
@@ -12,6 +13,8 @@ DEFAULT_RISK_SCORE = 50
 DEFAULT_SEVERITY = "medium"
 ATOMIC_REPO_BASE_URL = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/"
 MITRE_TECHNIQUE_BASE_URL = "https://attack.mitre.org/techniques/"
+
+
 
 
 def create_detection_rule_toml_for_test(atomic_data, test_data):  
@@ -88,13 +91,16 @@ def create_detection_rule_toml_for_test(atomic_data, test_data):
     
     if kql_query:
         rule['rule']['index'] = DEFAULT_INDICES
-    print(technique_id)
-    if '.' in technique_id:
-        rule['rule']['threat'][0]['tactic'] = {
-             'id': 'TAXXXX',
-             'name': 'Unknown Tactic',
-             'reference': 'https://attack.mitre.org/tactics/TAXXXX/'
-        }
+
+    tactics = mitre.get_tactics(technique_id)
+    for tactic in tactics:
+        tactic_id = mitre.map_tactic_to_id(tactic)
+        if tactic_id:
+            rule['rule']['threat'][0]['tactic'] = {
+                'id': tactic_id,
+                'name': tactic.replace("-", " ").title(),
+                'reference': f"{MITRE_TECHNIQUE_BASE_URL}{technique_id.split('.')[0]}/{technique_id.split('.')[1]}" if '.' in technique_id else f"{MITRE_TECHNIQUE_BASE_URL}{technique_id}"
+            }
 
     return toml.dumps(rule)
 

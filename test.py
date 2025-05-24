@@ -11,7 +11,6 @@ def main():
         tactic = mitre.get_tactics(technique)
         toml_result = generate_toml(technique)
         # print(toml_result)
-        #print(f"{technique} - {tactic}")
         break
 
 if __name__ == "__main__":
