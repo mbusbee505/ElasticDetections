@@ -167,6 +167,9 @@ def generate_kql_from_command(command, executor_name, input_arguments):
     return " AND ".join(query_parts)
 
 def generate_toml(technique):
+    # Returns a list of tuples, each containing a toml output and the output filename
+    # Each toml is a test for a specific technique
+    
     url = f"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/{technique}/{technique}.yaml"
     response = requests.get(url)
     if response.status_code == 200:
@@ -180,8 +183,7 @@ def generate_toml(technique):
                     print(f"No 'atomic_tests' found in {url}")
                     return []
                 
-                num_tests = len(atomic_tests)
-                
+                rule_tests = []
                 for test in atomic_tests:
                     # Loops through each test in the Atomic YAML file
                     toml_output = create_detection_rule_toml_for_test(atomic_data, test)
@@ -192,13 +194,9 @@ def generate_toml(technique):
                         test_name_for_file = re.sub(r'[^a-zA-Z0-9_-]', '_', test.get('name', f"Test_{test.get('auto_generated_guid', 'NOGUID')}")[:50])
                         output_filename = f"{technique_id_for_file}_{test_name_for_file}.toml"
                         output_filename = output_filename.replace(os.sep, "_").replace("/", "_").replace("\\\\", "_")
-                        print(toml_output)
-            return atomic_data
-        
-
-
-
-
+                        # print(toml_output)
+                        rule_tests.append((toml_output, output_filename))
+                return rule_tests
 
         except Exception as e:
             print(f"Error parsing YAML file {url}: {e}")
