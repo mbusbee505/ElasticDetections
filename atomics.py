@@ -17,11 +17,3 @@ for item in data["payload"]["tree"]["items"]:
 def get_atomics():
     return techniques
 
-def main():
-    atomics = get_atomics()
-    for atomic in atomics:
-        print(atomic)
-
-if __name__ == "__main__":
-    main()
-

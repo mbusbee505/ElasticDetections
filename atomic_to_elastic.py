@@ -167,76 +167,41 @@ def generate_kql_from_command(command, executor_name, input_arguments):
 
     return " AND ".join(query_parts)
 
-def fetch_and_process_technique(technique):
-    """
-    Fetches the Atomic YAML for a given technique, processes it, 
-    and returns a list of (toml_output, output_filename) tuples or an empty list on error.
-    """
-    print(f"[INFO] START processing technique: {technique}") # Added for diagnostics
-    url = f"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/{technique}/{technique}.yaml"
-    try:
-        response = requests.get(url, timeout=10) # Added timeout
-        response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
-        atomic_data = yaml.safe_load(response.text)
-        
-        if not atomic_data or not atomic_data.get('atomic_tests'):
-            print(f"No 'atomic_tests' found or empty YAML for {technique} at {url}")
-            return []
-
-        generated_results = []
-        atomic_tests = atomic_data.get('atomic_tests', [])
-        
-        for test_data in atomic_tests:
-            toml_output = create_detection_rule_toml_for_test(atomic_data, test_data)
-            if toml_output:
-                technique_id_for_file = atomic_data.get('attack_technique', 'T0000').replace('.', '_')
-                test_name_for_file = re.sub(r'[^a-zA-Z0-9_-]', '_', test_data.get('name', f"Test_{test_data.get('auto_generated_guid', 'NOGUID')}")[:50])
-                output_filename = f"{technique_id_for_file}_{test_name_for_file}.toml"
-                output_filename = output_filename.replace(os.sep, "_").replace("/", "_").replace("\\\\", "_")
-                generated_results.append((toml_output, output_filename))
-        return generated_results
-        
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching YAML for {technique} from {url}: {e}")
-        return []
-    except yaml.YAMLError as e:
-        print(f"Error parsing YAML for {technique} from {url}: {e}")
-        return []
-    except Exception as e:
-        print(f"An unexpected error occurred while processing {technique}: {e}")
-        return []
-    finally:
-        print(f"[INFO] END processing technique: {technique}") # Added for diagnostics
-
-
-def generate_toml_for_techniques(techniques, max_workers=5):
-    """
-    Generates TOML for a list of techniques in parallel.
-    """
-    if isinstance(techniques, str):
-        techniques = [techniques] # Ensure techniques is a list
-    all_results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # Submit all tasks and store futures
-        future_to_technique = {executor.submit(fetch_and_process_technique, tech): tech for tech in techniques}
-        
-        for future in concurrent.futures.as_completed(future_to_technique):
-            technique = future_to_technique[future]
-            try:
-                results_for_technique = future.result()
-                if results_for_technique: # Ensure it's not None or empty
-                    all_results.extend(results_for_technique)
-            except Exception as exc:
-                print(f'{technique} generated an exception: {exc}')
-    return all_results
-
-
-if __name__ == "__main__":
-    example_techniques = ["T1003", "T1059", "T1548.002", "T1071.001"] 
+def generate_toml(technique):
+    # Returns a list of tuples, each containing a toml output and the output filename
+    # Each toml is a test for a specific technique
     
+    url = f"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/{technique}/{technique}.yaml"
+    response = requests.get(url)
+    if response.status_code == 200:
+        try:
+            atomic_data = yaml.safe_load(response.text)
+            generated_results = []
 
-    if not example_techniques:
-        print("No techniques provided to process.")
+            if atomic_data and atomic_data.get('atomic_tests'):
+                atomic_tests = atomic_data.get('atomic_tests', [])
+                if not atomic_tests:
+                    print(f"No 'atomic_tests' found in {url}")
+                    return []
+                
+                rule_tests = []
+                for test in atomic_tests:
+                    # Loops through each test in the Atomic YAML file
+                    toml_output = create_detection_rule_toml_for_test(atomic_data, test)
+
+                    if toml_output:
+                        
+                        technique_id_for_file = atomic_data.get('attack_technique', 'T0000').replace('.', '_')
+                        test_name_for_file = re.sub(r'[^a-zA-Z0-9_-]', '_', test.get('name', f"Test_{test.get('auto_generated_guid', 'NOGUID')}")[:50])
+                        output_filename = f"{technique_id_for_file}_{test_name_for_file}.toml"
+                        output_filename = output_filename.replace(os.sep, "_").replace("/", "_").replace("\\\\", "_")
+                        # print(toml_output)
+                        rule_tests.append((toml_output, output_filename))
+                return rule_tests
+
+        except Exception as e:
+            print(f"Error parsing YAML file {url}: {e}")
+            return None
     else:
         print(f"Processing {len(example_techniques)} techniques in parallel...")
         all_toml_outputs = generate_toml_for_techniques(example_techniques, max_workers=10) # Adjust max_workers as needed

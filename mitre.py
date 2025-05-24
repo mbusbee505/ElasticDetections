@@ -40,7 +40,7 @@ def get_tactics(technique):
                             if "kill_chain_phases" in object:
                                 for tactic in object["kill_chain_phases"]:
                                     tactics.append(tactic["phase_name"])
-                            current_technique = reference["external_id"]
+                            technique = reference["external_id"]
                             name = object["name"]
                             url = reference["url"]
                         
@@ -49,21 +49,21 @@ def get_tactics(technique):
                                 deprecated = object["x_mitre_deprecated"]
                                 filtered_object = {
                                     "tactics": str(tactics),
-                                    "technique": current_technique,
+                                    "technique": technique,
                                     "name": name,
                                     "url": url,
                                     "deprecated": deprecated
                                 }
-                                mitreMapped[current_technique] = filtered_object
+                                mitreMapped[technique] = filtered_object
                             else:
                                 filtered_object = {
                                     "tactics": str(tactics),
-                                    "technique": current_technique,
+                                    "technique": technique,
                                     "name": name,
                                     "url": url,
                                     "deprecated": "False"
                                 }
-                                mitreMapped[current_technique] = filtered_object
+                                mitreMapped[technique] = filtered_object
     tactics_string = mitreMapped[technique]['tactics']
     tactics = ast.literal_eval(tactics_string)
     return tactics
