@@ -1,0 +1,23 @@
+[rule]
+
+description = """
+This is an example of a required field.
+"""
+name = "Example Required Field"
+risk_score = 50
+severity = "medium"
+type = "eql"
+
+query = '''
+    process.name : "example_process"
+
+'''
+
+# if type = "threshold"
+# threshold = <something>
+
+
+
+
+
+
