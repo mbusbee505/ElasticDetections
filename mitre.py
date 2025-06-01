@@ -19,8 +19,7 @@ mitre_tactics_list = [
     ("TA0040", "impact")
 ]
 
-def get_tactics(technique):
-
+def pull_mitre_data():
     url = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
     headers = {
         "Accept": "application/json"
@@ -28,6 +27,29 @@ def get_tactics(technique):
     }
 
     mitreData = requests.get(url, headers=headers).json()
+    return mitreData
+
+def tactic_search(search_string):
+    mitreData = pull_mitre_data()
+    search_string = search_string.lower()
+    results = []
+    for object in mitreData["objects"]:
+        if object["type"] == "attack-pattern":
+            name_match = search_string in object["name"].lower()
+            description_match = search_string in object["description"].lower()
+            
+            # Convert kill_chain_phases to string and check lowercase
+            kill_chain_match = search_string in str(object["kill_chain_phases"]).lower()
+            
+            # Convert external_references to string and check lowercase  
+            external_ref_match = search_string in str(object["external_references"]).lower()
+            
+            if name_match or description_match or kill_chain_match or external_ref_match:
+                results.append(object["name"])
+    return results
+
+def get_tactics(technique):
+    mitreData = pull_mitre_data()
     mitreMapped = {}
 
     for object in mitreData["objects"]:
@@ -76,9 +98,7 @@ def map_tactic_to_id(tactic_name):
     return None
 
 def main():
-    tactics = get_tactics('T1001.002')
-    for tactic in tactics:
-        print(map_tactic_to_id(tactic))
+    print(tactic_search("4688"))
 
 
 if __name__ == "__main__":

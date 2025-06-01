@@ -14,6 +14,6 @@ for item in data["payload"]["tree"]["items"]:
     if item["name"].startswith("T"):
         techniques.append(item["name"])
 
-def get_atomics():
+def get_atomic_techniques():
     return techniques
 
