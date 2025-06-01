@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Msiexec.exe - Execute Remote MSI file' (GUID: 44a4bedf-ffe3-452e-bee4-6925ab125662) of technique T1218.007 (Signed Binary Proxy Execution: Msiexec). Test Description: Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution. The MSI executes a built-in JScript payload that launches powershell.exe.. Command/Steps: #{msi_exe} /q /i \\\"#{msi_payload}\\\"\n"
+from = "now-9m"
+rule_id = "a648e115-f5bf-43e2-9d2c-3294a315d609"
+language = "kql"
+name = "Atomic Test: T1218.007 - Msiexec.exe - Execute Remote MSI file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.007/T1218.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.007", "44a4bedf-ffe3-452e-bee4-6925ab125662", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*c:\\\\windows\\\\system32\\\\msiexec.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.007"
+name = "Msiexec.exe - Execute Remote MSI file"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Code Executed Via Excel Add-in File (XLL)' (GUID: 441b1a0f-a771-428a-8af0-e99e4698cda3) of technique T1137.006 (Office Application Startup: Add-ins). Test Description: Loads an XLL file using the excel add-ins library.\nThis causes excel to launch Notepad.exe as a child process. This atomic test does not include persistent code execution as you would typically see when this is implemented in malware.. Command/Steps: $excelApp = New-Object -COMObject \\\"Excel.Application\\\"\nif(-not $excelApp.path.contains(\\\"Program Files (x86)\\\")){\n    Write-Host \\\"64-bit Office\\\"\n    $exc..."
+from = "now-9m"
+rule_id = "135a70ad-6737-4850-8b9e-8b871483fcd3"
+language = "kql"
+name = "Atomic Test: T1137.006 - Code Executed Via Excel Add-in File (XLL)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1137.006/T1137.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1137.006", "441b1a0f-a771-428a-8af0-e99e4698cda3", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$excelApp*\\\" AND powershell.script_block_text : \\\"*New-Object*\\\" AND powershell.script_block_text : \\\"*-COMObject*\\\" OR (process.command_line : \\\"*$excelApp*\\\" AND process.command_line : \\\"*New-Object*\\\" AND process.command_line : \\\"*-COMObject*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1137.006"
+name = "Code Executed Via Excel Add-in File (XLL)"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+

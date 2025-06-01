@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 ieadvpack.dll Execution' (GUID: 5e46a58e-cbf6-45ef-a289-ed7754603df9) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Test execution of a command using rundll32.exe with ieadvpack.dll.\nUpon execution calc.exe will be launched\n\nReference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml. Command/Steps: rundll32.exe ieadvpack.dll,LaunchINFSection \\\"#{inf_to_execute}\\\",DefaultInstall_SingleUser,1,\n"
+from = "now-9m"
+rule_id = "1f38fb65-aa86-4173-8fa6-e048855b57b2"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 ieadvpack.dll Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "5e46a58e-cbf6-45ef-a289-ed7754603df9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*ieadvpack.dll,LaunchINFSection*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 ieadvpack.dll Execution"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

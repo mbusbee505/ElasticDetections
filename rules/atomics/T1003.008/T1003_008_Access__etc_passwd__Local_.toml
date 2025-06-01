@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Access /etc/passwd (Local)' (GUID: 60e860b6-8ae6-49db-ad07-5e73edd88f5d) of technique T1003.008 (OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow). Test Description: /etc/passwd file is accessed in FreeBSD and Linux environments. Command/Steps: cat /etc/passwd > #{output_file}\ncat #{output_file}\n"
+from = "now-9m"
+rule_id = "3cf3b801-b606-4287-87db-72b6c5874fc7"
+language = "kql"
+name = "Atomic Test: T1003.008 - Access /etc/passwd (Local)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.008/T1003.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.008", "60e860b6-8ae6-49db-ad07-5e73edd88f5d", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/etc/passwd*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.008"
+name = "Access /etc/passwd (Local)"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+

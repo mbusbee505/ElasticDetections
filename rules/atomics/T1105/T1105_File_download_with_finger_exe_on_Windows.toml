@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'File download with finger.exe on Windows' (GUID: 5f507e45-8411-4f99-84e7-e38530c45d01) of technique T1105 (Ingress Tool Transfer). Test Description: Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.\nBecause this is being tested on the localhost, you should not be expecting a successful connection\nhttps://www.exploit-db.com/exploits/48815\nhttps://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/. Command/Steps: finger base64_filedata@#{remote_host}\n"
+from = "now-9m"
+rule_id = "e4ef59bd-1262-4ac5-bf9b-37ba170aa78d"
+language = "kql"
+name = "Atomic Test: T1105 - File download with finger.exe on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "5f507e45-8411-4f99-84e7-e38530c45d01", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*finger*\\\" AND process.command_line : \\\"*base64_filedata@localhost*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "File download with finger.exe on Windows"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

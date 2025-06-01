@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'COM hijacking via TreatAs' (GUID: 33eacead-f117-4863-8eb0-5c6304fbfaa9) of technique T1546.015 (Event Triggered Execution: Component Object Model Hijacking). Test Description: This test first create a custom CLSID class pointing to the Windows Script Component runtime DLL. This DLL looks for the ScriptletURL key to get the location of the script to execute.\nThen, it hijacks the CLSID for the Work Folders Logon Synchronization to establish persistence on user logon by creating the 'TreatAs' with the malicious CLSID as default value. The\ntest is validated by running 'rundll32.exe -sta \\\"AtomicTest\\\"' to avoid logging out.\n\nReferences:\n\nhttps://youtu.be/3gz1QmiMhss?t=1251\n\nhttps://github.com/enigma0x3/windows-operating-system-archaeology. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\SOFTWARE\\\\Classes\\\\AtomicTest\\\" /ve /T REG_SZ /d \\\"AtomicTest\\\" /f\nreg add \\\"HKEY_CURRENT_USER\\\\SOFTWARE\\\\Classes\\\\AtomicTest.1.00\\\" ..."
+from = "now-9m"
+rule_id = "72affb81-23c5-4d65-873a-30e4dc5653ce"
+language = "kql"
+name = "Atomic Test: T1546.015 - COM hijacking via TreatAs"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.015/T1546.015.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.015", "33eacead-f117-4863-8eb0-5c6304fbfaa9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*HKEY_CURRENT_USER\\\\SOFTWARE\\\\Classes\\\\AtomicTest*\\\" AND powershell.script_block_text : \\\"*REG_SZ*\\\" AND powershell.script_block_text : \\\"*AtomicTest*\\\" OR (process.command_line : \\\"*HKEY_CURRENT_USER\\\\SOFTWARE\\\\Classes\\\\AtomicTest*\\\" AND process.command_line : \\\"*REG_SZ*\\\" AND process.command_line : \\\"*AtomicTest*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.015"
+name = "COM hijacking via TreatAs"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+

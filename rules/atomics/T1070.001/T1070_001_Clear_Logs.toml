@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear Logs' (GUID: e6abb60e-26b8-41da-8aae-0c35174b0967) of technique T1070.001 (Indicator Removal on Host: Clear Windows Event Logs). Test Description: Upon execution this test will clear Windows Event Logs. Open the System.evtx logs at C:\\\\Windows\\\\System32\\\\winevt\\\\Logs and verify that it is now empty.. Command/Steps: wevtutil cl #{log_name}\n"
+from = "now-9m"
+rule_id = "2d6f3da5-96fa-4a81-b492-18cf7bf2a3a3"
+language = "kql"
+name = "Atomic Test: T1070.001 - Clear Logs"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.001/T1070.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.001", "e6abb60e-26b8-41da-8aae-0c35174b0967", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wevtutil*\\\" AND process.command_line : \\\"*System*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.001"
+name = "Clear Logs"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+

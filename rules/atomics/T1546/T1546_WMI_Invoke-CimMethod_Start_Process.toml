@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMI Invoke-CimMethod Start Process' (GUID: adae83d3-0df6-45e7-b2c3-575f91584577) of technique T1546 (Event Triggered Execution). Test Description: The following Atomic will create a New-CimSession on a remote endpoint and start a process usnig Invoke-CimMethod.\nThis is a novel way to perform lateral movement or to start a remote process.\nThis does require WinRM to be enabled. The account performing the run will also need to be elevated.\nA successful execution will stdout that the process started. On the remote endpoint, wmiprvse.exe will spawn the given process.. Command/Steps: # Set the remote computer name and credentials\n $RemoteComputer = \\\"#{dest}\\\"\n $PWord = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force..."
+from = "now-9m"
+rule_id = "c38db34f-3c42-475f-a9d6-fe4047ddcd5a"
+language = "kql"
+name = "Atomic Test: T1546 - WMI Invoke-CimMethod Start Process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546/T1546.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546", "adae83d3-0df6-45e7-b2c3-575f91584577", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*remote*\\\" AND powershell.script_block_text : \\\"*computer*\\\" AND powershell.script_block_text : \\\"*name*\\\" OR (process.command_line : \\\"*remote*\\\" AND process.command_line : \\\"*computer*\\\" AND process.command_line : \\\"*name*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546"
+name = "WMI Invoke-CimMethod Start Process"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+

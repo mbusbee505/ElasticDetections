@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Logging Configuration Changes on FreeBSD Host' (GUID: 6b8ca3ab-5980-4321-80c3-bcd77c8daed8) of technique T1562.006 (Impair Defenses: Indicator Blocking). Test Description: Emulates modification of syslog configuration.. Command/Steps: if [ -f \\\"/etc/#{syslog_config_file_name}\\\" ];\nthen echo '#art_test_1562_006_2' >> /etc/#{syslog_config_file_name}\nfi\n"
+from = "now-9m"
+rule_id = "494a6213-b5ea-4276-9512-f05b96e28666"
+language = "kql"
+name = "Atomic Test: T1562.006 - Logging Configuration Changes on FreeBSD Host"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.006/T1562.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.006", "6b8ca3ab-5980-4321-80c3-bcd77c8daed8", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/etc/syslog.conf*\\\" AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*#art_test_1562_006_2*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.006"
+name = "Logging Configuration Changes on FreeBSD Host"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+

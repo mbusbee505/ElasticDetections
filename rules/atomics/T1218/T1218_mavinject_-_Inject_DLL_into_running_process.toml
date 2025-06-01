@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'mavinject - Inject DLL into running process' (GUID: c426dacf-575d-4937-8611-a148a86a5e61) of technique T1218 (Signed Binary Proxy Execution). Test Description: Injects arbitrary DLL into running process specified by process ID. Requires Windows 10.. Command/Steps: mavinject.exe #{process_id} /INJECTRUNNING \\\"#{dll_payload}\\\"\n"
+from = "now-9m"
+rule_id = "d1295918-64db-44df-a0e5-d118d688fffa"
+language = "kql"
+name = "Atomic Test: T1218 - mavinject - Inject DLL into running process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "c426dacf-575d-4937-8611-a148a86a5e61", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mavinject.exe*\\\" AND process.command_line : \\\"*/INJECTRUNNING*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "mavinject - Inject DLL into running process"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMIC bypass using local XSL file' (GUID: 1b237334-3e21-4a0c-8178-b8c996124988) of technique T1220 (XSL Script Processing). Test Description: Executes the code specified within a XSL script using a local payload.. Command/Steps: wmic #{wmic_command} /FORMAT:\\\"#{local_xsl_file}\\\"\n"
+from = "now-9m"
+rule_id = "35f99386-e0bd-4697-8c4a-ba3774eb8691"
+language = "kql"
+name = "Atomic Test: T1220 - WMIC bypass using local XSL file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1220/T1220.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1220", "1b237334-3e21-4a0c-8178-b8c996124988", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*process*\\\" AND process.command_line : \\\"*list*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1220"
+name = "WMIC bypass using local XSL file"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+

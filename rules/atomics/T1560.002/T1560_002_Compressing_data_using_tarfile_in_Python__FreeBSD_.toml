@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Compressing data using tarfile in Python (FreeBSD/Linux)' (GUID: e86f1b4b-fcc1-4a2a-ae10-b49da01458db) of technique T1560.002 (Archive Collected Data: Archive via Library). Test Description: Uses tarfile from Python to compress files. Command/Steps: which_python=`which python || which python3`\n$which_python -c \\\"import tarfile; output_file = tarfile.open('#{path_to_output_file}','w'); output_file.a..."
+from = "now-9m"
+rule_id = "924ee2cd-b29b-4357-81cd-59e50eab4629"
+language = "kql"
+name = "Atomic Test: T1560.002 - Compressing data using tarfile in Python (FreeBSD/Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1560.002/T1560.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1560.002", "e86f1b4b-fcc1-4a2a-ae10-b49da01458db", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*which_python=`which*\\\" AND process.command_line : \\\"*python*\\\" AND process.command_line : \\\"*which*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1560.002"
+name = "Compressing data using tarfile in Python (FreeBSD/Linux)"
+reference = "https://attack.mitre.org/techniques/T1560/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1560/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1560/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1560/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear history of a bunch of shells' (GUID: 7e6721df-5f08-4370-9255-f06d8a77af4c) of technique T1070.003 (Indicator Removal on Host: Clear Command History). Test Description: Clears the history of a bunch of different shell types by setting the history size to zero. Command/Steps: unset HISTFILE\nexport HISTFILESIZE=0\nhistory -c\n"
+from = "now-9m"
+rule_id = "29474b07-4b72-487c-91b5-eb0f5353bd2d"
+language = "kql"
+name = "Atomic Test: T1070.003 - Clear history of a bunch of shells"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.003/T1070.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.003", "7e6721df-5f08-4370-9255-f06d8a77af4c", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*unset*\\\" AND process.command_line : \\\"*HISTFILE*\\\" AND process.command_line : \\\"*export*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.003"
+name = "Clear history of a bunch of shells"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+

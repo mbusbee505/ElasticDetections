@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Odbcconf.exe - Execute Arbitrary DLL' (GUID: 2430498b-06c0-4b92-a448-8ad263c388e2) of technique T1218.008 (Signed Binary Proxy Execution: Odbcconf). Test Description: Execute arbitrary DLL file stored locally.. Command/Steps: odbcconf.exe /S /A {REGSVR \\\"#{dll_payload}\\\"}\n"
+from = "now-9m"
+rule_id = "0f6fa181-56ef-46ad-a77a-8a59fb3c5be1"
+language = "kql"
+name = "Atomic Test: T1218.008 - Odbcconf.exe - Execute Arbitrary DLL"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.008/T1218.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.008", "2430498b-06c0-4b92-a448-8ad263c388e2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*odbcconf.exe*\\\" AND process.command_line : \\\"*{REGSVR*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.008"
+name = "Odbcconf.exe - Execute Arbitrary DLL"
+reference = "https://attack.mitre.org/techniques/T1218/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/008"
+
+

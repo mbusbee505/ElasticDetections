@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Service Discovery' (GUID: 89676ba1-b1f8-47ee-b940-2e1a113ebc71) of technique T1007 (System Service Discovery). Test Description: Identify system services.\n\nUpon successful execution, cmd.exe will execute service commands with expected result to stdout.. Command/Steps: tasklist.exe\nsc query\nsc query state= all\n"
+from = "now-9m"
+rule_id = "4bbf66ae-399a-4af3-91b8-f2d3327afc10"
+language = "kql"
+name = "Atomic Test: T1007 - System Service Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1007/T1007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1007", "89676ba1-b1f8-47ee-b940-2e1a113ebc71", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*tasklist.exe*\\\" AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*query*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1007"
+name = "System Service Discovery"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+

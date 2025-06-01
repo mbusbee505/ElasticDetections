@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Shell Creation using busybox command' (GUID: ab4d04af-68dc-4fee-9c16-6545265b3276) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: BusyBox is a multi-call binary. A multi-call binary is an executable program that performs the same job as more than one utility program. It can be used to break out from restricted environments by spawning an interactive system shell. \nReference - https://gtfobins.github.io/gtfobins/busybox/. Command/Steps: busybox sh &"
+from = "now-9m"
+rule_id = "a3e14e15-9234-4005-a80a-471f9a5404f2"
+language = "kql"
+name = "Atomic Test: T1059.004 - Shell Creation using busybox command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "ab4d04af-68dc-4fee-9c16-6545265b3276", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*busybox*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Shell Creation using busybox command"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

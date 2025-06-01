@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Active Directory Groups with Get-AdGroup' (GUID: 3d1fcd2a-e51c-4cbe-8d84-9a843bad8dc8) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: The following Atomic test will utilize Get-AdGroup to enumerate groups within Active Directory.\nUpon successful execution a listing of groups will output with their paths in AD.\nReference: https://docs.microsoft.com/en-us/powershell/module/activedirectory/get-adgroup?view=windowsserver2022-ps. Command/Steps: Get-AdGroup -Filter *\n"
+from = "now-9m"
+rule_id = "859b027c-283d-4f86-8ce9-4a94ecec2ba5"
+language = "kql"
+name = "Atomic Test: T1069.002 - Enumerate Active Directory Groups with Get-AdGroup"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "3d1fcd2a-e51c-4cbe-8d84-9a843bad8dc8", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-AdGroup*\\\" AND powershell.script_block_text : \\\"*-Filter*\\\" OR (process.command_line : \\\"*Get-AdGroup*\\\" AND process.command_line : \\\"*-Filter*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Enumerate Active Directory Groups with Get-AdGroup"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

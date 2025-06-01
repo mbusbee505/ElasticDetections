@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LinEnum tool execution' (GUID: a2b35a63-9df1-4806-9a4d-5fe0500845f2) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: LinEnum is a bash script that performs discovery commands for accounts,processes, kernel version, applications, services, and uses the information from these commands to present operator with ways of escalating privileges or further exploitation of targeted host.. Command/Steps: chmod +x #{linenum}\nbash #{linenum}\n"
+from = "now-9m"
+rule_id = "3433ccd1-2a7c-44f1-b42f-7791a448dd71"
+language = "kql"
+name = "Atomic Test: T1059.004 - LinEnum tool execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "a2b35a63-9df1-4806-9a4d-5fe0500845f2", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*chmod*\\\" AND process.command_line : \\\"*bash*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "LinEnum tool execution"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

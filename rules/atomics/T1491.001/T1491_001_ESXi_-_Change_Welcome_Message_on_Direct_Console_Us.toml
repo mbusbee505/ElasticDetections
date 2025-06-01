@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Change Welcome Message on Direct Console User Interface (DCUI)' (GUID: 30905f21-34f3-4504-8b4c-f7a5e314b810) of technique T1491.001 (Defacement: Internal Defacement). Test Description: Changes the ESXi welcome message to potentially display ransom information.\n[Reference](https://lolesxi-project.github.io/LOLESXi/lolesxi/Binaries/esxcli/#change%20display%20information). Command/Steps: echo \\\"\\\" | \\\"#{plink_file}\\\" -batch \\\"#{vm_host}\\\" -ssh -l #{vm_user} -pw \\\"#{vm_pass}\\\" \\\"esxcli system welcomemsg set -m 'RANSOMWARE-NOTIFICATION'\\\"\n"
+from = "now-9m"
+rule_id = "76fdad49-b52f-45ad-8960-9d3010e7f8a5"
+language = "kql"
+name = "Atomic Test: T1491.001 - ESXi - Change Welcome Message on Direct Console User Interface (DCUI)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1491.001/T1491.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1491.001", "30905f21-34f3-4504-8b4c-f7a5e314b810", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*-batch*\\\" AND process.command_line : \\\"*atomic.local*\\\" AND process.command_line : \\\"*-ssh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1491.001"
+name = "ESXi - Change Welcome Message on Direct Console User Interface (DCUI)"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+

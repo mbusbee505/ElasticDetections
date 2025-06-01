@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows IIS HTTP Logging' (GUID: 69435dcf-c66f-4ec0-a8b1-82beb76b34db) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).\nThis action requires HTTP logging configurations in IIS to be unlocked.\n\nUse the cleanup commands to restore some default auditpol settings (your original settings will be lost). Command/Steps: C:\\\\Windows\\\\System32\\\\inetsrv\\\\appcmd.exe set config \\\"#{website_name}\\\" /section:httplogging /dontLog:true\n"
+from = "now-9m"
+rule_id = "6be5f7a3-59f8-4a85-989a-f5e6d8ac9c1f"
+language = "kql"
+name = "Atomic Test: T1562.002 - Disable Windows IIS HTTP Logging"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "69435dcf-c66f-4ec0-a8b1-82beb76b34db", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\inetsrv\\\\appcmd.exe*\\\" AND powershell.script_block_text : \\\"*config*\\\" AND powershell.script_block_text : \\\"*Default*\\\" OR (process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\inetsrv\\\\appcmd.exe*\\\" AND process.command_line : \\\"*config*\\\" AND process.command_line : \\\"*Default*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Disable Windows IIS HTTP Logging"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

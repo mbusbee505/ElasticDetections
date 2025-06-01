@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add Federation to Azure AD' (GUID: 8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7) of technique T1484.002 (Domain Trust Modification). Test Description: Add a new federated domain to Azure AD using PowerShell.\nThe malicious domain to be federated must be configured beforehand (outside of the scope of this test):\n    1. Open Azure Portal\n    2. Add a new \\\"custom domain name\\\"\n    3. Verify the domain by following instructions (i.e. create the requested DNS record). Command/Steps: Import-Module AzureAD\nImport-Module AADInternals\n\n$PWord = ConvertTo-SecureString -String \\\"#{azure_password}\\\" -AsPlainText -Force\n$Credential = New-Ob..."
+from = "now-9m"
+rule_id = "6298b451-2aca-4289-b704-8f4f0ca6a410"
+language = "kql"
+name = "Atomic Test: T1484.002 - Add Federation to Azure AD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1484.002/T1484.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1484.002", "8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*AzureAD*\\\" AND powershell.script_block_text : \\\"*Import-Module*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*AzureAD*\\\" AND process.command_line : \\\"*Import-Module*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1484.002"
+name = "Add Federation to Azure AD"
+reference = "https://attack.mitre.org/techniques/T1484/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1484/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1484/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1484/002"
+
+

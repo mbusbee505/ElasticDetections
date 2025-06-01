@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PureLocker Ransom Note' (GUID: 649349c7-9abf-493b-a7a2-b1aa4d141528) of technique T1486 (Data Encrypted for Impact). Test Description: building the IOC (YOUR_FILES.txt) for the PureLocker ransomware \nhttps://www.bleepingcomputer.com/news/security/purelocker-ransomware-can-lock-files-on-windows-linux-and-macos/. Command/Steps: echo T1486 - Purelocker Ransom Note > %USERPROFILE%\\\\Desktop\\\\YOUR_FILES.txt\n"
+from = "now-9m"
+rule_id = "cb9fb644-5f17-4d22-9297-d2136551ca47"
+language = "kql"
+name = "Atomic Test: T1486 - PureLocker Ransom Note"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "649349c7-9abf-493b-a7a2-b1aa4d141528", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Purelocker*\\\" AND process.command_line : \\\"*Ransom*\\\" AND process.command_line : \\\"*Note*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "PureLocker Ransom Note"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

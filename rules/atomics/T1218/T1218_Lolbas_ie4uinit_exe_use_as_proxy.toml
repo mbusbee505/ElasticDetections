@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Lolbas ie4uinit.exe use as proxy' (GUID: 13c0804e-615e-43ad-b223-2dfbacd0b0b3) of technique T1218 (Signed Binary Proxy Execution). Test Description: Executes commands from a specially prepared ie4uinit.inf file.\nPoc from : https://bohops.com/2018/03/10/leveraging-inf-sct-fetch-execute-techniques-for-bypass-evasion-persistence-part-2/\nReference: https://lolbas-project.github.io/lolbas/Binaries/Ie4uinit/. Command/Steps: copy #{Path_ie4uinit} %TEMP%\\\\ie4uinit.exe\ncopy \\\"#{Path_inf}\\\" %TEMP%\\\\ieuinit.inf\n%TEMP%\\\\ie4uinit.exe -BaseSettings\n"
+from = "now-9m"
+rule_id = "70841faf-4f23-431e-99f1-2bfa0e4df84d"
+language = "kql"
+name = "Atomic Test: T1218 - Lolbas ie4uinit.exe use as proxy"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "13c0804e-615e-43ad-b223-2dfbacd0b0b3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*c:\\\\windows\\\\system32\\\\ie4uinit.exe*\\\" AND process.command_line : \\\"*%TEMP%\\\\ie4uinit.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "Lolbas ie4uinit.exe use as proxy"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

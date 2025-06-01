@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Opening ports for proxy - HARDRAIN' (GUID: 15e57006-79dd-46df-9bf9-31bc24fb5a80) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: This test creates a listening interface on a victim device. This tactic was used by HARDRAIN for proxying.\n\nreference: https://www.us-cert.gov/sites/default/files/publications/MAR-10135536-F.pdf. Command/Steps: netsh advfirewall firewall add rule name=\\\"atomic testing\\\" action=allow dir=in protocol=TCP localport=450 \n"
+from = "now-9m"
+rule_id = "c7a01863-96e7-4782-a90f-32153e646176"
+language = "kql"
+name = "Atomic Test: T1562.004 - Opening ports for proxy - HARDRAIN"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "15e57006-79dd-46df-9bf9-31bc24fb5a80", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*advfirewall*\\\" AND process.command_line : \\\"*firewall*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Opening ports for proxy - HARDRAIN"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

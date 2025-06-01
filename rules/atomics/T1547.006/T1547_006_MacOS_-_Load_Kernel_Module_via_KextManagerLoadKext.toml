@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MacOS - Load Kernel Module via KextManagerLoadKextWithURL()' (GUID: f0007753-beb3-41ea-9948-760785e4c1e5) of technique T1547.006 (Boot or Logon Autostart Execution: Kernel Modules and Extensions). Test Description: This test uses the IOKit API to load a kernel module for macOS.\nHarcoded to use SoftRAID kext. Command/Steps: sudo #{exe_path}\nkextstat 2>/dev/null | grep SoftRAID\nsudo kextunload /Library/Extensions/SoftRAID.kext\n"
+from = "now-9m"
+rule_id = "17d43a97-8517-4b88-bc24-ff11a7113baf"
+language = "kql"
+name = "Atomic Test: T1547.006 - MacOS - Load Kernel Module via KextManagerLoadKextWithURL()"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.006/T1547.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.006", "f0007753-beb3-41ea-9948-760785e4c1e5", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*kextstat*\\\" AND process.command_line : \\\"*2>/dev/null*\\\" AND process.command_line : \\\"*grep*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.006"
+name = "MacOS - Load Kernel Module via KextManagerLoadKextWithURL()"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+

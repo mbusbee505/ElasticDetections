@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Scheduled Task Startup Script' (GUID: fec27f65-db86-4c2d-b66c-61945aee87c2) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Run an exe on user logon or system startup.  Upon execution, success messages will be displayed for the two scheduled tasks. To view\nthe tasks, open the Task Scheduler and look in the Active Tasks pane.. Command/Steps: schtasks /create /tn \\\"T1053_005_OnLogon\\\" /sc onlogon /tr \\\"cmd.exe /c calc.exe\\\"\nschtasks /create /tn \\\"T1053_005_OnStartup\\\" /sc onstart /ru system /tr \\\"..."
+from = "now-9m"
+rule_id = "b710b01a-7cd7-4526-a0e6-cb0a44938cbc"
+language = "kql"
+name = "Atomic Test: T1053.005 - Scheduled Task Startup Script"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "fec27f65-db86-4c2d-b66c-61945aee87c2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*schtasks*\\\" AND process.command_line : \\\"*/create*\\\" AND process.command_line : \\\"*onlogon*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Scheduled Task Startup Script"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ListCronjobs' (GUID: ddfb0bc1-3c3f-47e9-a298-550ecfefacbd) of technique T1053.007 (Kubernetes Cronjob). Test Description: Kubernetes Job is a controller that creates one or more pods and ensures that a specified number of them successfully terminate. Kubernetes Job can be used to run containers that perform finite tasks for batch jobs. Kubernetes CronJob is used to schedule Jobs. Attackers may use Kubernetes CronJob for scheduling execution of malicious code that would run as a container in the cluster.. Command/Steps: kubectl get cronjobs -n #{namespace}\n"
+from = "now-9m"
+rule_id = "8dbf7288-c32b-4965-8f80-ae894627a536"
+language = "kql"
+name = "Atomic Test: T1053.007 - ListCronjobs"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.007/T1053.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.007", "ddfb0bc1-3c3f-47e9-a298-550ecfefacbd", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*kubectl*\\\" AND process.command_line : \\\"*cronjobs*\\\" AND process.command_line : \\\"*default*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.007"
+name = "ListCronjobs"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+

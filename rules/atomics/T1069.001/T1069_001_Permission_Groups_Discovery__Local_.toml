@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Permission Groups Discovery (Local)' (GUID: 952931a4-af0b-4335-bbbe-73c8c5b327ae) of technique T1069.001 (Permission Groups Discovery: Local Groups). Test Description: Permission Groups Discovery. Command/Steps: if [ -x \\\"$(command -v dscacheutil)\\\" ]; then dscacheutil -q group; else echo \\\"dscacheutil is missing from the machine. skipping...\\\"; fi;\nif [ -x \\\"$(com..."
+from = "now-9m"
+rule_id = "c3bdbdf0-279f-4d6d-92c4-f8375e16aa43"
+language = "kql"
+name = "Atomic Test: T1069.001 - Permission Groups Discovery (Local)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.001/T1069.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.001", "952931a4-af0b-4335-bbbe-73c8c5b327ae", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(command*\\\" AND process.command_line : \\\"*dscacheutil)*\\\" AND process.command_line : \\\"*then*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.001"
+name = "Permission Groups Discovery (Local)"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+

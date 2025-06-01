@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear PowerShell Session History' (GUID: 22c779cd-9445-4d3e-a136-f75adbf0315f) of technique T1070.003 (Indicator Removal on Host: Clear Command History). Test Description: This technique involves using the Clear-History cmdlet in PowerShell to remove all records of previously executed commands.\nThis action is often performed by attackers to eliminate traces of their activities, making incident detection and forensic \ninvestigation more challenging. By clearing the session history, adversaries aim to obfuscate their operational footprint.. Command/Steps: Clear-History\n"
+from = "now-9m"
+rule_id = "46aec216-0581-499d-906d-f7809902e47a"
+language = "kql"
+name = "Atomic Test: T1070.003 - Clear PowerShell Session History"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.003/T1070.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.003", "22c779cd-9445-4d3e-a136-f75adbf0315f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Clear-History*\\\" OR (process.command_line : \\\"*Clear-History*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.003"
+name = "Clear PowerShell Session History"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+

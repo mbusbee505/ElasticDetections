@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Cron - Replace crontab with referenced file' (GUID: 435057fb-74b1-410e-9403-d81baf194f75) of technique T1053.003 (Scheduled Task/Job: Cron). Test Description: This test replaces the current user's crontab file with the contents of the referenced file. This technique was used by numerous IoT automated exploitation attacks.. Command/Steps: crontab -l > /tmp/notevil\necho \\\"* * * * * #{command}\\\" > #{tmp_cron} && crontab #{tmp_cron}\n"
+from = "now-9m"
+rule_id = "827f2b7d-2c07-423d-9d17-d1ecc5835f60"
+language = "kql"
+name = "Atomic Test: T1053.003 - Cron - Replace crontab with referenced file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.003/T1053.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.003", "435057fb-74b1-410e-9403-d81baf194f75", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*crontab*\\\" AND process.command_line : \\\"*crontab*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.003"
+name = "Cron - Replace crontab with referenced file"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+

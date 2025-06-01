@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Indirect Command Execution - pcalua.exe' (GUID: cecfea7a-5f03-4cdd-8bc8-6f7c22862440) of technique T1202 (Indirect Command Execution). Test Description: The Program Compatibility Assistant (pcalua.exe) may invoke the execution of programs and commands from a Command-Line Interface.\n[Reference](https://twitter.com/KyleHanslovan/status/912659279806640128)\nUpon execution, calc.exe should open. Command/Steps: pcalua.exe -a #{process}\npcalua.exe -a #{payload_path}\n"
+from = "now-9m"
+rule_id = "712508f0-6e2f-42d2-b4ca-5e9922cefb22"
+language = "kql"
+name = "Atomic Test: T1202 - Indirect Command Execution - pcalua.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1202/T1202.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1202", "cecfea7a-5f03-4cdd-8bc8-6f7c22862440", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*pcalua.exe*\\\" AND process.command_line : \\\"*calc.exe*\\\" AND process.command_line : \\\"*pcalua.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1202"
+name = "Indirect Command Execution - pcalua.exe"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'InfDefaultInstall.exe .inf Execution' (GUID: 54ad7d5a-a1b5-472c-b6c4-f8090fb2daef) of technique T1218 (Signed Binary Proxy Execution). Test Description: Test execution of a .inf using InfDefaultInstall.exe\n\nReference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml. Command/Steps: InfDefaultInstall.exe \\\"#{inf_to_execute}\\\"\n"
+from = "now-9m"
+rule_id = "c304bb39-023b-4438-8b13-542a7bbe6716"
+language = "kql"
+name = "Atomic Test: T1218 - InfDefaultInstall.exe .inf Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "54ad7d5a-a1b5-472c-b6c4-f8090fb2daef", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*InfDefaultInstall.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "InfDefaultInstall.exe .inf Execution"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

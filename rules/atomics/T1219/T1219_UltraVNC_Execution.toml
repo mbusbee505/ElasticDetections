@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'UltraVNC Execution' (GUID: 42e51815-a6cc-4c75-b970-3f0ff54b610e) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading UltraVNC for use as a C2 channel.\nUpon successful execution, UltraVNC will be executed.. Command/Steps: Start-Process #{UltraVNC_Viewer_Path}\n"
+from = "now-9m"
+rule_id = "d0fd19ce-864a-4830-b38d-74884a672e3d"
+language = "kql"
+name = "Atomic Test: T1219 - UltraVNC Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "42e51815-a6cc-4c75-b970-3f0ff54b610e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*$env:ProgramFiles\\\\'uvnc*\\\" AND powershell.script_block_text : \\\"*bvba\\\\UltraVnc\\\\vncviewer.exe*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*$env:ProgramFiles\\\\'uvnc*\\\" AND process.command_line : \\\"*bvba\\\\UltraVnc\\\\vncviewer.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "UltraVNC Execution"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

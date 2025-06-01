@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS CloudWatch Log Stream Deletes' (GUID: 33ca84bc-4259-4943-bd36-4655dc420932) of technique T1562.008 (Impair Defenses: Disable Cloud Logs). Test Description: Creates a new cloudWatch log stream in AWS, Upon successful creation it will Delete the stream. Attackers can use this technique to evade defenses by \ndeleting the log stream. Once it is deleted, the logs created by the attackers will not be logged. https://www.elastic.co/guide/en/security/current/aws-cloudwatch-log-stream-deletion.html. Command/Steps: aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json\necho \\\"*** Log Group Created ***\\\"\naws logs cre..."
+from = "now-9m"
+rule_id = "11b6d7be-e5aa-4663-8be3-fa33e1cdf09e"
+language = "kql"
+name = "Atomic Test: T1562.008 - AWS CloudWatch Log Stream Deletes"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.008/T1562.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.008", "33ca84bc-4259-4943-bd36-4655dc420932", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*logs*\\\" AND process.command_line : \\\"*create-log-group*\\\" AND process.command_line : \\\"*--log-group-name*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.008"
+name = "AWS CloudWatch Log Stream Deletes"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+

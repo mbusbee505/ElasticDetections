@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'New shim database files created in the default shim database directory' (GUID: aefd6866-d753-431f-a7a4-215ca7e3f13d) of technique T1546.011 (Event Triggered Execution: Application Shimming). Test Description: Upon execution, check the \\\"C:\\\\Windows\\\\apppatch\\\\Custom\\\\\\\" folder for the new shim database\n\nhttps://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html. Command/Steps: Copy-Item \\\"$PathToAtomicsFolder\\\\T1546.011\\\\bin\\\\T1546.011CompatDatabase.sdb\\\" C:\\\\Windows\\\\apppatch\\\\Custom\\\\T1546.011CompatDatabase.sdb\nCopy-Item \\\"$PathToAt..."
+from = "now-9m"
+rule_id = "6b8cf946-7c8d-4877-8a0b-42289f29889b"
+language = "kql"
+name = "Atomic Test: T1546.011 - New shim database files created in the default shim database directory"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.011/T1546.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.011", "aefd6866-d753-431f-a7a4-215ca7e3f13d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*Copy-Item*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*Copy-Item*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.011"
+name = "New shim database files created in the default shim database directory"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+

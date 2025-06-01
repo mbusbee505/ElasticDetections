@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Darkside system information discovery' (GUID: f89812e5-67d1-4f49-86fa-cbc6609ea86a) of technique T1082 (System Information Discovery). Test Description: Darkside ransomware utilises various ESXCLI commands to obtain information about the ESXi Host.\n[Reference](https://www.trendmicro.com/en_ph/research/21/e/darkside-linux-vms-targeted.html). Command/Steps: echo \\\"\\\" | \\\"#{plink_file}\\\" \\\"#{vm_host}\\\" -ssh  -l \\\"#{vm_user}\\\" -pw \\\"#{vm_pass}\\\" -m \\\"#{cli_script}\\\"\n"
+from = "now-9m"
+rule_id = "25e03ea2-3bda-4c69-9360-29a68b01aee0"
+language = "kql"
+name = "Atomic Test: T1082 - ESXi - Darkside system information discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "f89812e5-67d1-4f49-86fa-cbc6609ea86a", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*atomic.local*\\\" AND process.command_line : \\\"*-ssh*\\\" AND process.command_line : \\\"*root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "ESXi - Darkside system information discovery"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

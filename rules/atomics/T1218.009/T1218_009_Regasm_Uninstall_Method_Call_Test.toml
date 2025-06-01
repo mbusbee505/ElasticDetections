@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Regasm Uninstall Method Call Test' (GUID: 71bfbfac-60b1-4fc0-ac8b-2cedbbdcb112) of technique T1218.009 (Signed Binary Proxy Execution: Regsvcs/Regasm). Test Description: Executes the Uninstall Method, No Admin Rights Required. Upon execution, \\\"I shouldn't really execute either.\\\" will be displayed.. Command/Steps: C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\csc.exe /r:System.EnterpriseServices.dll /out:\\\"#{output_file}\\\" /target:library \\\"#{source_file}\\\"\nC:\\\\Windo..."
+from = "now-9m"
+rule_id = "1de363ad-133b-4ce2-aad4-6ed2428e5258"
+language = "kql"
+name = "Atomic Test: T1218.009 - Regasm Uninstall Method Call Test"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.009/T1218.009.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.009", "71bfbfac-60b1-4fc0-ac8b-2cedbbdcb112", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\csc.exe*\\\" AND process.command_line : \\\"*/r:System.EnterpriseServices.dll*\\\" AND process.command_line : \\\"*/target:library*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.009"
+name = "Regasm Uninstall Method Call Test"
+reference = "https://attack.mitre.org/techniques/T1218/009"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/009"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/009"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/009"
+
+

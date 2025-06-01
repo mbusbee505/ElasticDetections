@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Search files of interest and save them to a single zip file (Windows)' (GUID: d3d9af44-b8ad-4375-8b0a-4bff4b7e419c) of technique T1005 (Data from Local System). Test Description: This test searches for files of certain extensions and saves them to a single zip file prior to extraction.. Command/Steps: $startingDirectory = \\\"#{starting_directory}\\\"\n$outputZip = \\\"#{output_zip_folder_path}\\\"\n$fileExtensionsString = \\\"#{file_extensions}\\\" \n$fileExtensions = ..."
+from = "now-9m"
+rule_id = "b313251e-0348-4db4-9940-d853845d2f3a"
+language = "kql"
+name = "Atomic Test: T1005 - Search files of interest and save them to a single zip file (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1005/T1005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1005", "d3d9af44-b8ad-4375-8b0a-4bff4b7e419c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$startingDirectory*\\\" AND powershell.script_block_text : \\\"*C:\\\\Users*\\\" AND powershell.script_block_text : \\\"*$outputZip*\\\" OR (process.command_line : \\\"*$startingDirectory*\\\" AND process.command_line : \\\"*C:\\\\Users*\\\" AND process.command_line : \\\"*$outputZip*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1005"
+name = "Search files of interest and save them to a single zip file (Windows)"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+

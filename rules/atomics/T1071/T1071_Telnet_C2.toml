@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Telnet C2' (GUID: 3b0df731-030c-4768-b492-2a3216d90e53) of technique T1071 (Application Layer Protocol). Test Description: An adversary may establish Telnet communication from a compromised endpoint to a command and control (C2) server in order to carry out additional attacks on objectives.. Command/Steps: #{client_path} #{server_ip} --port #{server_port}\n"
+from = "now-9m"
+rule_id = "ee7ab1a8-e9c9-4db2-8265-45bc7af2da5c"
+language = "kql"
+name = "Atomic Test: T1071 - Telnet C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1071/T1071.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1071", "3b0df731-030c-4768-b492-2a3216d90e53", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*127.0.0.1*\\\" AND powershell.script_block_text : \\\"*--port*\\\" OR (process.command_line : \\\"*127.0.0.1*\\\" AND process.command_line : \\\"*--port*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1071"
+name = "Telnet C2"
+reference = "https://attack.mitre.org/techniques/T1071"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1071"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1071"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1071"
+
+

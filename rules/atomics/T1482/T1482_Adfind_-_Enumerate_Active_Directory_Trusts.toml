@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Adfind - Enumerate Active Directory Trusts' (GUID: 15fe436d-e771-4ff3-b655-2dca9ba52834) of technique T1482 (Domain Trust Discovery). Test Description: Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts\nreference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html. Command/Steps: \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\AdFind.exe\\\" #{optional_args} -gcb -sc trustdmp\n"
+from = "now-9m"
+rule_id = "c5ca3781-049d-4633-936b-9c44c5962311"
+language = "kql"
+name = "Atomic Test: T1482 - Adfind - Enumerate Active Directory Trusts"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1482/T1482.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1482", "15fe436d-e771-4ff3-b655-2dca9ba52834", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*-gcb*\\\" AND process.command_line : \\\"*trustdmp*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1482"
+name = "Adfind - Enumerate Active Directory Trusts"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump individual process memory with sh (Local)' (GUID: 7e91138a-8e74-456d-a007-973d67a0bb80) of technique T1003.007 (OS Credential Dumping: Proc Filesystem). Test Description: Using `/proc/$PID/mem`, where $PID is the target process ID, use shell utilities to\ncopy process memory to an external file so it can be searched or exfiltrated later.. Command/Steps: sh #{script_path}\nPID=$(pgrep -n -f \\\"#{pid_term}\\\")\nHEAP_MEM=$(grep -E \\\"^[0-9a-f-]* r\\\" /proc/\\\"$PID\\\"/maps | grep heap | cut -d' ' -f 1)\nMEM_START=$(echo..."
+from = "now-9m"
+rule_id = "edcc3102-7ea8-4de9-a42b-9c2568467d3c"
+language = "kql"
+name = "Atomic Test: T1003.007 - Dump individual process memory with sh (Local)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.007/T1003.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.007", "7e91138a-8e74-456d-a007-973d67a0bb80", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*PID=$(pgrep*\\\" AND process.command_line : \\\"*HEAP_MEM=$(grep*\\\" AND process.command_line : \\\"*^[0-9a-f-]*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.007"
+name = "Dump individual process memory with sh (Local)"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get-DomainUser with PowerView' (GUID: 93662494-5ed7-4454-a04c-8c8372808ac2) of technique T1087.002 (Account Discovery: Domain Account). Test Description: Utilizing PowerView, run Get-DomainUser to identify the domain users. Upon execution, Users within the domain will be listed.. Command/Steps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploi..."
+from = "now-9m"
+rule_id = "96f5687e-40a1-4c98-a1c2-7df9a287eb95"
+language = "kql"
+name = "Atomic Test: T1087.002 - Get-DomainUser with PowerView"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "93662494-5ed7-4454-a04c-8c8372808ac2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND powershell.script_block_text : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND powershell.script_block_text : \\\"*(IWR*\\\" OR (process.command_line : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND process.command_line : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND process.command_line : \\\"*(IWR*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Get-DomainUser with PowerView"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

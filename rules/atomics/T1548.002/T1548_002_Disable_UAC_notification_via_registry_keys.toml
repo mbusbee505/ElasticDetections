@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable UAC notification via registry keys' (GUID: 160a7c77-b00e-4111-9e45-7c2a44eda3fd) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: This atomic regarding UACDisableNotify pertains to the notification behavior of UAC. UAC is a critical security feature in Windows that prevents unauthorized changes to the operating system. It prompts the user for permission or an administrator password before allowing actions that could affect the system's operation or change settings that affect other users. The BlotchyQuasar RAT defense evasion activities that the adversary to disable UAC notifications makes it easier for malware and malicious software to execute with elevated privileges. [Article](https://securityintelligence.com/x-force/x-force-hive0129-targeting-financial-institutions-latam-banking-trojan/). Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Security Center\\\" /v UACDisableNotify /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "c62307c8-4e20-4616-8cd5-cd313da92ed7"
+language = "kql"
+name = "Atomic Test: T1548.002 - Disable UAC notification via registry keys"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "160a7c77-b00e-4111-9e45-7c2a44eda3fd", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Security*\\\" AND process.command_line : \\\"*Center*\\\" AND process.command_line : \\\"*UACDisableNotify*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Disable UAC notification via registry keys"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create and start VirtualBox virtual machine' (GUID: 88b81702-a1c0-49a9-95b2-2dd53d755767) of technique T1564.006 (Run Virtual Instance). Test Description: Create a simple VirtualBox VM and start up the machine\nCleanup command stops and deletes the newly created VM and associated files\nhttps://www.virtualbox.org/manual/ch08.html#vboxmanage-startvm\nhttps://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/\nhttps://attack.mitre.org/techniques/T1564/006/. Command/Steps: \\\"#{vboxmanage_exe}\\\" createvm --name \\\"#{vm_name}\\\" --register\n\\\"#{vboxmanage_exe}\\\" modifyvm \\\"#{vm_name}\\\" --firmware efi\n\\\"#{vboxmanage_exe}\\\" startvm \\\"#{vm..."
+from = "now-9m"
+rule_id = "2d8d4a8f-4fc8-427d-9112-b1e64d61f1ef"
+language = "kql"
+name = "Atomic Test: T1564.006 - Create and start VirtualBox virtual machine"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.006/T1564.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.006", "88b81702-a1c0-49a9-95b2-2dd53d755767", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Program*\\\" AND process.command_line : \\\"*Files\\\\Oracle\\\\VirtualBox\\\\VBoxManage.exe*\\\" AND process.command_line : \\\"*createvm*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.006"
+name = "Create and start VirtualBox virtual machine"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+

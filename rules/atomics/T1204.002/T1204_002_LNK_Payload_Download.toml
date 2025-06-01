@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LNK Payload Download' (GUID: 581d7521-9c4b-420e-9695-2aec5241167f) of technique T1204.002 (User Execution: Malicious File). Test Description: This lnk files invokes powershell to download putty from the internet and opens the file. https://twitter.com/ankit_anubhav/status/1518932941090410496. Command/Steps: Invoke-WebRequest -OutFile $env:Temp\\\\test10.lnk \\\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/bin/test10.lnk..."
+from = "now-9m"
+rule_id = "38e921b2-f1c3-4fa3-a660-9691754cdf71"
+language = "kql"
+name = "Atomic Test: T1204.002 - LNK Payload Download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1204.002/T1204.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1204.002", "581d7521-9c4b-420e-9695-2aec5241167f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*-OutFile*\\\" AND powershell.script_block_text : \\\"*$env:Temp\\\\test10.lnk*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*-OutFile*\\\" AND process.command_line : \\\"*$env:Temp\\\\test10.lnk*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1204.002"
+name = "LNK Payload Download"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+

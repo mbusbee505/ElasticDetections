@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Python3 http.server' (GUID: 3ea1f938-f80a-4305-9aa8-431bc4867313) of technique T1048.003 (Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol). Test Description: An adversary may use the python3 standard library module http.server to exfiltrate data. This test checks if python3 is available and if so, creates a HTTP server on port 9090, captures the PID, sleeps for 10 seconds, then kills the PID and unsets the $PID variable.. Command/Steps: [ \\\"$(uname)\\\" = 'FreeBSD' ] && alias python3=python3.9\nif [ $(which python3) ]; then cd /tmp; python3 -m http.server 9090 & PID=$!; sleep 10; kill $PID..."
+from = "now-9m"
+rule_id = "509f3f5a-d5e7-4c95-a1f2-acd2114be643"
+language = "kql"
+name = "Atomic Test: T1048.003 - Python3 http.server"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048.003/T1048.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048.003", "3ea1f938-f80a-4305-9aa8-431bc4867313", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(uname)*\\\" AND process.command_line : \\\"*FreeBSD*\\\" AND process.command_line : \\\"*alias*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048.003"
+name = "Python3 http.server"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+

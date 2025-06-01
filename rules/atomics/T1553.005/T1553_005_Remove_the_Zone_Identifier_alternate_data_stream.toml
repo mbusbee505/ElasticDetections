@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remove the Zone.Identifier alternate data stream' (GUID: 64b12afc-18b8-4d3f-9eab-7f6cae7c73f9) of technique T1553.005 (Subvert Trust Controls: Mark-of-the-Web Bypass). Test Description: Remove the Zone.Identifier alternate data stream which identifies the file as downloaded from the internet.\nRemoving this allows more freedom in executing scripts in PowerShell and avoids opening files in protected view.. Command/Steps: Unblock-File -Path #{file_path}\n"
+from = "now-9m"
+rule_id = "573e4e34-4e6e-4942-9e53-4463aa2931f8"
+language = "kql"
+name = "Atomic Test: T1553.005 - Remove the Zone.Identifier alternate data stream"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.005/T1553.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.005", "64b12afc-18b8-4d3f-9eab-7f6cae7c73f9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Unblock-File*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*$env:tmp\\\\ReadMe.md*\\\" OR (process.command_line : \\\"*Unblock-File*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*$env:tmp\\\\ReadMe.md*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.005"
+name = "Remove the Zone.Identifier alternate data stream"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+

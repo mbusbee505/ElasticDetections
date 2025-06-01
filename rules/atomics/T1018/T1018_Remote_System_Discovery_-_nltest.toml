@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - nltest' (GUID: 52ab5108-3f6f-42fb-8ba3-73bc054f22c8) of technique T1018 (Remote System Discovery). Test Description: Identify domain controllers for specified domain.\n\nUpon successful execution, cmd.exe will execute nltest.exe against a target domain to retrieve a list of domain controllers. Output will be via stdout.. Command/Steps: nltest.exe /dclist:#{target_domain}\n"
+from = "now-9m"
+rule_id = "f0545073-a2e6-41a3-a79f-6448d3be601f"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - nltest"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "52ab5108-3f6f-42fb-8ba3-73bc054f22c8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*nltest.exe*\\\" AND process.command_line : \\\"*/dclist:%userdnsdomain%*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - nltest"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

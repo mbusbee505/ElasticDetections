@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Uninstall Sysmon' (GUID: a316fb2e-5344-470d-91c1-23e15c374edc) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Uninstall Sysinternals Sysmon for Defense Evasion. Command/Steps: sysmon -u\n"
+from = "now-9m"
+rule_id = "ad5e2dfb-217e-431a-aa12-d15f3c3c72ea"
+language = "kql"
+name = "Atomic Test: T1562.001 - Uninstall Sysmon"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "a316fb2e-5344-470d-91c1-23e15c374edc", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*sysmon*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Uninstall Sysmon"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

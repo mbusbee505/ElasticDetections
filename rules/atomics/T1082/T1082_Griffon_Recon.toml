@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Griffon Recon' (GUID: 69bd4abe-8759-49a6-8d21-0f15822d6370) of technique T1082 (System Information Discovery). Test Description: This script emulates the reconnaissance script seen in used by Griffon and was modified by security researcher Kirk Sayre \nin order simply print the recon results to the screen as opposed to exfiltrating them. [Script](https://gist.github.com/kirk-sayre-work/7cb5bf4e2c7c77fa5684ddc17053f1e5).  \nFor more information see also [https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon](https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon) and [https://attack.mitre.org/software/S0417/](https://attack.mitre.org/software/S0417/). Command/Steps: cscript \\\"#{vbscript}\\\"\n"
+from = "now-9m"
+rule_id = "790669b4-6b06-486e-be6c-ad39a71bd2e6"
+language = "kql"
+name = "Atomic Test: T1082 - Griffon Recon"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "69bd4abe-8759-49a6-8d21-0f15822d6370", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*cscript*\\\" OR (process.command_line : \\\"*cscript*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Griffon Recon"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

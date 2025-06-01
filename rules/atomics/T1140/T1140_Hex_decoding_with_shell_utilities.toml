@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Hex decoding with shell utilities' (GUID: 005943f9-8dd5-4349-8b46-0313c0a9f973) of technique T1140 (Deobfuscate/Decode Files or Information). Test Description: Use common shell utilities to decode a hex-encoded text string and echo it to the console. Command/Steps: ENCODED=$(echo '#{message}' | xxd -ps -c 256)\nprintf $ENCODED | xxd -r -p\necho $ENCODED | xxd -r -p\necho $(echo $ENCODED) | xxd -r -p\necho $ENCODED > ..."
+from = "now-9m"
+rule_id = "ae425dc0-115d-48fe-903a-f3f6ad4d16b4"
+language = "kql"
+name = "Atomic Test: T1140 - Hex decoding with shell utilities"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1140/T1140.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1140", "005943f9-8dd5-4349-8b46-0313c0a9f973", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ENCODED=$(echo*\\\" AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1140"
+name = "Hex decoding with shell utilities"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+

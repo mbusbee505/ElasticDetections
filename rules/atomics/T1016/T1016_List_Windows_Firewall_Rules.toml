@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Windows Firewall Rules' (GUID: 038263cb-00f4-4b0a-98ae-0696c67e1752) of technique T1016 (System Network Configuration Discovery). Test Description: Enumerates Windows Firewall Rules using netsh.\n\nUpon successful execution, cmd.exe will spawn netsh.exe to list firewall rules. Output will be via stdout.. Command/Steps: netsh advfirewall firewall show rule name=all\n"
+from = "now-9m"
+rule_id = "b8de2eba-bfcb-4013-bd97-eec464b61478"
+language = "kql"
+name = "Atomic Test: T1016 - List Windows Firewall Rules"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016/T1016.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016", "038263cb-00f4-4b0a-98ae-0696c67e1752", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*advfirewall*\\\" AND process.command_line : \\\"*firewall*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016"
+name = "List Windows Firewall Rules"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+

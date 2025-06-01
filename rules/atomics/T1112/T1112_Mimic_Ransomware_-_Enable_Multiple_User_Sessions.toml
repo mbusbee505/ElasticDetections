@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mimic Ransomware - Enable Multiple User Sessions' (GUID: 39f1f378-ba8a-42b3-96dc-2a6540cfc1e3) of technique T1112 (Modify Registry). Test Description: This test emulates Mimic ransomware's ability to enable multiple user sessions by modifying the AllowMultipleTSSessions value within the Winlogon registry key. \nSee [Mimic Ransomware Overview] (https://www.trendmicro.com/en_us/research/23/a/new-mimic-ransomware-abuses-everything-apis-for-its-encryption-p.html). Command/Steps: reg add HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Winlogon /t REG_DWORD /v AllowMultipleTSSessions /d 1 /f\n"
+from = "now-9m"
+rule_id = "f658a067-d257-4159-8780-48a4093bc4ed"
+language = "kql"
+name = "Atomic Test: T1112 - Mimic Ransomware - Enable Multiple User Sessions"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "39f1f378-ba8a-42b3-96dc-2a6540cfc1e3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Winlogon*\\\" AND process.command_line : \\\"*REG_DWORD*\\\" AND process.command_line : \\\"*AllowMultipleTSSessions*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Mimic Ransomware - Enable Multiple User Sessions"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

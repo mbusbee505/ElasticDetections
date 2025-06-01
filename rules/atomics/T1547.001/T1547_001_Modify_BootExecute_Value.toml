@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify BootExecute Value' (GUID: befc2b40-d487-4a5a-8813-c11085fb5672) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: This test modifies the BootExecute registry value to \\\"autocheck autoche *\\\", which can be used to simulate an adversary's attempt to tamper with the system's boot process. \nReference - https://www.welivesecurity.com/wp-content/uploads/2018/09/ESET-LoJax.pdf\nNOTE that by not saving the correct value, you may inhibit your system from booting properly. Only run on a test system. There is a reg export before running the Atomic.. Command/Steps: if (!(Test-Path \\\"$PathToAtomicsFolder\\\\T1547.001\\\\src\\\\SessionManagerBackup.reg\\\")) { reg.exe export \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manage..."
+from = "now-9m"
+rule_id = "366e6841-7019-49b7-872b-319cd54bdc27"
+language = "kql"
+name = "Atomic Test: T1547.001 - Modify BootExecute Value"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "befc2b40-d487-4a5a-8813-c11085fb5672", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(!(Test-Path*\\\" AND powershell.script_block_text : \\\"*reg.exe*\\\" AND powershell.script_block_text : \\\"*export*\\\" OR (process.command_line : \\\"*(!(Test-Path*\\\" AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*export*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Modify BootExecute Value"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

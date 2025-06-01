@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Change Startup Folder - HKLM Modify User Shell Folders Common Startup Value' (GUID: acfef903-7662-447e-a391-9c91c2f00f7b) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: This test will modify the HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\User Shell Folders -V \\\"Common Startup\\\" \nvalue to point to a new startup folder where a payload could be stored to launch at boot.  *successful execution requires system restart. Command/Steps: New-Item -ItemType Directory -path \\\"#{new_startup_folder}\\\"\nCopy-Item -path \\\"#{payload}\\\" -destination \\\"#{new_startup_folder}\\\"\nSet-ItemProperty -Path  \\\"..."
+from = "now-9m"
+rule_id = "fd1cfea1-c21f-46d3-9d68-ef1aae421222"
+language = "kql"
+name = "Atomic Test: T1547.001 - Change Startup Folder - HKLM Modify User Shell Folders Common Startup Value"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "acfef903-7662-447e-a391-9c91c2f00f7b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-ItemType*\\\" AND powershell.script_block_text : \\\"*Directory*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-ItemType*\\\" AND process.command_line : \\\"*Directory*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Change Startup Folder - HKLM Modify User Shell Folders Common Startup Value"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

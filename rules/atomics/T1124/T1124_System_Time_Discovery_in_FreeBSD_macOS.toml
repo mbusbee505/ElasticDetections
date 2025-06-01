@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Time Discovery in FreeBSD/macOS' (GUID: f449c933-0891-407f-821e-7916a21a1a6f) of technique T1124 (System Time Discovery). Test Description: Identify system time. Upon execution, the local computer system time and timezone will be displayed.. Command/Steps: date\n"
+from = "now-9m"
+rule_id = "81ea1cd1-82d0-4efb-9e9e-71d111fd25d7"
+language = "kql"
+name = "Atomic Test: T1124 - System Time Discovery in FreeBSD/macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1124/T1124.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1124", "f449c933-0891-407f-821e-7916a21a1a6f", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*date*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1124"
+name = "System Time Discovery in FreeBSD/macOS"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+

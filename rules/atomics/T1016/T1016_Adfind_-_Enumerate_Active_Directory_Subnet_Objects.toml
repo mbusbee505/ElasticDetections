@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Adfind - Enumerate Active Directory Subnet Objects' (GUID: 9bb45dd7-c466-4f93-83a1-be30e56033ee) of technique T1016 (System Network Configuration Discovery). Test Description: Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Subnet Objects\nreference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html. Command/Steps: \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\AdFind.exe\\\" -f (objectcategory=subnet) #{optional_args}\n"
+from = "now-9m"
+rule_id = "12b5d834-840a-4aa2-b835-53e8c5bdcd8a"
+language = "kql"
+name = "Atomic Test: T1016 - Adfind - Enumerate Active Directory Subnet Objects"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016/T1016.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016", "9bb45dd7-c466-4f93-83a1-be30e56033ee", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*(objectcategory=subnet)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016"
+name = "Adfind - Enumerate Active Directory Subnet Objects"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+

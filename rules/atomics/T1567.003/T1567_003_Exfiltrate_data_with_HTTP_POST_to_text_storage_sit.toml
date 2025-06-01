@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows)' (GUID: c2e8ab6e-431e-460a-a2aa-3bc6a32022e3) of technique T1567.003 (Exfiltration Over Web Service: Exfiltration to Text Storage Sites). Test Description: This test uses HTTP POST to exfiltrate data to a remote text storage site. (pastebin)                             \nSee https://web.archive.org/web/20201107203304/https://www.echosec.net/blog/what-is-pastebin-and-why-do-hackers-love-it. Command/Steps: $apiKey = \\\"#{api_key}\\\"\n$content = \\\"secrets, api keys, passwords...\\\"\n$url = \\\"https://pastebin.com/api/api_post.php\\\"\n$postData = @{\n  api_dev_key   = $a..."
+from = "now-9m"
+rule_id = "7335049d-8527-4ce3-bbad-d558c44644e7"
+language = "kql"
+name = "Atomic Test: T1567.003 - Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1567.003/T1567.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1567.003", "c2e8ab6e-431e-460a-a2aa-3bc6a32022e3", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$apiKey*\\\" AND powershell.script_block_text : \\\"*6nxrBm7UIJuaEuPOkH5Z8I7SvCLN3OP0*\\\" AND powershell.script_block_text : \\\"*$content*\\\" OR (process.command_line : \\\"*$apiKey*\\\" AND process.command_line : \\\"*6nxrBm7UIJuaEuPOkH5Z8I7SvCLN3OP0*\\\" AND process.command_line : \\\"*$content*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1567.003"
+name = "Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows)"
+reference = "https://attack.mitre.org/techniques/T1567/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1567/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1567/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1567/003"
+
+

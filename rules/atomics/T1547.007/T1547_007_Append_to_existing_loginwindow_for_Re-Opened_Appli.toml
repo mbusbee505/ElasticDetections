@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Append to existing loginwindow for Re-Opened Applications' (GUID: 766b6c3c-9353-4033-8b7e-38b309fa3a93) of technique T1547.007 (Boot or Logon Autostart Execution: Re-opened Applications). Test Description: Appends an entry to launch Calculator hidden loginwindow.*.plist for next login.\nNote that the change may not result in the added Calculator program launching on next user login.\nIt may depend on which version of macOS you are running on.. Command/Steps: FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`\nif [ -z \\\"${FILE}\\\" ] ; then echo \\\"No loginwindow plist file fo..."
+from = "now-9m"
+rule_id = "2f28512a-330b-45d4-bcd1-ac9cb9cd17aa"
+language = "kql"
+name = "Atomic Test: T1547.007 - Append to existing loginwindow for Re-Opened Applications"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.007/T1547.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.007", "766b6c3c-9353-4033-8b7e-38b309fa3a93", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*FILE=`find*\\\" AND process.command_line : \\\"*-type*\\\" AND process.command_line : \\\"*head*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.007"
+name = "Append to existing loginwindow for Re-Opened Applications"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+

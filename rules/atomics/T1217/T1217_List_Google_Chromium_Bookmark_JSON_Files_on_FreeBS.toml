@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Google Chromium Bookmark JSON Files on FreeBSD' (GUID: 88ca025b-3040-44eb-9168-bd8af22b82fa) of technique T1217 (Browser Bookmark Discovery). Test Description: Searches for Google Chromium's Bookmark file (on FreeBSD) that contains bookmarks in JSON format and lists any found instances to a text file.. Command/Steps: find / -path \\\"*/.config/chromium/*/Bookmarks\\\" -exec echo {} >> #{output_file} \\\\;\ncat #{output_file} 2>/dev/null\n"
+from = "now-9m"
+rule_id = "e0271713-e4f3-46cd-a6ec-8ba7d29ca191"
+language = "kql"
+name = "Atomic Test: T1217 - List Google Chromium Bookmark JSON Files on FreeBSD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1217/T1217.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1217", "88ca025b-3040-44eb-9168-bd8af22b82fa", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*-path*\\\" AND process.command_line : \\\"*-exec*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1217"
+name = "List Google Chromium Bookmark JSON Files on FreeBSD"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+

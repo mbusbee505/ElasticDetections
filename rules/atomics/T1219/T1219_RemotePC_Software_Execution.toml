@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'RemotePC Software Execution' (GUID: fbff3f1f-b0bf-448e-840f-7e1687affdce) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading RemotePC Software for use as a C2 channel. \nUpon successful execution, RemotePC will be executed.. Command/Steps: Start-Process \\\"#{RemotePC_Path}\\\"\n"
+from = "now-9m"
+rule_id = "be5cf86e-d63d-48ad-8882-35cef3aa6859"
+language = "kql"
+name = "Atomic Test: T1219 - RemotePC Software Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "fbff3f1f-b0bf-448e-840f-7e1687affdce", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" OR (process.command_line : \\\"*Start-Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "RemotePC Software Execution"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

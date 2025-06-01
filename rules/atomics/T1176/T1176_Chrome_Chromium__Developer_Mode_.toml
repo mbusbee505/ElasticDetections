@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Chrome/Chromium (Developer Mode)' (GUID: 3ecd790d-2617-4abf-9a8c-4e8d47da9ee1) of technique T1176 (Browser Extensions). Test Description: Turn on Chrome/Chromium developer mode and Load Extension found in the src directory. Command/Steps: 1. Navigate to [chrome://extensions](chrome://extensions) and\ntick 'Developer Mode'.\n\n2. Click 'Load unpacked extension...' and navigate to\n[Browser_E..."
+from = "now-9m"
+rule_id = "a4a83ef7-f974-48dd-ac1d-66bca9e918c8"
+language = "kql"
+name = "Atomic Test: T1176 - Chrome/Chromium (Developer Mode)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1176/T1176.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1176", "3ecd790d-2617-4abf-9a8c-4e8d47da9ee1", "linux", "windows", "macos",]
+type = "query"
+query = "process.command_line : \\\"*Navigate*\\\" AND process.command_line : \\\"*[chrome://extensions](chrome://extensions)*\\\" AND process.command_line : \\\"*tick*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1176"
+name = "Chrome/Chromium (Developer Mode)"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+

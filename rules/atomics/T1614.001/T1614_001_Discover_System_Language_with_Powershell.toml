@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language with Powershell' (GUID: 1f23bfe8-36d4-49ce-903a-19a1e8c6631b) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: This PowerShell script collects key system settings, such as the UI language, user language preferences, system locale, current culture, UI culture, and time zone, into a hash table. \n\nIt then outputs these settings in a readable key-value format directly to the terminal. The script is simple and efficient for quickly displaying system configuration details.. Command/Steps: $info = @{\n  UILanguage     = Get-WinUILanguageOverride\n  UserLanguages  = (Get-WinUserLanguageList).LanguageTag -join ', '\n  SystemLocale   = Get-Win..."
+from = "now-9m"
+rule_id = "ba46c399-e0bd-4e03-af9c-d8e23d01031d"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language with Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "1f23bfe8-36d4-49ce-903a-19a1e8c6631b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$info*\\\" AND powershell.script_block_text : \\\"*UILanguage*\\\" AND powershell.script_block_text : \\\"*Get-WinUILanguageOverride*\\\" OR (process.command_line : \\\"*$info*\\\" AND process.command_line : \\\"*UILanguage*\\\" AND process.command_line : \\\"*Get-WinUILanguageOverride*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language with Powershell"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

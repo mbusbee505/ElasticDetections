@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install IIS Module using AppCmd.exe' (GUID: 53adbdfa-8200-490c-871c-d3b1ab3324b2) of technique T1505.004 (IIS Components). Test Description: The following Atomic will utilize AppCmd.exe to install a new IIS Module. IIS must be installed.\nThis atomic utilizes a DLL on disk, but to test further suspiciousness, compile and load [IIS-Raid](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/).\nA successful execution will install a module into IIS using AppCmd.exe.\n[Managing and installing Modules Reference](https://learn.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview#to-install-a-module-using-appcmdexe)\n[IIS Modules](https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/). Command/Steps: %windir%\\\\system32\\\\inetsrv\\\\appcmd.exe install module /name:#{module_name} /image:#{dll_path}\n"
+from = "now-9m"
+rule_id = "643e1e97-76f2-45ef-9a34-bc7f74c1b53b"
+language = "kql"
+name = "Atomic Test: T1505.004 - Install IIS Module using AppCmd.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1505.004/T1505.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1505.004", "53adbdfa-8200-490c-871c-d3b1ab3324b2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%windir%\\\\system32\\\\inetsrv\\\\appcmd.exe*\\\" AND process.command_line : \\\"*install*\\\" AND process.command_line : \\\"*module*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1505.004"
+name = "Install IIS Module using AppCmd.exe"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+

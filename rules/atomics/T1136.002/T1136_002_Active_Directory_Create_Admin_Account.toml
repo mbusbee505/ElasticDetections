@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Active Directory Create Admin Account' (GUID: 562aa072-524e-459a-ba2b-91f1afccf5ab) of technique T1136.002 (Create Account: Domain Account). Test Description: Use Admin Credentials to Create A Domain Admin Account. Command/Steps: echo \\\"dn: CN=Admin User,CN=Users,DC=#{domain},DC=#{top_level_domain}\\\\nchangetype: add\\\\nobjectClass: top\\\\nobjectClass: person\\\\nobjectClass: organizatio..."
+from = "now-9m"
+rule_id = "36e75e39-fb10-4466-8db7-e029be15d8e7"
+language = "kql"
+name = "Atomic Test: T1136.002 - Active Directory Create Admin Account"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.002/T1136.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.002", "562aa072-524e-459a-ba2b-91f1afccf5ab", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*CN=Admin*\\\" AND process.command_line : \\\"*User,CN=Users,DC=example,DC=test\\\\nchangetype:*\\\" AND process.command_line : \\\"*add\\\\nobjectClass:*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.002"
+name = "Active Directory Create Admin Account"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+

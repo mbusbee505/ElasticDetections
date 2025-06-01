@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add Port Monitor persistence in Registry' (GUID: d34ef297-f178-4462-871e-9ce618d44e50) of technique T1547.010 (Boot or Logon Autostart Execution: Port Monitors). Test Description: Add key-value pair to a Windows Port Monitor registry. On the subsequent reboot DLL will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege.. Command/Steps: reg add \\\"hklm\\\\system\\\\currentcontrolset\\\\control\\\\print\\\\monitors\\\\AtomicRedTeam\\\" /v \\\"Driver\\\" /d \\\"#{monitor_dll}\\\" /t REG_SZ /f\n"
+from = "now-9m"
+rule_id = "50b53276-57b8-4b31-8399-27323437e1f4"
+language = "kql"
+name = "Atomic Test: T1547.010 - Add Port Monitor persistence in Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.010/T1547.010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.010", "d34ef297-f178-4462-871e-9ce618d44e50", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*hklm\\\\system\\\\currentcontrolset\\\\control\\\\print\\\\monitors\\\\AtomicRedTeam*\\\" AND process.command_line : \\\"*Driver*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.010"
+name = "Add Port Monitor persistence in Registry"
+reference = "https://attack.mitre.org/techniques/T1547/010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/010"
+
+

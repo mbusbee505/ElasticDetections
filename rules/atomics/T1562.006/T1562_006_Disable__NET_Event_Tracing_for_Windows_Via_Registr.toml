@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable .NET Event Tracing for Windows Via Registry (powershell)' (GUID: 19c07a45-452d-4620-90ed-4c34fffbe758) of technique T1562.006 (Impair Defenses: Indicator Blocking). Test Description: Disables ETW for the .NET Framework using PowerShell to update the Windows registry. Command/Steps: New-ItemProperty -Path HKLM:\\\\Software\\\\Microsoft\\\\.NETFramework -Name ETWEnabled -Value 0 -PropertyType \\\"DWord\\\" -Force"
+from = "now-9m"
+rule_id = "6a6d0b2a-640e-41c3-b133-3c6fc547e31c"
+language = "kql"
+name = "Atomic Test: T1562.006 - Disable .NET Event Tracing for Windows Via Registry (powershell)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.006/T1562.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.006", "19c07a45-452d-4620-90ed-4c34fffbe758", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\.NETFramework*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\.NETFramework*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.006"
+name = "Disable .NET Event Tracing for Windows Via Registry (powershell)"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+

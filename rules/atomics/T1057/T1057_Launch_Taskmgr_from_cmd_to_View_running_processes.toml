@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Launch Taskmgr from cmd to View running processes' (GUID: 4fd35378-39aa-481e-b7c4-e3bf49375c67) of technique T1057 (Process Discovery). Test Description: An adverary may launch taskmgr.exe with the /7 switch via command prompt to view processes running on the system.\n[Reference](https://github.com/trellix-enterprise/ac3-threat-sightings/blob/main/sightings/Sightings_Conti_Ransomware.yml). Command/Steps: taskmgr.exe /7\n"
+from = "now-9m"
+rule_id = "f33794f5-b8a3-4a96-9860-900fb2f72aa1"
+language = "kql"
+name = "Atomic Test: T1057 - Launch Taskmgr from cmd to View running processes"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "4fd35378-39aa-481e-b7c4-e3bf49375c67", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*taskmgr.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Launch Taskmgr from cmd to View running processes"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

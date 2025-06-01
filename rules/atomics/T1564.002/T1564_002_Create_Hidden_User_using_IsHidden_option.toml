@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Hidden User using IsHidden option' (GUID: de87ed7b-52c3-43fd-9554-730f695e7f31) of technique T1564.002 (Hide Artifacts: Hidden Users). Test Description: Add a hidden user on macOS using IsHidden optoin. Command/Steps: sudo dscl . -create /Users/#{user_name} IsHidden 1\n"
+from = "now-9m"
+rule_id = "3dd378df-117f-4efb-a797-635d45b718bb"
+language = "kql"
+name = "Atomic Test: T1564.002 - Create Hidden User using IsHidden option"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.002/T1564.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.002", "de87ed7b-52c3-43fd-9554-730f695e7f31", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*dscl*\\\" AND process.command_line : \\\"*-create*\\\" AND process.command_line : \\\"*/Users/APT*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.002"
+name = "Create Hidden User using IsHidden option"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+

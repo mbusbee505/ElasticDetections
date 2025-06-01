@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Deobfuscate/Decode Files Or Information' (GUID: dc6fe391-69e6-4506-bd06-ea5eeb4082f8) of technique T1140 (Deobfuscate/Decode Files or Information). Test Description: Encode/Decode executable\nUpon execution a file named T1140_calc_decoded.exe will be placed in the temp folder. Command/Steps: certutil -encode #{executable} %temp%\\\\T1140_calc.txt\ncertutil -decode %temp%\\\\T1140_calc.txt %temp%\\\\T1140_calc_decoded.exe\n"
+from = "now-9m"
+rule_id = "e315155d-e55f-4ef1-885d-52f25cd86030"
+language = "kql"
+name = "Atomic Test: T1140 - Deobfuscate/Decode Files Or Information"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1140/T1140.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1140", "dc6fe391-69e6-4506-bd06-ea5eeb4082f8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*certutil*\\\" AND process.command_line : \\\"*-encode*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1140"
+name = "Deobfuscate/Decode Files Or Information"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+

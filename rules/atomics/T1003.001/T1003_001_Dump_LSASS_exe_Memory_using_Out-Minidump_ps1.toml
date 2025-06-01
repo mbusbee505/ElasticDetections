@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe Memory using Out-Minidump.ps1' (GUID: 6502c8f0-b775-4dbd-9193-1298f56b6781) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure\npowershell implementation that leverages the MiniDumpWriteDump Win32 API call.\nUpon successful execution, you should see the following file created $env:TEMP\\\\lsass_*.dmp.\n\nAuthor of Out-Minidump: Matthew Graeber (@mattifestation). Command/Steps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nNew-Item -Type Directory \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\\\\" -E..."
+from = "now-9m"
+rule_id = "1c63beea-42f2-4e92-a1d0-db1feccd1f82"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe Memory using Out-Minidump.ps1"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "6502c8f0-b775-4dbd-9193-1298f56b6781", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND powershell.script_block_text : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND powershell.script_block_text : \\\"*New-Item*\\\" OR (process.command_line : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND process.command_line : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND process.command_line : \\\"*New-Item*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe Memory using Out-Minidump.ps1"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

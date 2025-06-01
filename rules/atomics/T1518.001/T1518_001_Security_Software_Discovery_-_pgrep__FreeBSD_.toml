@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Security Software Discovery - pgrep (FreeBSD)' (GUID: fa96c21c-5fd6-4428-aa28-51a2fbecdbdc) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: Methods to identify Security Software on an endpoint\nwhen sucessfully executed, command shell is going to display AV/Security software it is running.. Command/Steps: pgrep -l 'bareos-fd|icinga2|cbagentd|wazuh-agent|packetbeat|filebeat|osqueryd'\n"
+from = "now-9m"
+rule_id = "c84862ed-8541-45ee-ac28-8bea8c7eca85"
+language = "kql"
+name = "Atomic Test: T1518.001 - Security Software Discovery - pgrep (FreeBSD)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "fa96c21c-5fd6-4428-aa28-51a2fbecdbdc", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*pgrep*\\\" AND process.command_line : \\\"*bareos-fd|icinga2|cbagentd|wazuh-agent|packetbeat|filebeat|osqueryd*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Security Software Discovery - pgrep (FreeBSD)"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

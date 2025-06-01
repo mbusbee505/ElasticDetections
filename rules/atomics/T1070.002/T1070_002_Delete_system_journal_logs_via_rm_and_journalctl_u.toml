@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete system journal logs via rm and journalctl utilities' (GUID: ca50dd85-81ff-48ca-92e1-61f119cb1dcf) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: The first sub-test deletes the journal files using rm utility in the \\\"/var/log/journal/\\\" directory and the second sub-test clears the journal by modifiying time period of logs that should be retained to zero.. Command/Steps: sudo rm #{journal_folder}/* #physically deletes the journal files, and not just their content\nsudo journalctl --vacuum-time=0 #clears the journal whil..."
+from = "now-9m"
+rule_id = "6f57c2a5-2167-475b-9506-b05e14382abe"
+language = "kql"
+name = "Atomic Test: T1070.002 - Delete system journal logs via rm and journalctl utilities"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "ca50dd85-81ff-48ca-92e1-61f119cb1dcf", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/var/log/journal/*\\\" AND process.command_line : \\\"*#physically*\\\" AND process.command_line : \\\"*deletes*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Delete system journal logs via rm and journalctl utilities"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

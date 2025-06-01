@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Nix File and Directory Discovery 2' (GUID: 13c5e1ae-605b-46c4-a79f-db28c77ff24e) of technique T1083 (File and Directory Discovery). Test Description: Find or discover files on the file system. Command/Steps: cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > #{output_file}\nif [ -f /etc/mtab ]; then cat /etc/mtab >> #{output_file}; fi;\nfind . ..."
+from = "now-9m"
+rule_id = "af859d2c-8c70-4142-9a18-e56e4368276f"
+language = "kql"
+name = "Atomic Test: T1083 - Nix File and Directory Discovery 2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1083/T1083.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1083", "13c5e1ae-605b-46c4-a79f-db28c77ff24e", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$HOME*\\\" AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*-print*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1083"
+name = "Nix File and Directory Discovery 2"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+

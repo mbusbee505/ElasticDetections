@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify VSS Service Permissions' (GUID: a4420f93-5386-4290-b780-f4f66abc7070) of technique T1490 (Inhibit System Recovery). Test Description: This atomic test alters the security settings of the Volume Shadow Copy Service (VSS) by modifying its permissions, potentially impacting system recovery operations. The specific permissions set by the command are as follows:\n- Deny Generic All (GA) permissions to Network Users (NU)\n- Deny GA permissions to Everyone (WD)\n- Deny GA permissions to Anonymous (AN)\n- Allow Full Access (FA) and Generic All (GA) permissions to Everyone (WD) in System ACL (SACL)\n- Allow Object Inherit and Inherit Only (OIIO) Full Access (FA) and GA permissions to Everyone (WD) in SACL\nThese permissions can significantly restrict VSS functionalities, including backup and restore operations. As such, it is essential to run this test only in a controlled environment with administrative privileges.\nA cleanup command is provided to reset VSS permissions to a common default configuration, which should be verified against your specific system's configuration. It's crucial to use this cleanup command after testing to ensure the system's backup and recovery capabilities remain functional. Running this test on a production system or critical environment is not recommended without proper precautions and a robust recovery plan.. Command/Steps: sc sdset VSS D:(D;;GA;;;NU)(D;;GA;;;WD)(D;;GA;;;AN)S:(AU;FA;GA;;;WD)(AU;OIIOFA;GA;;;WD)\n"
+from = "now-9m"
+rule_id = "8196898c-a782-4686-8453-56e082c564c8"
+language = "kql"
+name = "Atomic Test: T1490 - Modify VSS Service Permissions"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "a4420f93-5386-4290-b780-f4f66abc7070", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*sdset*\\\" AND process.command_line : \\\"*D:(D;;GA;;;NU)(D;;GA;;;WD)(D;;GA;;;AN)S:(AU;FA;GA;;;WD)(AU;OIIOFA;GA;;;WD)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Modify VSS Service Permissions"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

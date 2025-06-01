@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Shortcut Modification' (GUID: ce4fc678-364f-4282-af16-2fb4c78005ce) of technique T1547.009 (Boot or Logon Autostart Execution: Shortcut Modification). Test Description: This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;\ngci -path \\\"C:\\\\Users\\\" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern \\\"exe\\\" | FL.\nUpon execution, calc.exe will be launched.. Command/Steps: echo [InternetShortcut] > #{shortcut_file_path}\necho URL=C:\\\\windows\\\\system32\\\\calc.exe >> #{shortcut_file_path}\n#{shortcut_file_path}\n"
+from = "now-9m"
+rule_id = "ce2c6702-611c-4e27-94fe-1b604a9b9ddd"
+language = "kql"
+name = "Atomic Test: T1547.009 - Shortcut Modification"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.009/T1547.009.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.009", "ce4fc678-364f-4282-af16-2fb4c78005ce", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*[InternetShortcut]*\\\" AND process.command_line : \\\"*URL=C:\\\\windows\\\\system32\\\\calc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.009"
+name = "Shortcut Modification"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+

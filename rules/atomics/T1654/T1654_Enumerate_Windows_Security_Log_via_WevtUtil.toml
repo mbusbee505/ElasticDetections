@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Windows Security Log via WevtUtil' (GUID: fef0ace1-3550-4bf1-a075-9fea55a778dd) of technique T1654 (Log Enumeration). Test Description: WevtUtil is a command line tool that can be utilised by adversaries to gather intelligence on a targeted Windows system's logging infrastructure. \n\nBy executing this command, malicious actors can enumerate all available event logs, including both default logs such as Application, Security, and System\nas well as any custom logs created by administrators. \n\nThis information provides valuable insight into the system's logging mechanisms, potentially allowing attackers to identify gaps or weaknesses in the logging configuration. Command/Steps: wevtutil enum-logs"
+from = "now-9m"
+rule_id = "2f6cbc75-41ac-4418-8532-15b36fb6da2f"
+language = "kql"
+name = "Atomic Test: T1654 - Enumerate Windows Security Log via WevtUtil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1654/T1654.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1654", "fef0ace1-3550-4bf1-a075-9fea55a778dd", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wevtutil*\\\" AND process.command_line : \\\"*enum-logs*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1654"
+name = "Enumerate Windows Security Log via WevtUtil"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+

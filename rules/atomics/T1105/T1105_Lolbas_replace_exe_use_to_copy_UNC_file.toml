@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Lolbas replace.exe use to copy UNC file' (GUID: ed0335ac-0354-400c-8148-f6151d20035a) of technique T1105 (Ingress Tool Transfer). Test Description: Copy UNC file to destination\nReference: https://lolbas-project.github.io/lolbas/Binaries/Replace/. Command/Steps: del %TEMP%\\\\redcanary.cab >nul 2>&1\n#{Path_replace} #{replace_cab} %TEMP% /A\n"
+from = "now-9m"
+rule_id = "5135bba8-203a-4624-bde4-928146763b4a"
+language = "kql"
+name = "Atomic Test: T1105 - Lolbas replace.exe use to copy UNC file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "ed0335ac-0354-400c-8148-f6151d20035a", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%TEMP%\\\\redcanary.cab*\\\" AND process.command_line : \\\"*>nul*\\\" AND process.command_line : \\\"*2>&1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Lolbas replace.exe use to copy UNC file"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rubeus kerberoast' (GUID: 14625569-6def-4497-99ac-8e7817105b55) of technique T1558.003 (Steal or Forge Kerberos Tickets: Kerberoasting). Test Description: Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast\nThis build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus. Command/Steps: klist purge\ncmd.exe /c \\\"#{local_folder}\\\\#{local_executable}\\\" kerberoast #{flags} /outfile:\\\"#{local_folder}\\\\#{out_file}\\\"\n"
+from = "now-9m"
+rule_id = "94be476e-f0e0-4b58-a8aa-821bddaf7d59"
+language = "kql"
+name = "Atomic Test: T1558.003 - Rubeus kerberoast"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.003/T1558.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.003", "14625569-6def-4497-99ac-8e7817105b55", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*klist*\\\" AND powershell.script_block_text : \\\"*purge*\\\" AND powershell.script_block_text : \\\"*cmd.exe*\\\" OR (process.command_line : \\\"*klist*\\\" AND process.command_line : \\\"*purge*\\\" AND process.command_line : \\\"*cmd.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.003"
+name = "Rubeus kerberoast"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+

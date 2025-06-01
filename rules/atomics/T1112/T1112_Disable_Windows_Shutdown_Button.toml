@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows Shutdown Button' (GUID: 6e0d1131-2d7e-4905-8ca5-d6172f05d03d) of technique T1112 (Modify Registry). Test Description: Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows shutdown button.\nSee how ransomware abuses this technique- https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/ransom.msil.screenlocker.a/. Command/Steps: reg add \\\"HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\" /v shutdownwithoutlogon /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "b43b346e-dfee-41fd-9b34-5c166be3271c"
+language = "kql"
+name = "Atomic Test: T1112 - Disable Windows Shutdown Button"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "6e0d1131-2d7e-4905-8ca5-d6172f05d03d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\" AND process.command_line : \\\"*shutdownwithoutlogon*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Disable Windows Shutdown Button"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

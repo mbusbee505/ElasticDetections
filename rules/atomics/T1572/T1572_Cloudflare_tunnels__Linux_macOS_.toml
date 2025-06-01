@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Cloudflare tunnels (Linux/macOS)' (GUID: 228c336a-2f79-4043-8aef-bfa453a611d5) of technique T1572 (Protocol Tunneling). Test Description: Cloudflared can be used for exposing local development environment/services/files over the internet.\nThis atomic will generate a dev tunnel binding it to the local service running on the provided port.\nReference:\n- [Cloudflared Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)\n- [LOT Tunnels](https://lottunnels.github.io/lottunnels/Binaries/cloudflared/). Command/Steps: nohup #{binary_path} tunnel --url #{url_to_tunnel} #{additional_args} >/dev/null 2>&1 &\n"
+from = "now-9m"
+rule_id = "589b4659-46a5-4e8b-8e86-f2dc57e01d30"
+language = "kql"
+name = "Atomic Test: T1572 - Cloudflare tunnels (Linux/macOS)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1572/T1572.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1572", "228c336a-2f79-4043-8aef-bfa453a611d5", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*nohup*\\\" AND process.command_line : \\\"*tunnel*\\\" AND process.command_line : \\\"*--url*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1572"
+name = "Cloudflare tunnels (Linux/macOS)"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+

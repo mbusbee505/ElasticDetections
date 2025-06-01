@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Extract all accounts in use as SPN using setspn' (GUID: e6f4affd-d826-4871-9a62-6c9004b8fe06) of technique T1558.003 (Steal or Forge Kerberos Tickets: Kerberoasting). Test Description: The following test will utilize setspn to extract the Service Principal Names. This behavior is typically used during a kerberos or silver ticket attack. \nA successful execution will output all the SPNs for the related domain.. Command/Steps: setspn -T #{domain_name} -Q */*\n"
+from = "now-9m"
+rule_id = "6ef283e2-cc61-4be4-85b5-9dd7993d6a6e"
+language = "kql"
+name = "Atomic Test: T1558.003 - Extract all accounts in use as SPN using setspn"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.003/T1558.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.003", "e6f4affd-d826-4871-9a62-6c9004b8fe06", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*setspn*\\\" AND process.command_line : \\\"*%USERDNSDOMAIN%*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.003"
+name = "Extract all accounts in use as SPN using setspn"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+

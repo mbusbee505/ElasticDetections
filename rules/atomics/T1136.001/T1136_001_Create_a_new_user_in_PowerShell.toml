@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new user in PowerShell' (GUID: bc8be0ac-475c-4fbf-9b1d-9fffd77afbde) of technique T1136.001 (Create Account: Local Account). Test Description: Creates a new user in PowerShell. Upon execution, details about the new account will be displayed in the powershell session. To verify the\nnew account, run \\\"net user\\\" in powershell or CMD and observe that there is a new user named \\\"T1136.001_PowerShell\\\". Command/Steps: New-LocalUser -Name \\\"#{username}\\\" -NoPassword\n"
+from = "now-9m"
+rule_id = "a977f1e8-8717-4bbb-b53a-6af061a8fea1"
+language = "kql"
+name = "Atomic Test: T1136.001 - Create a new user in PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.001/T1136.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.001", "bc8be0ac-475c-4fbf-9b1d-9fffd77afbde", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-LocalUser*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*-NoPassword*\\\" OR (process.command_line : \\\"*New-LocalUser*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*-NoPassword*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.001"
+name = "Create a new user in PowerShell"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+

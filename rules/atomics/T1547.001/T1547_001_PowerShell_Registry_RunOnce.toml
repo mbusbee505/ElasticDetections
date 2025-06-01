@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Registry RunOnce' (GUID: eb44f842-0457-4ddc-9b92-c4caa144ac42) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: RunOnce Key Persistence via PowerShell\nUpon successful execution, a new entry will be added to the runonce item in the registry.. Command/Steps: $RunOnceKey = \\\"#{reg_key_path}\\\"\nset-itemproperty $RunOnceKey \\\"NextRun\\\" '#{thing_to_execute} \\\"IEX (New-Object Net.WebClient).DownloadString(`\\\"https://g..."
+from = "now-9m"
+rule_id = "07750178-e38d-4318-a0c1-3220784f3f4d"
+language = "kql"
+name = "Atomic Test: T1547.001 - PowerShell Registry RunOnce"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "eb44f842-0457-4ddc-9b92-c4caa144ac42", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$RunOnceKey*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce*\\\" AND powershell.script_block_text : \\\"*set-itemproperty*\\\" OR (process.command_line : \\\"*$RunOnceKey*\\\" AND process.command_line : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce*\\\" AND process.command_line : \\\"*set-itemproperty*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "PowerShell Registry RunOnce"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

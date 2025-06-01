@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'RDP Authentication Level Override' (GUID: 7e7b62e9-5f83-477d-8935-48600f38a3c6) of technique T1112 (Modify Registry). Test Description: A modification registry to override RDP Authentication Level. This technique was seen in DarkGate malware as part of its installation.. Command/Steps: reg add \\\"HKCU\\\\Software\\\\Microsoft\\\\Terminal Server Client\\\" /v AuthenticationLevelOverride /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "da113eae-a742-480b-8347-ad08e09b9c5b"
+language = "kql"
+name = "Atomic Test: T1112 - RDP Authentication Level Override"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "7e7b62e9-5f83-477d-8935-48600f38a3c6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\Software\\\\Microsoft\\\\Terminal*\\\" AND process.command_line : \\\"*Server*\\\" AND process.command_line : \\\"*Client*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "RDP Authentication Level Override"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

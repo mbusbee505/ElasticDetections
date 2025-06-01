@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy in loginwindow.plist for Re-Opened Applications' (GUID: 5fefd767-ef54-4ac6-84d3-751ab85e8aba) of technique T1547.007 (Boot or Logon Autostart Execution: Re-opened Applications). Test Description: Copy in new loginwindow.plist to launch Calculator.. Command/Steps: cp #{calc_plist_path} ~/Library/Preferences/ByHost/com.apple.loginwindow.plist\n"
+from = "now-9m"
+rule_id = "e633c25e-d109-4ca0-aa45-e810505c5de9"
+language = "kql"
+name = "Atomic Test: T1547.007 - Copy in loginwindow.plist for Re-Opened Applications"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.007/T1547.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.007", "5fefd767-ef54-4ac6-84d3-751ab85e8aba", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*~/Library/Preferences/ByHost/com.apple.loginwindow.plist*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.007"
+name = "Copy in loginwindow.plist for Re-Opened Applications"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+

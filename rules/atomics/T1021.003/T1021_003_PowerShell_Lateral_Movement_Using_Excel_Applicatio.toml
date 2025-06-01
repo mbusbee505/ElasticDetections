@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Lateral Movement Using Excel Application Object' (GUID: 505f24be-1c11-4694-b614-e01ae1cd2570) of technique T1021.003 (Remote Services: Distributed Component Object Model). Test Description: Powershell lateral movement using the Excel COM objects.\n\nReference:\n\nhttps://posts.specterops.io/lateral-movement-abuse-the-power-of-dcom-excel-application-3c016d0d9922\n\nUpon successful execution, cmd will spawn calc.exe on a remote computer.. Command/Steps: copy c:\\\\windows\\\\system32\\\\calc.exe 'C:\\\\users\\\\#{user}\\\\AppData\\\\local\\\\Microsoft\\\\WindowsApps\\\\foxprow.exe'\n$com = [System.Activator]::CreateInstance([type]:..."
+from = "now-9m"
+rule_id = "3b984fbc-0a34-4b46-95bd-919cc8b4bda7"
+language = "kql"
+name = "Atomic Test: T1021.003 - PowerShell Lateral Movement Using Excel Application Object"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.003/T1021.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.003", "505f24be-1c11-4694-b614-e01ae1cd2570", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*copy*\\\" AND powershell.script_block_text : \\\"*c:\\\\windows\\\\system32\\\\calc.exe*\\\" AND powershell.script_block_text : \\\"*C:\\\\users\\\\admin\\\\AppData\\\\local\\\\Microsoft\\\\WindowsApps\\\\foxprow.exe*\\\" OR (process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*c:\\\\windows\\\\system32\\\\calc.exe*\\\" AND process.command_line : \\\"*C:\\\\users\\\\admin\\\\AppData\\\\local\\\\Microsoft\\\\WindowsApps\\\\foxprow.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.003"
+name = "PowerShell Lateral Movement Using Excel Application Object"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+

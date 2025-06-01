@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'cacls - Grant permission to specified user or group recursively' (GUID: a8206bcc-f282-40a9-a389-05d9c0263485) of technique T1222.001 (File and Directory Permissions Modification: Windows File and Directory Permissions Modification). Test Description: Modifies the filesystem permissions of the specified folder and contents to allow the specified user or group Full Control. If \\\"Access is denied\\\"\nis displayed it may be because the file or folder doesn't exit. Run the prereq command to create it. Upon successfull execution, \\\"Successfully processed 3 files\\\"\nwill be displayed.. Command/Steps: icacls.exe #{file_or_folder} /grant #{user_or_group}:F\n"
+from = "now-9m"
+rule_id = "f6f1a008-4d41-4281-8e79-7238f80f039e"
+language = "kql"
+name = "Atomic Test: T1222.001 - cacls - Grant permission to specified user or group recursively"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.001/T1222.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.001", "a8206bcc-f282-40a9-a389-05d9c0263485", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*icacls.exe*\\\" AND process.command_line : \\\"*/grant*\\\" AND process.command_line : \\\"*Everyone:F*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.001"
+name = "cacls - Grant permission to specified user or group recursively"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows Notification Center' (GUID: c0d6d67f-1f63-42cc-95c0-5fd6b20082ad) of technique T1112 (Modify Registry). Test Description: Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows notification center.\nSee how remcos rat abuses this technique- https://tccontre.blogspot.com/2020/01/remcos-rat-evading-windows-defender-av.html. Command/Steps: reg add HKEY_CURRENT_USER\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\Explorer /v DisableNotificationCenter /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "db2eddc8-bece-4806-b023-abf7614e0dbc"
+language = "kql"
+name = "Atomic Test: T1112 - Disable Windows Notification Center"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "c0d6d67f-1f63-42cc-95c0-5fd6b20082ad", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\Explorer*\\\" AND process.command_line : \\\"*DisableNotificationCenter*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Disable Windows Notification Center"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

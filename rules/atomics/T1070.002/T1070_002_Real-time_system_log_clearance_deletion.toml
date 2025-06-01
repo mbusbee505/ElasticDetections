@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Real-time system log clearance/deletion' (GUID: 848e43b3-4c0a-4e4c-b4c9-d1e8cea9651c) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process. Command/Steps: sudo log -f /var/log/system.log | : > /var/log/system.log\n"
+from = "now-9m"
+rule_id = "f3aa7ddb-fa4e-4d4a-80c2-f417c5b1a4e8"
+language = "kql"
+name = "Atomic Test: T1070.002 - Real-time system log clearance/deletion"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "848e43b3-4c0a-4e4c-b4c9-d1e8cea9651c", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/var/log/system.log*\\\" AND process.command_line : \\\"*/var/log/system.log*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Real-time system log clearance/deletion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

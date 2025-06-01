@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AMSI Bypass - Create AMSIEnable Reg Key' (GUID: 728eca7b-0444-4f6f-ac36-437e3d751dc0) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Threat Actor could disable the AMSI function by adding a registry value name “AmsiEnable” to the registry key “HKCU\\\\Software\\\\Microsoft\\\\Windows Script\\\\Settings\\\\AmsiEnable” and set its value to 0.\nRef: https://mostafayahiax.medium.com/hunting-for-amsi-bypassing-methods-9886dda0bf9d. Command/Steps: New-Item -Path \\\"HKCU:\\\\Software\\\\Microsoft\\\\Windows Script\\\\Settings\\\" -Force | Out-Null\nNew-ItemProperty -Path \\\"HKCU:\\\\Software\\\\Microsoft\\\\Windows Script\\\\Se..."
+from = "now-9m"
+rule_id = "41d74d34-5399-4815-914d-c83c7434e2bd"
+language = "kql"
+name = "Atomic Test: T1562.001 - AMSI Bypass - Create AMSIEnable Reg Key"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "728eca7b-0444-4f6f-ac36-437e3d751dc0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Windows*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Windows*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "AMSI Bypass - Create AMSIEnable Reg Key"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

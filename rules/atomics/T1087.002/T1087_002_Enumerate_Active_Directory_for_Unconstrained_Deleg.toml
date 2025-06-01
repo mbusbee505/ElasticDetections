@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Active Directory for Unconstrained Delegation' (GUID: 46f8dbe9-22a5-4770-8513-66119c5be63b) of technique T1087.002 (Account Discovery: Domain Account). Test Description: Attackers may attempt to query for computer objects with the UserAccountControl property\n'TRUSTED_FOR_DELEGATION' (0x80000;524288) set\nMore Information - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-the-stars-align-unconstrained-delegation-leads-to-rce\nPrerequisite: AD RSAT PowerShell module is needed and it must run under a domain user. Command/Steps: Get-ADObject -LDAPFilter '(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})' -Server #{domain}\n"
+from = "now-9m"
+rule_id = "f98d919c-41bf-431a-8f8e-7500e507ebcb"
+language = "kql"
+name = "Atomic Test: T1087.002 - Enumerate Active Directory for Unconstrained Delegation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "46f8dbe9-22a5-4770-8513-66119c5be63b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ADObject*\\\" AND powershell.script_block_text : \\\"*-LDAPFilter*\\\" AND powershell.script_block_text : \\\"*(UserAccountControl:1.2.840.113556.1.4.803:=524288)*\\\" OR (process.command_line : \\\"*Get-ADObject*\\\" AND process.command_line : \\\"*-LDAPFilter*\\\" AND process.command_line : \\\"*(UserAccountControl:1.2.840.113556.1.4.803:=524288)*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Enumerate Active Directory for Unconstrained Delegation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

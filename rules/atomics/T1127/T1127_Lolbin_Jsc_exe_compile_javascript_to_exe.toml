@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Lolbin Jsc.exe compile javascript to exe' (GUID: 1ec1c269-d6bd-49e7-b71b-a461f7fa7bc8) of technique T1127 (Trusted Developer Utilities Proxy Execution). Test Description: Use jsc.exe to compile javascript code stored in scriptfile.js and output scriptfile.exe.\nhttps://lolbas-project.github.io/lolbas/Binaries/Jsc/\nhttps://www.phpied.com/make-your-javascript-a-windows-exe/. Command/Steps: copy \\\"#{filename}\\\" %TEMP%\\\\hello.js\n#{jscpath}\\\\#{jscname} %TEMP%\\\\hello.js\n"
+from = "now-9m"
+rule_id = "b47d120d-e2b9-4f1a-a195-be148f000d53"
+language = "kql"
+name = "Atomic Test: T1127 - Lolbin Jsc.exe compile javascript to exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1127/T1127.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1127", "1ec1c269-d6bd-49e7-b71b-a461f7fa7bc8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%TEMP%\\\\hello.js*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\jsc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1127"
+name = "Lolbin Jsc.exe compile javascript to exe"
+reference = "https://attack.mitre.org/techniques/T1127"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1127"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1127"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1127"
+
+

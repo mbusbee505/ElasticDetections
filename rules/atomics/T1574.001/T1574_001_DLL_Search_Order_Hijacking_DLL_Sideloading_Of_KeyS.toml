@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE' (GUID: c095ad8e-4469-4d33-be9d-6f6d1fb21585) of technique T1574.001 (Hijack Execution Flow: DLL). Test Description: Various threat actors and malware have been found side loading a masqueraded \\\"KeyScramblerIE.dll\\\" through \\\"KeyScrambler.exe\\\", which can load further executables embedded in modified KeyScramblerIE.dll file.. Command/Steps: Write-Host 1.Downloading KeyScrambler from official website to temp directory\nInvoke-WebRequest -Uri \\\"https://download.qfxsoftware.com/download/latest..."
+from = "now-9m"
+rule_id = "9c1022cf-7db6-4903-a253-b90e937349c3"
+language = "kql"
+name = "Atomic Test: T1574.001 - DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.001/T1574.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.001", "c095ad8e-4469-4d33-be9d-6f6d1fb21585", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Write-Host*\\\" AND powershell.script_block_text : \\\"*1.Downloading*\\\" AND powershell.script_block_text : \\\"*KeyScrambler*\\\" OR (process.command_line : \\\"*Write-Host*\\\" AND process.command_line : \\\"*1.Downloading*\\\" AND process.command_line : \\\"*KeyScrambler*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.001"
+name = "DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+

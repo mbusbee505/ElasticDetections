@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate domain computers within Active Directory using DirectorySearcher' (GUID: 962a6017-1c09-45a6-880b-adc9c57cb22e) of technique T1018 (Remote System Discovery). Test Description: This test is a Powershell script that enumerates Active Directory to determine computers that are joined to the domain. \nThis test is designed to mimic how SessionGopher can determine the additional systems within a domain, which has been used before by threat actors to aid in lateral movement. \nReference: [Head Fake: Tackling Disruptive Ransomware Attacks](https://www.mandiant.com/resources/head-fake-tackling-disruptive-ransomware-attacks). \nUpon successful execution, this test will output the names of the computers that reside on the domain to the console window.. Command/Steps: $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher(\\\"(ObjectCategory=Computer)\\\")\n$DirectorySearcher.PropertiesToLoad.Add(\\\"Name\\\"..."
+from = "now-9m"
+rule_id = "67697953-96b2-48eb-895e-5f1fc831a76a"
+language = "kql"
+name = "Atomic Test: T1018 - Enumerate domain computers within Active Directory using DirectorySearcher"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "962a6017-1c09-45a6-880b-adc9c57cb22e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$DirectorySearcher*\\\" AND powershell.script_block_text : \\\"*New-Object*\\\" AND powershell.script_block_text : \\\"*System.DirectoryServices.DirectorySearcher(\\\"(ObjectCategory=Computer)\\\")*\\\" OR (process.command_line : \\\"*$DirectorySearcher*\\\" AND process.command_line : \\\"*New-Object*\\\" AND process.command_line : \\\"*System.DirectoryServices.DirectorySearcher(\\\"(ObjectCategory=Computer)\\\")*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Enumerate domain computers within Active Directory using DirectorySearcher"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

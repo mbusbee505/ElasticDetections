@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete TeamViewer Log Files' (GUID: 69f50a5f-967c-4327-a5bb-e1a9a9983785) of technique T1070.004 (Indicator Removal on Host: File Deletion). Test Description: Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.\nThis test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer\nlog file format of TeamViewer_##.log. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.\n\nhttps://twitter.com/SBousseaden/status/1197524463304290305?s=20. Command/Steps: New-Item -Path #{teamviewer_log_file} -Force | Out-Null\nRemove-Item #{teamviewer_log_file} -Force -ErrorAction Ignore\n"
+from = "now-9m"
+rule_id = "1fc7c209-849c-4caf-9264-3919079d3e1a"
+language = "kql"
+name = "Atomic Test: T1070.004 - Delete TeamViewer Log Files"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.004/T1070.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.004", "69f50a5f-967c-4327-a5bb-e1a9a9983785", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*\\\\TeamViewer_54.log*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*\\\\TeamViewer_54.log*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.004"
+name = "Delete TeamViewer Log Files"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell Cmdlet Scheduled Task' (GUID: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Create an atomic scheduled task that leverages native powershell cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.. Command/Steps: $Action = New-ScheduledTaskAction -Execute \\\"calc.exe\\\"\n$Trigger = New-ScheduledTaskTrigger -AtLogon\n$User = New-ScheduledTaskPrincipal -GroupId \\\"BUILTI..."
+from = "now-9m"
+rule_id = "e9872c74-ce32-4b31-ae7e-c8cf6fd0d068"
+language = "kql"
+name = "Atomic Test: T1053.005 - Powershell Cmdlet Scheduled Task"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Action*\\\" AND powershell.script_block_text : \\\"*New-ScheduledTaskAction*\\\" AND powershell.script_block_text : \\\"*-Execute*\\\" OR (process.command_line : \\\"*$Action*\\\" AND process.command_line : \\\"*New-ScheduledTaskAction*\\\" AND process.command_line : \\\"*-Execute*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Powershell Cmdlet Scheduled Task"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

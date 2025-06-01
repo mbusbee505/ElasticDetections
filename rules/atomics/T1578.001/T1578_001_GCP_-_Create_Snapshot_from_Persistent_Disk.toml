@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'GCP - Create Snapshot from Persistent Disk' (GUID: e6fbc036-91e7-4ad3-b9cb-f7210f40dd5d) of technique T1578.001 (Modify Cloud Compute Infrastructure: Create Snapshot). Test Description: Creates a snapshot of a persistent disk in GCP using the gcloud CLI.\nEmulates adversary behavior to gain access to volume data or replicate environment state.. Command/Steps: gcloud compute snapshots create #{gcp_snapshot_name} --source-disk=#{gcp_disk_name} --zone=#{gcp_zone}\n"
+from = "now-9m"
+rule_id = "d30e1c2a-a615-49c6-ab2f-932f6175907c"
+language = "kql"
+name = "Atomic Test: T1578.001 - GCP - Create Snapshot from Persistent Disk"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1578.001/T1578.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1578.001", "e6fbc036-91e7-4ad3-b9cb-f7210f40dd5d", "iaas:gcp",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*gcloud*\\\" AND process.command_line : \\\"*compute*\\\" AND process.command_line : \\\"*snapshots*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1578.001"
+name = "GCP - Create Snapshot from Persistent Disk"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+

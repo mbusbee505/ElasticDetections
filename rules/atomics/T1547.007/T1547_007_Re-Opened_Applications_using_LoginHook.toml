@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Re-Opened Applications using LoginHook' (GUID: 5f5b71da-e03f-42e7-ac98-d63f9e0465cb) of technique T1547.007 (Boot or Logon Autostart Execution: Re-opened Applications). Test Description: Mac Defaults\n\n[Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html). Command/Steps: sudo defaults write com.apple.loginwindow LoginHook #{script}\n"
+from = "now-9m"
+rule_id = "cd8be21a-d7ba-485a-9b04-06584f366b14"
+language = "kql"
+name = "Atomic Test: T1547.007 - Re-Opened Applications using LoginHook"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.007/T1547.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.007", "5f5b71da-e03f-42e7-ac98-d63f9e0465cb", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*defaults*\\\" AND process.command_line : \\\"*write*\\\" AND process.command_line : \\\"*com.apple.loginwindow*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.007"
+name = "Re-Opened Applications using LoginHook"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/007"
+
+

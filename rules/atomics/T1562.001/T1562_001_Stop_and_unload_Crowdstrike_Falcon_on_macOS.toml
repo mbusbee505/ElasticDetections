@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Stop and unload Crowdstrike Falcon on macOS' (GUID: b3e7510c-2d4c-4249-a33f-591a2bc83eef) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Stop and unload Crowdstrike Falcon daemons falcond and userdaemon on macOS. Command/Steps: sudo launchctl unload #{falcond_plist}\nsudo launchctl unload #{userdaemon_plist}\n"
+from = "now-9m"
+rule_id = "0e48f357-ac47-408a-bff7-1a5a288b30a6"
+language = "kql"
+name = "Atomic Test: T1562.001 - Stop and unload Crowdstrike Falcon on macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "b3e7510c-2d4c-4249-a33f-591a2bc83eef", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*launchctl*\\\" AND process.command_line : \\\"*unload*\\\" AND process.command_line : \\\"*/Library/LaunchDaemons/com.crowdstrike.falcond.plist*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Stop and unload Crowdstrike Falcon on macOS"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

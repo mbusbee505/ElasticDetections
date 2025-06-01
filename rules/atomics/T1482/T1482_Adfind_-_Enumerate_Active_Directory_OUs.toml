@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Adfind - Enumerate Active Directory OUs' (GUID: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec) of technique T1482 (Domain Trust Discovery). Test Description: Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs\nreference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html. Command/Steps: \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\AdFind.exe\\\" -f (objectcategory=organizationalUnit) #{optional_args}\n"
+from = "now-9m"
+rule_id = "8ff71e33-92fa-4db3-9085-33436d2b8b63"
+language = "kql"
+name = "Atomic Test: T1482 - Adfind - Enumerate Active Directory OUs"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1482/T1482.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1482", "d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*(objectcategory=organizationalUnit)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1482"
+name = "Adfind - Enumerate Active Directory OUs"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+

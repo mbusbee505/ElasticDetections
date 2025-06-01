@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy and Modify Mailbox Data on macOS' (GUID: 8a0b1579-5a36-483a-9cde-0236983e1665) of technique T1070.008 (Email Collection: Mailbox Manipulation). Test Description: Copies and modifies mail data on macOS. Command/Steps: mkdir ~/Library/Mail/copy\ncp -R ~/Library/Mail/* ~/Library/Mail/copy\necho \\\"Manipulated data\\\" > ~/Library/Mail/copy/manipulated.txt\n"
+from = "now-9m"
+rule_id = "03b2d0b4-5576-4025-9818-ab973792cf04"
+language = "kql"
+name = "Atomic Test: T1070.008 - Copy and Modify Mailbox Data on macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.008/T1070.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.008", "8a0b1579-5a36-483a-9cde-0236983e1665", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*~/Library/Mail/copy*\\\" AND process.command_line : \\\"*~/Library/Mail/*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.008"
+name = "Copy and Modify Mailbox Data on macOS"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+

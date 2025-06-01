@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'RDP hijacking' (GUID: a37ac520-b911-458e-8aed-c5f1576d9f46) of technique T1563.002 (Remote Service Session Hijacking: RDP Hijacking). Test Description: [RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6) - how to hijack RDS and RemoteApp sessions transparently to move through an organization. Command/Steps: query user\nsc.exe create sesshijack binpath= \\\"cmd.exe /k tscon #{Session_ID} /dest:#{Destination_ID}\\\"\nnet start sesshijack\n"
+from = "now-9m"
+rule_id = "e1200cb4-d295-401e-aa03-05fd1418499a"
+language = "kql"
+name = "Atomic Test: T1563.002 - RDP hijacking"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1563.002/T1563.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1563.002", "a37ac520-b911-458e-8aed-c5f1576d9f46", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*sc.exe*\\\" AND process.command_line : \\\"*create*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1563.002"
+name = "RDP hijacking"
+reference = "https://attack.mitre.org/techniques/T1563/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1563/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1563/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1563/002"
+
+

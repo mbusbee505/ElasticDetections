@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Automated AD Recon (ADRecon)' (GUID: 95018438-454a-468c-a0fa-59c800149b59) of technique T1087.002 (Account Discovery: Domain Account). Test Description: ADRecon extracts and combines information about an AD environement into a report. Upon execution, an Excel file with all of the data will be generated and its\npath will be displayed.. Command/Steps: Invoke-Expression \\\"#{adrecon_path}\\\"\n"
+from = "now-9m"
+rule_id = "7d1fcf05-dde6-4b44-a71d-4558acf4d651"
+language = "kql"
+name = "Atomic Test: T1087.002 - Automated AD Recon (ADRecon)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "95018438-454a-468c-a0fa-59c800149b59", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-Expression*\\\" OR (process.command_line : \\\"*Invoke-Expression*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Automated AD Recon (ADRecon)"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

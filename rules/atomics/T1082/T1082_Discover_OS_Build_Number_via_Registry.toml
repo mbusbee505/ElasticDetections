@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover OS Build Number via Registry' (GUID: acfcd709-0013-4f1e-b9ee-bc1e7bafaaec) of technique T1082 (System Information Discovery). Test Description: Identify the Operating System Build Number via registry with the reg.exe command.\nUpon execution, the OS Build Number will be displayed.. Command/Steps: reg query \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\" /v CurrentBuildNumber\n"
+from = "now-9m"
+rule_id = "2150025e-7405-412b-8e91-1cb3032e13b8"
+language = "kql"
+name = "Atomic Test: T1082 - Discover OS Build Number via Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "acfcd709-0013-4f1e-b9ee-bc1e7bafaaec", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Discover OS Build Number via Registry"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

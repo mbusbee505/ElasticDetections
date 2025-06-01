@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Microsoft App Quick Assist Execution' (GUID: 1aea6d15-70f1-4b4e-8b02-397b5d5ffe75) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick a user into executing Microsoft Quick Assist Microsoft Store app and connect to the user's machine.. Command/Steps: Start-Process \\\"shell:AppsFolder\\\\MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe!App\\\""
+from = "now-9m"
+rule_id = "131201cc-7ca6-4c85-a1a6-d0e5a28a5181"
+language = "kql"
+name = "Atomic Test: T1219 - Microsoft App Quick Assist Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "1aea6d15-70f1-4b4e-8b02-397b5d5ffe75", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*shell:AppsFolder\\\\MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe!App*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*shell:AppsFolder\\\\MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe!App*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "Microsoft App Quick Assist Execution"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

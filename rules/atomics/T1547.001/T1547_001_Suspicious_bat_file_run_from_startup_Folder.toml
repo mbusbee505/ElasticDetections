@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Suspicious bat file run from startup Folder' (GUID: 5b6768e4-44d2-44f0-89da-a01d1430fd5e) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: bat files can be placed in and executed from the startup folder to maintain persistance\n\nUpon execution, cmd will be run and immediately closed. Additionally, the new files can be viewed in the \\\"$env:APPDATA\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\"\nfolder and will also run when the computer is restarted and the user logs in.. Command/Steps: Copy-Item \\\"$PathToAtomicsFolder\\\\T1547.001\\\\src\\\\batstartup.bat\\\" \\\"$env:APPDATA\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\batstartup.bat\\\"\nCopy-Item \\\"$..."
+from = "now-9m"
+rule_id = "ff85ebda-e5fd-4f87-9e97-28d9a89e33aa"
+language = "kql"
+name = "Atomic Test: T1547.001 - Suspicious bat file run from startup Folder"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "5b6768e4-44d2-44f0-89da-a01d1430fd5e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*$env:APPDATA\\\\Microsoft\\\\Windows\\\\Start*\\\" AND powershell.script_block_text : \\\"*Menu\\\\Programs\\\\Startup\\\\batstartup.bat*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*$env:APPDATA\\\\Microsoft\\\\Windows\\\\Start*\\\" AND process.command_line : \\\"*Menu\\\\Programs\\\\Startup\\\\batstartup.bat*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Suspicious bat file run from startup Folder"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

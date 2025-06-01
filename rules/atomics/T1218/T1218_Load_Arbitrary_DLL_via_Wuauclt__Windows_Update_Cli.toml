@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Load Arbitrary DLL via Wuauclt (Windows Update Client)' (GUID: 49fbd548-49e9-4bb7-94a6-3769613912b8) of technique T1218 (Signed Binary Proxy Execution). Test Description: This test uses Wuauclt to load an arbitrary DLL. Upon execution with the default inputs, calculator.exe will be launched. \nSee https://dtm.uk/wuauclt/. Command/Steps: wuauclt.exe /UpdateDeploymentProvider \\\"#{arbitrary_dll}\\\" /RunHandlerComServer\n"
+from = "now-9m"
+rule_id = "3d7450a6-a221-485e-831c-520683dccd75"
+language = "kql"
+name = "Atomic Test: T1218 - Load Arbitrary DLL via Wuauclt (Windows Update Client)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "49fbd548-49e9-4bb7-94a6-3769613912b8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wuauclt.exe*\\\" AND process.command_line : \\\"*/UpdateDeploymentProvider*\\\" AND process.command_line : \\\"*/RunHandlerComServer*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "Load Arbitrary DLL via Wuauclt (Windows Update Client)"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

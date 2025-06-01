@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'View accounts with UID 0' (GUID: c955a599-3653-4fe5-b631-f11c00eb0397) of technique T1087.001 (Account Discovery: Local Account). Test Description: View accounts with UID 0. Command/Steps: grep 'x:0:' /etc/passwd > #{output_file}\ngrep '*:0:' /etc/passwd >> #{output_file}\ncat #{output_file} 2>/dev/null\n"
+from = "now-9m"
+rule_id = "92ac7e6f-fc3c-4b04-b7f0-4ed4e8214213"
+language = "kql"
+name = "Atomic Test: T1087.001 - View accounts with UID 0"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.001/T1087.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.001", "c955a599-3653-4fe5-b631-f11c00eb0397", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*grep*\\\" AND process.command_line : \\\"*x:0:*\\\" AND process.command_line : \\\"*/etc/passwd*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.001"
+name = "View accounts with UID 0"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Space After Filename' (GUID: b95ce2eb-a093-4cd8-938d-5258cef656ea) of technique T1036.006 (Masquerading: Space after Filename). Test Description: Space after filename.. Command/Steps: mkdir -p /tmp/atomic-test-T1036.006\ncd /tmp/atomic-test-T1036.006\nmkdir -p 'testdirwithspaceend '\n[ \\\"$(uname)\\\" = 'FreeBSD' ] && /bin/echo \\\"#\\\\!/bin/sh\\\"..."
+from = "now-9m"
+rule_id = "752612ce-5006-4ff6-8a37-b65ce2856c7a"
+language = "kql"
+name = "Atomic Test: T1036.006 - Space After Filename"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.006/T1036.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.006", "b95ce2eb-a093-4cd8-938d-5258cef656ea", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*testdirwithspaceend*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.006"
+name = "Space After Filename"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+

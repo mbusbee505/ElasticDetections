@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure Security Scan with SkyArk' (GUID: 26a18d3d-f8bc-486b-9a33-d6df5d78a594) of technique T1082 (System Information Discovery). Test Description: Upon successful execution, this test will utilize a valid read-only Azure AD user's credentials to conduct a security scan and determine what users exist in a given tenant, as well as identify any admin users. \nOnce the test is complete, a folder will be output to the temp directory that contains 3 csv files which provide info on the discovered users. \nSee https://github.com/cyberark/SkyArk. Command/Steps: Import-Module \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\AzureStealth.ps1\\\" -force      \n$Password = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlai..."
+from = "now-9m"
+rule_id = "3f74e72b-4068-49c6-89b4-e7164ee0eb51"
+language = "kql"
+name = "Atomic Test: T1082 - Azure Security Scan with SkyArk"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "26a18d3d-f8bc-486b-9a33-d6df5d78a594", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-force*\\\" AND powershell.script_block_text : \\\"*$Password*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-force*\\\" AND process.command_line : \\\"*$Password*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Azure Security Scan with SkyArk"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

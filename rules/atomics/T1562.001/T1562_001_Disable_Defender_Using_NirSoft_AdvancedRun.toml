@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Defender Using NirSoft AdvancedRun' (GUID: 81ce22fd-9612-4154-918e-8a1f285d214d) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Information on NirSoft AdvancedRun and its creators found here: http://www.nirsoft.net/utils/advanced_run.html\nThis Atomic will run AdvancedRun.exe with similar behavior identified during the WhisperGate campaign.\nSee https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3\nUpon successful execution, AdvancedRun.exe will attempt to run and stop Defender, and optionally attempt to delete the Defender folder on disk.. Command/Steps: Try {cmd /c \\\"#{AdvancedRun_Location}\\\" /EXEFilename \\\"$env:systemroot\\\\System32\\\\sc.exe\\\" /WindowState 0 /CommandLine \\\"stop WinDefend\\\" /StartDirectory \\\"\\\" /..."
+from = "now-9m"
+rule_id = "b06be587-656d-4258-ab52-072b04c5b554"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Defender Using NirSoft AdvancedRun"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "81ce22fd-9612-4154-918e-8a1f285d214d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*{cmd*\\\" AND powershell.script_block_text : \\\"*/EXEFilename*\\\" AND powershell.script_block_text : \\\"*$env:systemroot\\\\System32\\\\sc.exe*\\\" OR (process.command_line : \\\"*{cmd*\\\" AND process.command_line : \\\"*/EXEFilename*\\\" AND process.command_line : \\\"*$env:systemroot\\\\System32\\\\sc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Defender Using NirSoft AdvancedRun"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

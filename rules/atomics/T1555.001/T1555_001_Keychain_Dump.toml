@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Keychain Dump' (GUID: 88e1fa00-bf63-4e5b-a3e1-e2ea51c8cca6) of technique T1555.001 (Credentials from Password Stores: Keychain). Test Description: This command will dump keychain credential information from login.keychain. \nSource: https://www.loobins.io/binaries/security/\n\n### Keychain File path\n  ~/Library/Keychains/\n  /Library/Keychains/\n  /Network/Library/Keychains/\n  [Security Reference](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/security.1.html). Command/Steps: sudo security dump-keychain -d login.keychain"
+from = "now-9m"
+rule_id = "76915c46-c607-44c1-9dba-4c1089799298"
+language = "kql"
+name = "Atomic Test: T1555.001 - Keychain Dump"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1555.001/T1555.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1555.001", "88e1fa00-bf63-4e5b-a3e1-e2ea51c8cca6", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*security*\\\" AND process.command_line : \\\"*dump-keychain*\\\" AND process.command_line : \\\"*login.keychain*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1555.001"
+name = "Keychain Dump"
+reference = "https://attack.mitre.org/techniques/T1555/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1555/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1555/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1555/001"
+
+

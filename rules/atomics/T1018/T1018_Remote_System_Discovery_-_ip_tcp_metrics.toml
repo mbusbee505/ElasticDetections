@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - ip tcp_metrics' (GUID: 6c2da894-0b57-43cb-87af-46ea3b501388) of technique T1018 (Remote System Discovery). Test Description: Use the ip tcp_metrics command to display the recent cached entries for IPv4 and IPv6 source and destination addresses.. Command/Steps: ip tcp_metrics show |grep --invert-match \\\"^127\\\\.\\\"\n"
+from = "now-9m"
+rule_id = "1ca52ed3-b9be-4ee3-af94-81884f7c7734"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - ip tcp_metrics"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "6c2da894-0b57-43cb-87af-46ea3b501388", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*tcp_metrics*\\\" AND process.command_line : \\\"*show*\\\" AND process.command_line : \\\"*|grep*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - ip tcp_metrics"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

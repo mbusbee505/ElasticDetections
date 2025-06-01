@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Registry artefact when application use microphone' (GUID: 7a21cce2-6ada-4f7c-afd9-e1e9c481e44a) of technique T1123 (Audio Capture). Test Description: [can-you-track-processes-accessing-the-camera-and-microphone](https://svch0st.medium.com/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072). Command/Steps: reg add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\CapabilityAccessManager\\\\ConsentStore\\\\microphone\\\\NonPackaged\\\\C:#Windows#Temp#atomic.exe /v LastU..."
+from = "now-9m"
+rule_id = "bb4df18c-7a50-46e7-82fa-7c92a86c3ca1"
+language = "kql"
+name = "Atomic Test: T1123 - Registry artefact when application use microphone"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1123/T1123.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1123", "7a21cce2-6ada-4f7c-afd9-e1e9c481e44a", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\CapabilityAccessManager\\\\ConsentStore\\\\microphone\\\\NonPackaged\\\\C:#Windows#Temp#atomic.exe*\\\" AND process.command_line : \\\"*LastUsedTimeStart*\\\" AND process.command_line : \\\"*REG_BINARY*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1123"
+name = "Registry artefact when application use microphone"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+

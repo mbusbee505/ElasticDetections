@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Utilize Clipboard to store or execute commands from' (GUID: 0cd14633-58d4-4422-9ede-daa2c9474ae7) of technique T1115 (Clipboard Data). Test Description: Add data to clipboard to copy off or execute commands from.. Command/Steps: dir | clip\necho \\\"T1115\\\" > %temp%\\\\T1115.txt\nclip < %temp%\\\\T1115.txt\n"
+from = "now-9m"
+rule_id = "bc7168e7-e6fe-4d7d-91bd-b2d68d917b2b"
+language = "kql"
+name = "Atomic Test: T1115 - Utilize Clipboard to store or execute commands from"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1115/T1115.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1115", "0cd14633-58d4-4422-9ede-daa2c9474ae7", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*clip*\\\" AND process.command_line : \\\"*clip*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1115"
+name = "Utilize Clipboard to store or execute commands from"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+

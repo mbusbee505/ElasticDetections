@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Find local admins on all machines in domain (PowerView)' (GUID: a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: Enumerates members of the local Administrators groups across all machines in the domain. Upon execution, information about each machine will be displayed.. Command/Steps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploi..."
+from = "now-9m"
+rule_id = "89b7b335-d60d-4bb8-9648-15ec528ee2fc"
+language = "kql"
+name = "Atomic Test: T1069.002 - Find local admins on all machines in domain (PowerView)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND powershell.script_block_text : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND powershell.script_block_text : \\\"*(IWR*\\\" OR (process.command_line : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND process.command_line : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND process.command_line : \\\"*(IWR*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Find local admins on all machines in domain (PowerView)"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

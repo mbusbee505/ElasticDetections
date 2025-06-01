@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Indicator Manipulation using FSUtil' (GUID: 96e86706-6afd-45b6-95d6-108d23eaf2e9) of technique T1070 (Indicator Removal on Host). Test Description: Finds a file by user name (if Disk Quotas are enabled), queries allocated ranges for a file, sets a file's short name, sets a file's valid data length, sets zero data for a file, or creates a new file. Upon execution, no output\nwill be displayed. More information about fsutil can be found at https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-file\n- https://tria.ge/230601-x8x6bsgb24/behavioral2. Command/Steps: if (-not (Test-Path \\\"#{file_to_manipulate}\\\")) { New-Item \\\"#{file_to_manipulate}\\\" -Force } \necho \\\"1234567890\\\" > \\\"#{file_to_manipulate}\\\"\nfsutil  file se..."
+from = "now-9m"
+rule_id = "c4506794-90fa-4d74-bfc1-a8227b812091"
+language = "kql"
+name = "Atomic Test: T1070 - Indicator Manipulation using FSUtil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070/T1070.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070", "96e86706-6afd-45b6-95d6-108d23eaf2e9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(-not*\\\" AND powershell.script_block_text : \\\"*(Test-Path*\\\" AND powershell.script_block_text : \\\"*New-Item*\\\" OR (process.command_line : \\\"*(-not*\\\" AND process.command_line : \\\"*(Test-Path*\\\" AND process.command_line : \\\"*New-Item*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070"
+name = "Indicator Manipulation using FSUtil"
+reference = "https://attack.mitre.org/techniques/T1070"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070"
+
+

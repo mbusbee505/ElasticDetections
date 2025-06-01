@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Crafting Active Directory silver tickets with mimikatz' (GUID: 385e59aa-113e-4711-84d9-f637aef01f2c) of technique T1558.002 (Steal or Forge Kerberos Tickets: Silver Ticket). Test Description: Once the hash of service account is retrieved it is possible to forge Kerberos ticket granting service (TGS) tickets, also known as silver tickets.\nThe generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.. Command/Steps: Remove-Item $env:TEMP\\\\silver.bat -ErrorAction Ignore\nRemove-Item $env:TEMP\\\\silver.txt -ErrorAction Ignore\n\n# get current domain SID if default was use..."
+from = "now-9m"
+rule_id = "fcc38077-5b1f-420d-bffe-6c8a4aa5b26c"
+language = "kql"
+name = "Atomic Test: T1558.002 - Crafting Active Directory silver tickets with mimikatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.002/T1558.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.002", "385e59aa-113e-4711-84d9-f637aef01f2c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Remove-Item*\\\" AND powershell.script_block_text : \\\"*\\\\silver.bat*\\\" AND powershell.script_block_text : \\\"*-ErrorAction*\\\" OR (process.command_line : \\\"*Remove-Item*\\\" AND process.command_line : \\\"*\\\\silver.bat*\\\" AND process.command_line : \\\"*-ErrorAction*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.002"
+name = "Crafting Active Directory silver tickets with mimikatz"
+reference = "https://attack.mitre.org/techniques/T1558/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/002"
+
+

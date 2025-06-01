@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add launch script to launch daemon' (GUID: fc369906-90c7-4a15-86fd-d37da624dde6) of technique T1037.005 (Boot or Logon Initialization Scripts: Startup Items). Test Description: Add launch script to /Library/StartupItems to launch agent\n[Example](https://cybersecurity.att.com/blogs/labs-research/diversity-in-recent-mac-malware). Command/Steps: sudo cp #{path_startup_params} /Library/StartupItems/StartupParameters.plist\nsudo cp #{path_malicious_script} /Library/StartupItems/atomic.sh\nsudo cp ..."
+from = "now-9m"
+rule_id = "1ad8a568-abfc-4ec0-8fe3-2880f87612f4"
+language = "kql"
+name = "Atomic Test: T1037.005 - Add launch script to launch daemon"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1037.005/T1037.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1037.005", "fc369906-90c7-4a15-86fd-d37da624dde6", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/Library/StartupItems/StartupParameters.plist*\\\" AND process.command_line : \\\"*/Library/StartupItems/atomic.sh*\\\" AND process.command_line : \\\"*/Library/StartupItems/atomic.sh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1037.005"
+name = "Add launch script to launch daemon"
+reference = "https://attack.mitre.org/techniques/T1037/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1037/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1037/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1037/005"
+
+

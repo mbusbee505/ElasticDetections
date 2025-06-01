@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Trap EXIT (freebsd)' (GUID: be1a5d70-6865-44aa-ab50-42244c9fd16f) of technique T1546.005 (Event Triggered Execution: Trap). Test Description: Launch bash shell with command arg to create TRAP on EXIT.\nThe trap executes script that writes to /tmp/art-fish.txt. Command/Steps: bash -c 'trap \\\"nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh\\\" EXIT'\n"
+from = "now-9m"
+rule_id = "76eb3995-2e5f-4ed6-bb70-a977607c9e1e"
+language = "kql"
+name = "Atomic Test: T1546.005 - Trap EXIT (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.005/T1546.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.005", "be1a5d70-6865-44aa-ab50-42244c9fd16f", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*bash*\\\" AND process.command_line : \\\"*trap*\\\" AND process.command_line : \\\"*nohup*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.005"
+name = "Trap EXIT (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1546/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/005"
+
+

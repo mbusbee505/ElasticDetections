@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'CreateCronjob' (GUID: f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3) of technique T1053.007 (Kubernetes Cronjob). Test Description: Kubernetes Job is a controller that creates one or more pods and ensures that a specified number of them successfully terminate. Kubernetes Job can be used to run containers that perform finite tasks for batch jobs. Kubernetes CronJob is used to schedule Jobs. Attackers may use Kubernetes CronJob for scheduling execution of malicious code that would run as a container in the cluster.. Command/Steps: kubectl create -f src/cronjob.yaml -n #{namespace}\n"
+from = "now-9m"
+rule_id = "836a13a0-a544-4896-8bd7-d0aa2b58fc4d"
+language = "kql"
+name = "Atomic Test: T1053.007 - CreateCronjob"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.007/T1053.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.007", "f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*kubectl*\\\" AND process.command_line : \\\"*create*\\\" AND process.command_line : \\\"*src/cronjob.yaml*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.007"
+name = "CreateCronjob"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/007"
+
+

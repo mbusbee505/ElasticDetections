@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Internal Packet Capture' (GUID: b5656f67-d67f-4de8-8e62-b5581630f528) of technique T1040 (Network Sniffing). Test Description: Uses the built-in Windows packet capture\nAfter execution you should find a file named trace.etl and trace.cab in the temp directory. Command/Steps: netsh trace start capture=yes tracefile=%temp%\\\\trace.etl maxsize=10"
+from = "now-9m"
+rule_id = "ee8b94ff-6dec-4db2-9554-c2c724e88c3a"
+language = "kql"
+name = "Atomic Test: T1040 - Windows Internal Packet Capture"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "b5656f67-d67f-4de8-8e62-b5581630f528", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*trace*\\\" AND process.command_line : \\\"*start*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Windows Internal Packet Capture"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

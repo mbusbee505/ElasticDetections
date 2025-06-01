@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Chrome/Chromium (Chrome Web Store)' (GUID: 4c83940d-8ca5-4bb2-8100-f46dc914bc3f) of technique T1176 (Browser Extensions). Test Description: Install the \\\"Minimum Viable Malicious Extension\\\" Chrome extension. Command/Steps: 1. Navigate to https://chrome.google.com/webstore/detail/minimum-viable-malicious/odlpfdolehmhciiebahbpnaopneicend\nin Chrome\n\n2. Click 'Add to Chrome'..."
+from = "now-9m"
+rule_id = "2db3e826-85ce-49a8-87a3-8d9d3e94d36d"
+language = "kql"
+name = "Atomic Test: T1176 - Chrome/Chromium (Chrome Web Store)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1176/T1176.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1176", "4c83940d-8ca5-4bb2-8100-f46dc914bc3f", "linux", "windows", "macos",]
+type = "query"
+query = "process.command_line : \\\"*Navigate*\\\" AND process.command_line : \\\"*https://chrome.google.com/webstore/detail/minimum-viable-malicious/odlpfdolehmhciiebahbpnaopneicend*\\\" AND process.command_line : \\\"*Chrome*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1176"
+name = "Chrome/Chromium (Chrome Web Store)"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+

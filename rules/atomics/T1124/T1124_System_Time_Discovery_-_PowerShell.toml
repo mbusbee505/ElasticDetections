@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Time Discovery - PowerShell' (GUID: 1d5711d6-655c-4a47-ae9c-6503c74fa877) of technique T1124 (System Time Discovery). Test Description: Identify the system time via PowerShell. Upon execution, the system time will be displayed.. Command/Steps: Get-Date\n"
+from = "now-9m"
+rule_id = "de023b08-e494-488d-98e8-5bb4bc37573c"
+language = "kql"
+name = "Atomic Test: T1124 - System Time Discovery - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1124/T1124.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1124", "1d5711d6-655c-4a47-ae9c-6503c74fa877", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Date*\\\" OR (process.command_line : \\\"*Get-Date*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1124"
+name = "System Time Discovery - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+

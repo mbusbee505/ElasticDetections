@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'TeamViewer Files Detected Test on Windows' (GUID: 8ca3b96d-8983-4a7f-b125-fc98cc0a2aa0) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading teamviewer and using this to maintain access to the machine. Download of TeamViewer installer will be at the destination location when sucessfully executed.. Command/Steps: Invoke-WebRequest -OutFile C:\\\\Users\\\\$env:username\\\\Desktop\\\\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe\n$file1 = ..."
+from = "now-9m"
+rule_id = "7d051392-bfae-43d4-90e9-72f7e2db3f98"
+language = "kql"
+name = "Atomic Test: T1219 - TeamViewer Files Detected Test on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "8ca3b96d-8983-4a7f-b125-fc98cc0a2aa0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*-OutFile*\\\" AND powershell.script_block_text : \\\"*https://download.teamviewer.com/download/TeamViewer_Setup.exe*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*-OutFile*\\\" AND process.command_line : \\\"*https://download.teamviewer.com/download/TeamViewer_Setup.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "TeamViewer Files Detected Test on Windows"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

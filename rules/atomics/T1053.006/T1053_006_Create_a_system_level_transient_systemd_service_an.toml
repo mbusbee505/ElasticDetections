@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a system level transient systemd service and timer' (GUID: d3eda496-1fc0-49e9-aff5-3bec5da9fa22) of technique T1053.006 (Scheduled Task/Job: Systemd Timers). Test Description: Schedule a system level transient task (will not survive a reboot) without having to create the .timer or .service files by using the systemd-run command.. Command/Steps: systemd-run --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'echo \\\"$(date) $(whoami)\\\" >>/tmp/log'\n"
+from = "now-9m"
+rule_id = "1b4a1cae-f268-4ed7-97f6-fbbd3720a97b"
+language = "kql"
+name = "Atomic Test: T1053.006 - Create a system level transient systemd service and timer"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.006/T1053.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.006", "d3eda496-1fc0-49e9-aff5-3bec5da9fa22", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*systemd-run*\\\" AND process.command_line : \\\"*--unit=Atomic-Red-Team*\\\" AND process.command_line : \\\"*--on-calendar*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.006"
+name = "Create a system level transient systemd service and timer"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+

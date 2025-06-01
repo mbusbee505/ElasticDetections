@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Login as nobody (freebsd)' (GUID: 16f6374f-7600-459a-9b16-6a88fd96d310) of technique T1078.003 (Valid Accounts: Local Accounts). Test Description: An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin. Here is how the nobody entry should look like in `/etc/passwd` before the test is executed and right after the cleanup: `# -> nobody:x:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin`. Command/Steps: cat /etc/passwd |grep nobody\npw usermod nobody -s /bin/sh\necho $(openssl passwd -1 art) | pw mod user nobody -h 0\nsu nobody\nwhoami\nexit\n"
+from = "now-9m"
+rule_id = "8630c4a6-201d-4ccb-98d4-228163ef4d76"
+language = "kql"
+name = "Atomic Test: T1078.003 - Login as nobody (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.003/T1078.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.003", "16f6374f-7600-459a-9b16-6a88fd96d310", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/etc/passwd*\\\" AND process.command_line : \\\"*|grep*\\\" AND process.command_line : \\\"*nobody*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.003"
+name = "Login as nobody (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+

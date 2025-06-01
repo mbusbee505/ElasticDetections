@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump Active Directory Database with NTDSUtil' (GUID: 2364e33d-ceab-4641-8468-bfb1d7cc2723) of technique T1003.003 (OS Credential Dumping: NTDS). Test Description: This test is intended to be run on a domain Controller.\n\nThe Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability\nuses the \\\"IFM\\\" or \\\"Install From Media\\\" backup functionality that allows Active Directory restoration or installation of\nsubsequent domain controllers without the need of network-based replication.\n\nUpon successful completion, you will find a copy of the ntds.dit file in the C:\\\\Windows\\\\Temp directory.. Command/Steps: mkdir #{output_folder}\nntdsutil \\\"ac i ntds\\\" \\\"ifm\\\" \\\"create full #{output_folder}\\\" q q\n"
+from = "now-9m"
+rule_id = "cd9ea7a8-e546-409e-97ff-bb0de1c1a138"
+language = "kql"
+name = "Atomic Test: T1003.003 - Dump Active Directory Database with NTDSUtil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.003/T1003.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.003", "2364e33d-ceab-4641-8468-bfb1d7cc2723", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\Temp\\\\ntds_T1003*\\\" AND process.command_line : \\\"*ntdsutil*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.003"
+name = "Dump Active Directory Database with NTDSUtil"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+

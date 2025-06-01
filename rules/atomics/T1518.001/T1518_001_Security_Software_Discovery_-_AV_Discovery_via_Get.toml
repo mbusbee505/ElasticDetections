@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets' (GUID: 015cd268-996e-4c32-8347-94c80c6286ee) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: Discovery of installed antivirus products via Get-CimInstance and Get-WmiObject cmdlets of powershell.\n\nwhen sucessfully executed, information about installed AV software is displayed... Command/Steps: powershell Get-CimInstance -Namespace root/securityCenter2 -classname antivirusproduct\npowershell Get-WmiObject -Namespace root\\\\securitycenter2 -Class..."
+from = "now-9m"
+rule_id = "d2898c9a-1524-4f92-973a-ea62227b9666"
+language = "kql"
+name = "Atomic Test: T1518.001 - Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "015cd268-996e-4c32-8347-94c80c6286ee", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Get-CimInstance*\\\" AND process.command_line : \\\"*-Namespace*\\\" AND process.command_line : \\\"*root/securityCenter2*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

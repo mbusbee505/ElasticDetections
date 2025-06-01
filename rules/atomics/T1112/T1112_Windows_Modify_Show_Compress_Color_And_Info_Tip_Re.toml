@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Modify Show Compress Color And Info Tip Registry' (GUID: 795d3248-0394-4d4d-8e86-4e8df2a2693f) of technique T1112 (Modify Registry). Test Description: Modify the registry of the currently logged in user using reg.exe via cmd console to show compress color and show tips feature. \nSee how hermeticwiper uses this technique - https://www.splunk.com/en_us/blog/security/detecting-hermeticwiper.html. Command/Steps: reg  add HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced /v ShowInfoTip /t REG_DWORD /d 0 /f\nreg  add HKCU\\\\Software\\\\Microsoft\\\\Windows..."
+from = "now-9m"
+rule_id = "9e0c1320-18bd-4a4b-8400-92a4fbbbe2b1"
+language = "kql"
+name = "Atomic Test: T1112 - Windows Modify Show Compress Color And Info Tip Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "795d3248-0394-4d4d-8e86-4e8df2a2693f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced*\\\" AND process.command_line : \\\"*ShowInfoTip*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Windows Modify Show Compress Color And Info Tip Registry"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

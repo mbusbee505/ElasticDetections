@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add or copy content to clipboard with xClip' (GUID: ee363e53-b083-4230-aff3-f8d955f2d5bb) of technique T1115 (Clipboard Data). Test Description: Utilize Linux Xclip to copy history and place in clipboard then output to a history.txt file. Successful execution will capture history and output to a file on disk.. Command/Steps: apt install xclip -y\nhistory | tail -n 30 | xclip -sel clip\nxclip -o > history.txt\n"
+from = "now-9m"
+rule_id = "292043fc-a28c-4fe8-9e83-00173f0a88c8"
+language = "kql"
+name = "Atomic Test: T1115 - Add or copy content to clipboard with xClip"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1115/T1115.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1115", "ee363e53-b083-4230-aff3-f8d955f2d5bb", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*install*\\\" AND process.command_line : \\\"*xclip*\\\" AND process.command_line : \\\"*history*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1115"
+name = "Add or copy content to clipboard with xClip"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+

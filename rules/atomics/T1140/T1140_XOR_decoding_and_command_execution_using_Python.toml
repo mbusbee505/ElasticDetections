@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'XOR decoding and command execution using Python' (GUID: c3b65cd5-ee51-4e98-b6a3-6cbdec138efc) of technique T1140 (Deobfuscate/Decode Files or Information). Test Description: An adversary can obfuscate malicious commands or payloads using XOR and execute them on the victim's machine. This test uses Python to decode and execute commands on the machine.. Command/Steps: python3 -c 'import base64; import subprocess; xor_decrypt = lambda text, key: \\\"\\\".join([chr(c ^ ord(k)) for c, k in zip(base64.b64decode(text.encode())..."
+from = "now-9m"
+rule_id = "1c7021be-b042-4e38-b5fa-0f4f0d3184f9"
+language = "kql"
+name = "Atomic Test: T1140 - XOR decoding and command execution using Python"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1140/T1140.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1140", "c3b65cd5-ee51-4e98-b6a3-6cbdec138efc", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*python3*\\\" AND process.command_line : \\\"*import*\\\" AND process.command_line : \\\"*base64*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1140"
+name = "XOR decoding and command execution using Python"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+

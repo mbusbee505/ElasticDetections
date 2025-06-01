@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Service Discovery - net.exe' (GUID: 5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3) of technique T1007 (System Service Discovery). Test Description: Enumerates started system services using net.exe and writes them to a file. This technique has been used by multiple threat actors.\n\nUpon successful execution, net.exe will run from cmd.exe that queries services. Expected output is to a txt file in in the temp directory called service-list.txt.. Command/Steps: net.exe start >> #{output_file}\n"
+from = "now-9m"
+rule_id = "2cd6c221-5a51-4e9b-b889-8c732c6c78a0"
+language = "kql"
+name = "Atomic Test: T1007 - System Service Discovery - net.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1007/T1007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1007", "5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*net.exe*\\\" AND process.command_line : \\\"*start*\\\" AND process.command_line : \\\"*%temp%\\\\service-list.txt*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1007"
+name = "System Service Discovery - net.exe"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+

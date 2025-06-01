@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Google Chrome / Opera Bookmarks on Windows with powershell' (GUID: faab755e-4299-48ec-8202-fc7885eb6545) of technique T1217 (Browser Bookmark Discovery). Test Description: Searches for Google Chrome's and Opera's Bookmarks file (on Windows distributions) that contains bookmarks.\nUpon execution, paths that contain bookmark files will be displayed.. Command/Steps: Get-ChildItem -Path C:\\\\Users\\\\ -Filter Bookmarks -Recurse -ErrorAction SilentlyContinue -Force\n"
+from = "now-9m"
+rule_id = "4540392e-dd41-4e0e-a9b4-a14b33b7ba1d"
+language = "kql"
+name = "Atomic Test: T1217 - List Google Chrome / Opera Bookmarks on Windows with powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1217/T1217.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1217", "faab755e-4299-48ec-8202-fc7885eb6545", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ChildItem*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*-Filter*\\\" OR (process.command_line : \\\"*Get-ChildItem*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*-Filter*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1217"
+name = "List Google Chrome / Opera Bookmarks on Windows with powershell"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+

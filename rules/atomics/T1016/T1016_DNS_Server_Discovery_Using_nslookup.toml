@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DNS Server Discovery Using nslookup' (GUID: 34557863-344a-468f-808b-a1bfb89b4fa9) of technique T1016 (System Network Configuration Discovery). Test Description: Identify System domain dns controller on an endpoint using nslookup ldap query. This tool is being abused by qakbot malware to gather information on the domain\ncontroller of the targeted or compromised host. reference https://securelist.com/qakbot-technical-analysis/103931/. Command/Steps: nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc._msdcs.%USERDNSDOMAIN%\n"
+from = "now-9m"
+rule_id = "43a56612-7d46-41c2-b0dc-4375c14f976e"
+language = "kql"
+name = "Atomic Test: T1016 - DNS Server Discovery Using nslookup"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016/T1016.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016", "34557863-344a-468f-808b-a1bfb89b4fa9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*nslookup*\\\" AND process.command_line : \\\"*-querytype=ALL*\\\" AND process.command_line : \\\"*-timeout=12*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016"
+name = "DNS Server Discovery Using nslookup"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+

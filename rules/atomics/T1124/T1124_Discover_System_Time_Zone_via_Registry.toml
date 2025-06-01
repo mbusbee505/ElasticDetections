@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Time Zone via Registry' (GUID: 25c5d1f1-a24b-494a-a6c5-5f50a1ae7f47) of technique T1124 (System Time Discovery). Test Description: Identify the Operating System Time Zone via registry with the reg.exe command.\nUpon execution, the system Time Zone will be shown.. Command/Steps: reg query \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\TimeZoneInformation\\\" /v TimeZoneKeyName\n"
+from = "now-9m"
+rule_id = "de20cba0-57e0-449e-a54e-76160a6bb49d"
+language = "kql"
+name = "Atomic Test: T1124 - Discover System Time Zone via Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1124/T1124.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1124", "25c5d1f1-a24b-494a-a6c5-5f50a1ae7f47", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\TimeZoneInformation*\\\" AND process.command_line : \\\"*TimeZoneKeyName*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1124"
+name = "Discover System Time Zone via Registry"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+

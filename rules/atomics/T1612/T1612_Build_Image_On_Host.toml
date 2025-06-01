@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Build Image On Host' (GUID: 2db30061-589d-409b-b125-7b473944f9b3) of technique T1612 (Build Image on Host). Test Description: Adversaries may build a container image directly on a host to bypass defenses that monitor for the retrieval of malicious images from a public registry. An adversary may take advantage of that build API to build a custom image on the host that includes malware downloaded from their C2 server, and then they then may utilize Deploy Container using that custom image.. Command/Steps: docker build -t t1612  $PathtoAtomicsFolder/T1612/src/\ndocker run --name t1612_container --rm -d -t t1612\ndocker exec t1612_container ./test.sh"
+from = "now-9m"
+rule_id = "0e5d57a1-4663-49fa-89a4-ce7d0e926e90"
+language = "kql"
+name = "Atomic Test: T1612 - Build Image On Host"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1612/T1612.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1612", "2db30061-589d-409b-b125-7b473944f9b3", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*docker*\\\" AND process.command_line : \\\"*build*\\\" AND process.command_line : \\\"*t1612*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1612"
+name = "Build Image On Host"
+reference = "https://attack.mitre.org/techniques/T1612"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1612"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1612"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1612"
+
+

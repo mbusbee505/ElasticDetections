@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Request A Single Ticket via PowerShell' (GUID: 988539bc-2ed7-4e62-aec6-7c5cf6680863) of technique T1558.003 (Steal or Forge Kerberos Tickets: Kerberoasting). Test Description: The following test will utilize native PowerShell Identity modules to query the domain to extract the Service Principal Names for a single computer. This behavior is typically used during a kerberos or silver ticket attack. \nA successful execution will output the SPNs for the endpoint in question.. Command/Steps: Add-Type -AssemblyName System.IdentityModel\n$ComputerFQDN=$env:LogonServer.trimStart('\\\\') + \\\".\\\" + $env:UserDnsDomain\nNew-Object System.IdentityModel.T..."
+from = "now-9m"
+rule_id = "57cb8e0d-cbb3-45e3-838e-281b46447496"
+language = "kql"
+name = "Atomic Test: T1558.003 - Request A Single Ticket via PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.003/T1558.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.003", "988539bc-2ed7-4e62-aec6-7c5cf6680863", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Add-Type*\\\" AND powershell.script_block_text : \\\"*-AssemblyName*\\\" AND powershell.script_block_text : \\\"*System.IdentityModel*\\\" OR (process.command_line : \\\"*Add-Type*\\\" AND process.command_line : \\\"*-AssemblyName*\\\" AND process.command_line : \\\"*System.IdentityModel*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.003"
+name = "Request A Single Ticket via PowerShell"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/003"
+
+

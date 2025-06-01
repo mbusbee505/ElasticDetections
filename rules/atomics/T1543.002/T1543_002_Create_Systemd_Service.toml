@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Systemd Service' (GUID: d9e4f24f-aa67-4c6e-bcbf-85622b697a7c) of technique T1543.002 (Create or Modify System Process: SysV/Systemd Service). Test Description: This test creates a Systemd service unit file and enables it as a service.. Command/Steps: echo \\\"[Unit]\\\" > #{systemd_service_path}/#{systemd_service_file}\necho \\\"Description=Atomic Red Team Systemd Service\\\" >> #{systemd_service_path}/#{system..."
+from = "now-9m"
+rule_id = "d9ce6e99-da35-44e0-afba-61311020263a"
+language = "kql"
+name = "Atomic Test: T1543.002 - Create Systemd Service"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.002/T1543.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.002", "d9e4f24f-aa67-4c6e-bcbf-85622b697a7c", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*[Unit]*\\\" AND process.command_line : \\\"*/etc/systemd/system/art-systemd-service.service*\\\" AND process.command_line : \\\"*Description=Atomic*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.002"
+name = "Create Systemd Service"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+

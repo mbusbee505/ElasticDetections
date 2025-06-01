@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'CMSTP Executing Remote Scriptlet' (GUID: 34e63321-9683-496b-bbc1-7566bc55e624) of technique T1218.003 (Signed Binary Proxy Execution: CMSTP). Test Description: Adversaries may supply CMSTP.exe with INF files infected with malicious commands. Command/Steps: cmstp.exe /s \\\"#{inf_file_path}\\\"\n"
+from = "now-9m"
+rule_id = "066997b3-ed20-4423-b6bd-070e1e88142f"
+language = "kql"
+name = "Atomic Test: T1218.003 - CMSTP Executing Remote Scriptlet"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.003/T1218.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.003", "34e63321-9683-496b-bbc1-7566bc55e624", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cmstp.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.003"
+name = "CMSTP Executing Remote Scriptlet"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+

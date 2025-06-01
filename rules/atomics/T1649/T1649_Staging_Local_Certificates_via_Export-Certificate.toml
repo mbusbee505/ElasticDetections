@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Staging Local Certificates via Export-Certificate' (GUID: eb121494-82d1-4148-9e2b-e624e03fbf3d) of technique T1649 (Steal or Forge Authentication Certificates). Test Description: Export all user certificates and add to a compressed archive.. Command/Steps: $archive=\\\"$env:PUBLIC\\\\T1649\\\\atomic_certs.zip\\\"\n$exfilpath=\\\"$env:PUBLIC\\\\T1649\\\\certs\\\"\nAdd-Type -assembly \\\"system.io.compression.filesystem\\\"\nRemove-Item $..."
+from = "now-9m"
+rule_id = "d423f17e-f9ad-4330-a6ed-1e951c226240"
+language = "kql"
+name = "Atomic Test: T1649 - Staging Local Certificates via Export-Certificate"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1649/T1649.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1649", "eb121494-82d1-4148-9e2b-e624e03fbf3d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Add-Type*\\\" AND powershell.script_block_text : \\\"*-assembly*\\\" AND powershell.script_block_text : \\\"*system.io.compression.filesystem*\\\" OR (process.command_line : \\\"*Add-Type*\\\" AND process.command_line : \\\"*-assembly*\\\" AND process.command_line : \\\"*system.io.compression.filesystem*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1649"
+name = "Staging Local Certificates via Export-Certificate"
+reference = "https://attack.mitre.org/techniques/T1649"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1649"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1649"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1649"
+
+

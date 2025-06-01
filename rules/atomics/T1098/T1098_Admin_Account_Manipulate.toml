@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Admin Account Manipulate' (GUID: 5598f7cb-cf43-455e-883a-f6008c5d46af) of technique T1098 (Account Manipulation). Test Description: Manipulate Admin Account Name. Command/Steps: $x = Get-Random -Minimum 2 -Maximum 9999\n$y = Get-Random -Minimum 2 -Maximum 9999\n$z = Get-Random -Minimum 2 -Maximum 9999\n$w = Get-Random -Minimum 2 ..."
+from = "now-9m"
+rule_id = "ef19527e-990c-45ea-8581-46185ae722d2"
+language = "kql"
+name = "Atomic Test: T1098 - Admin Account Manipulate"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098/T1098.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098", "5598f7cb-cf43-455e-883a-f6008c5d46af", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Random*\\\" AND powershell.script_block_text : \\\"*-Minimum*\\\" AND powershell.script_block_text : \\\"*-Maximum*\\\" OR (process.command_line : \\\"*Get-Random*\\\" AND process.command_line : \\\"*-Minimum*\\\" AND process.command_line : \\\"*-Maximum*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098"
+name = "Admin Account Manipulate"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+

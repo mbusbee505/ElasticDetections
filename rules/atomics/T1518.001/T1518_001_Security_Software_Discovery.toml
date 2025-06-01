@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Security Software Discovery' (GUID: f92a380f-ced9-491f-b338-95a991418ce2) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: Methods to identify Security Software on an endpoint\n\nwhen sucessfully executed, the test is going to display running processes, firewall configuration on network profiles\nand specific security software.. Command/Steps: netsh.exe advfirewall  show allprofiles \nnetsh.exe advfirewall firewall dump\nnetsh.exe advfirewall show currentprofile\nnetsh.exe advfirewall firewall ..."
+from = "now-9m"
+rule_id = "bcd6017c-896b-402b-978a-620fcc5be9e1"
+language = "kql"
+name = "Atomic Test: T1518.001 - Security Software Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "f92a380f-ced9-491f-b338-95a991418ce2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh.exe*\\\" AND process.command_line : \\\"*advfirewall*\\\" AND process.command_line : \\\"*show*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Security Software Discovery"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

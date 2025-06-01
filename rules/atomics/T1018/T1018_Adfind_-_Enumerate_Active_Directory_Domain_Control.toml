@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Adfind - Enumerate Active Directory Domain Controller Objects' (GUID: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e) of technique T1018 (Remote System Discovery). Test Description: Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Domain Controller Objects\nreference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html. Command/Steps: \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\AdFind.exe\\\" #{optional_args} -sc dclist\n"
+from = "now-9m"
+rule_id = "a6e82967-01b4-4b73-bfc4-c2f587045faf"
+language = "kql"
+name = "Atomic Test: T1018 - Adfind - Enumerate Active Directory Domain Controller Objects"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "5838c31e-a0e2-4b9f-b60a-d79d2cb7995e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*dclist*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Adfind - Enumerate Active Directory Domain Controller Objects"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

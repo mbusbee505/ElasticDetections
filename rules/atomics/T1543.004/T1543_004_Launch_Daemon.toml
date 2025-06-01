@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Launch Daemon' (GUID: 03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf) of technique T1543.004 (Create or Modify System Process: Launch Daemon). Test Description: Utilize LaunchDaemon to launch `Hello World`. Command/Steps: sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}\nsudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}\n"
+from = "now-9m"
+rule_id = "23826764-2374-4a78-a963-4e088371f9f4"
+language = "kql"
+name = "Atomic Test: T1543.004 - Launch Daemon"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.004/T1543.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.004", "03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/Library/LaunchDaemons/com.atomicredteam.plist*\\\" AND process.command_line : \\\"*launchctl*\\\" AND process.command_line : \\\"*load*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.004"
+name = "Launch Daemon"
+reference = "https://attack.mitre.org/techniques/T1543/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/004"
+
+

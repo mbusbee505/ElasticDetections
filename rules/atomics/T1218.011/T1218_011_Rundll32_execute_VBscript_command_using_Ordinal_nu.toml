@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 execute VBscript command using Ordinal number' (GUID: 32d1cf1b-cbc2-4c09-8d05-07ec5c83a821) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.\nTechnique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/\nUpon execution calc.exe will be launched. Command/Steps: rundll32 vbscript:\\\"\\\\..\\\\mshtml,#135 \\\"+String(CreateObject(\\\"WScript.Shell\\\").Run(\\\"#{command_to_execute}\\\"),0)\n"
+from = "now-9m"
+rule_id = "7fc218d0-81bb-4f34-9177-31f16bbceb7e"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 execute VBscript command using Ordinal number"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "32d1cf1b-cbc2-4c09-8d05-07ec5c83a821", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32*\\\" AND process.command_line : \\\"*vbscript:\\\"\\\\..\\\\mshtml,#135*\\\" AND process.command_line : \\\"*+String(CreateObject(\\\"WScript.Shell\\\").Run(\\\"calc.exe\\\"),0)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 execute VBscript command using Ordinal number"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

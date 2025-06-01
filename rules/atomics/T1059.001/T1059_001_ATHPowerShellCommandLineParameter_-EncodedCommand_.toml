@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments' (GUID: 0d181431-ddf3-4826-8055-2dbf63ae848b) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Executes powershell.exe with variations of the -EncodedCommand parameter with encoded arguments supplied. Command/Steps: Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type} -EncodedCommandParamVariation #{encoded_command_param_variati..."
+from = "now-9m"
+rule_id = "ea1f0917-5ae8-4377-9d13-1ba36546f68a"
+language = "kql"
+name = "Atomic Test: T1059.001 - ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "0d181431-ddf3-4826-8055-2dbf63ae848b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Out-ATHPowerShellCommandLineParameter*\\\" AND powershell.script_block_text : \\\"*-CommandLineSwitchType*\\\" AND powershell.script_block_text : \\\"*Hyphen*\\\" OR (process.command_line : \\\"*Out-ATHPowerShellCommandLineParameter*\\\" AND process.command_line : \\\"*-CommandLineSwitchType*\\\" AND process.command_line : \\\"*Hyphen*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

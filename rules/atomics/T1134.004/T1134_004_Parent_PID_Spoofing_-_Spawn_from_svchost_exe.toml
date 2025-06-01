@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Parent PID Spoofing - Spawn from svchost.exe' (GUID: e9f2b777-3123-430b-805d-5cedc66ab591) of technique T1134.004 (Access Token Manipulation: Parent PID Spoofing). Test Description: Spawnd a process as a child of the first accessible svchost.exe process.. Command/Steps: Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine, ProcessId -Filter \\\"Name = 'svchost.exe' AND CommandLine LIKE '%'\\\" | Select-Objec..."
+from = "now-9m"
+rule_id = "e8725a88-f78e-41a8-a641-eb9b7ef8a61b"
+language = "kql"
+name = "Atomic Test: T1134.004 - Parent PID Spoofing - Spawn from svchost.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.004/T1134.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.004", "e9f2b777-3123-430b-805d-5cedc66ab591", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-CimInstance*\\\" AND powershell.script_block_text : \\\"*-ClassName*\\\" AND powershell.script_block_text : \\\"*Win32_Process*\\\" OR (process.command_line : \\\"*Get-CimInstance*\\\" AND process.command_line : \\\"*-ClassName*\\\" AND process.command_line : \\\"*Win32_Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.004"
+name = "Parent PID Spoofing - Spawn from svchost.exe"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+

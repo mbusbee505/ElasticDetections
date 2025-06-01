@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Delete Backup Files' (GUID: 6b1dbaf6-cc8a-4ea6-891f-6058569653bf) of technique T1490 (Inhibit System Recovery). Test Description: Deletes backup files in a manner similar to Ryuk ransomware. Upon exection, many \\\"access is denied\\\" messages will appear as the commands try\nto delete files from around the system.. Command/Steps: del /s /f /q c:\\\\*.VHD c:\\\\*.bac c:\\\\*.bak c:\\\\*.wbcat c:\\\\*.bkf c:\\\\Backup*.* c:\\\\backup*.* c:\\\\*.set c:\\\\*.win c:\\\\*.dsk\n"
+from = "now-9m"
+rule_id = "2adb6378-8b22-4d35-965f-ebedaa88bdb7"
+language = "kql"
+name = "Atomic Test: T1490 - Windows - Delete Backup Files"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "6b1dbaf6-cc8a-4ea6-891f-6058569653bf", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Windows - Delete Backup Files"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

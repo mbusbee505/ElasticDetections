@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Steal Chrome Cookies via Remote Debugging (Mac)' (GUID: e43cfdaf-3fb8-4a45-8de0-7eee8741d072) of technique T1539 (Steal Web Session Cookie). Test Description: The remote debugging functionality in Chrome can be used by malware for post-exploitation activities to obtain cookies without requiring keychain access. By initiating Chrome with a remote debug port, an attacker can sidestep encryption and employ Chrome's own mechanisms to access cookies.\n\nIf successful, this test will output a list of cookies.\n\nNote: Chrome processes will be killed during this test.\n\nSee https://posts.specterops.io/hands-in-the-cookie-jar-dumping-cookies-with-chromiums-remote-debugger-port-34c4f468844e. Command/Steps: killall 'Google Chrome'\nsleep 1\nopen -a \\\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\\\" --args --remote-debugging-port=1337 --remote-al..."
+from = "now-9m"
+rule_id = "cde592bf-0698-48c4-9b39-2929d13ec2ed"
+language = "kql"
+name = "Atomic Test: T1539 - Steal Chrome Cookies via Remote Debugging (Mac)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1539/T1539.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1539", "e43cfdaf-3fb8-4a45-8de0-7eee8741d072", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*killall*\\\" AND process.command_line : \\\"*Google*\\\" AND process.command_line : \\\"*Chrome*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1539"
+name = "Steal Chrome Cookies via Remote Debugging (Mac)"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+

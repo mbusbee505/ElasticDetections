@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify UsePartialEncryptionKey Registry entry' (GUID: b5169fd5-85c8-4b2c-a9b6-64cc0b9febef) of technique T1112 (Modify Registry). Test Description: Allow startup key with TPM for Bitlocker tool. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\FVE\\\" /v UsePartialEncryptionKey /t REG_DWORD /d 2 /f\n"
+from = "now-9m"
+rule_id = "3dec7fe8-482d-4bc3-a43e-cbe49f031879"
+language = "kql"
+name = "Atomic Test: T1112 - Modify UsePartialEncryptionKey Registry entry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "b5169fd5-85c8-4b2c-a9b6-64cc0b9febef", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\FVE*\\\" AND process.command_line : \\\"*UsePartialEncryptionKey*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Modify UsePartialEncryptionKey Registry entry"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

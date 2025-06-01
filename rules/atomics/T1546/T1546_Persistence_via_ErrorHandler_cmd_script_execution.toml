@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persistence via ErrorHandler.cmd script execution' (GUID: 547a4736-dd1c-4b48-b4fe-e916190bb2e7) of technique T1546 (Event Triggered Execution). Test Description: Create persistence by triggering script within ErrorHandler.cmd upon the execution of specific binaries within the oobe directory.\nUpon test execution, Setup.exe will be executed to further execute script within ErrorHandlercmd to launch Notepad.. Command/Steps: Copy-Item -Path PathToAtomicsFolder\\\\T1546\\\\src\\\\ErrorHandler.cmd -Destination C:\\\\Windows\\\\Setup\\\\Scripts\\\\ErrorHandler.cmd\nC:\\\\windows\\\\System32\\\\oobe\\\\Setup\n"
+from = "now-9m"
+rule_id = "9262141a-73ec-4d2d-b72d-fce993697351"
+language = "kql"
+name = "Atomic Test: T1546 - Persistence via ErrorHandler.cmd script execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546/T1546.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546", "547a4736-dd1c-4b48-b4fe-e916190bb2e7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*-Destination*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*-Destination*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546"
+name = "Persistence via ErrorHandler.cmd script execution"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+

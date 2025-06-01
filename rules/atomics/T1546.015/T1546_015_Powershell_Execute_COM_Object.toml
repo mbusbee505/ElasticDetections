@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell Execute COM Object' (GUID: 752191b1-7c71-445c-9dbe-21bb031b18eb) of technique T1546.015 (Event Triggered Execution: Component Object Model Hijacking). Test Description: Use the PowerShell to execute COM CLSID object.\nReference: https://pentestlab.blog/2020/05/20/persistence-com-hijacking/. Command/Steps: $o= [activator]::CreateInstance([type]::GetTypeFromCLSID(\\\"9BA05972-F6A8-11CF-A442-00A0C90A8F39\\\"))\n$item = $o.Item()\n$item.Document.Application.ShellEx..."
+from = "now-9m"
+rule_id = "1873f072-e1ac-45c7-abad-532d22066d34"
+language = "kql"
+name = "Atomic Test: T1546.015 - Powershell Execute COM Object"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.015/T1546.015.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.015", "752191b1-7c71-445c-9dbe-21bb031b18eb", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[activator]::CreateInstance([type]::GetTypeFromCLSID(\\\"9BA05972-F6A8-11CF-A442-00A0C90A8F39\\\"))*\\\" AND powershell.script_block_text : \\\"*$item*\\\" AND powershell.script_block_text : \\\"*$o.Item()*\\\" OR (process.command_line : \\\"*[activator]::CreateInstance([type]::GetTypeFromCLSID(\\\"9BA05972-F6A8-11CF-A442-00A0C90A8F39\\\"))*\\\" AND process.command_line : \\\"*$item*\\\" AND process.command_line : \\\"*$o.Item()*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.015"
+name = "Powershell Execute COM Object"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+

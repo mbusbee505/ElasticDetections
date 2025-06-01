@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AppleScript' (GUID: 3600d97d-81b9-4171-ab96-e4386506e2c2) of technique T1059.002 (Command and Scripting Interpreter: AppleScript). Test Description: Shell Script with AppleScript. The encoded python script will perform an HTTP GET request to 127.0.0.1:80 with a session cookie of \\\"t3VhVOs/DyCcDTFzIKanRxkvk3I=\\\", unless 'Little Snitch' is installed, in which case it will just exit. \nYou can use netcat to listen for the connection and verify execution, e.g. use \\\"nc -l 80\\\" in another terminal window before executing this test and watch for the request.\n\nReference: https://github.com/EmpireProject/Empire. Command/Steps: osascript -e \\\"do shell script \\\\\\\"echo \\\\\\\\\\\\\\\"import sys,base64,warnings;warnings.filterwarnings('ignore');exec(base64.b64decode('aW1wb3J0IHN5cztpbXBvcnQgc..."
+from = "now-9m"
+rule_id = "75b8c77b-1dd3-4bb4-9ec9-0cb4f436a263"
+language = "kql"
+name = "Atomic Test: T1059.002 - AppleScript"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.002/T1059.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.002", "3600d97d-81b9-4171-ab96-e4386506e2c2", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*osascript*\\\" AND process.command_line : \\\"*shell*\\\" AND process.command_line : \\\"*script*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.002"
+name = "AppleScript"
+reference = "https://attack.mitre.org/techniques/T1059/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'NetWire RAT Registry Key Creation' (GUID: 65704cd4-6e36-4b90-b6c1-dc29a82c8e56) of technique T1112 (Modify Registry). Test Description: NetWire continues to create its home key (HKCU\\\\SOFTWARE\\\\NetWire) as well as adding it into the auto-run group in the victim’s registry.\nSee how NetWire malware - https://app.any.run/tasks/41ecdbde-4997-4301-a350-0270448b4c8f/. Command/Steps: reg add HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run /v NetWire /t REG_SZ  /d \\\"C:\\\\Users\\\\admin\\\\AppData\\\\Roaming\\\\Install\\\\Host.exe\\\" /f\nreg add HKCU\\\\..."
+from = "now-9m"
+rule_id = "2d1ee025-8352-4bb2-ad50-8322c6ad22a5"
+language = "kql"
+name = "Atomic Test: T1112 - NetWire RAT Registry Key Creation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "65704cd4-6e36-4b90-b6c1-dc29a82c8e56", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run*\\\" AND process.command_line : \\\"*NetWire*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "NetWire RAT Registry Key Creation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

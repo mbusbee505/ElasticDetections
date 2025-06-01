@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AutoIt Script Execution' (GUID: a9b93f17-31cb-435d-a462-5e838a2a6026) of technique T1059 (Command and Scripting Interpreter). Test Description: An adversary may attempt to execute suspicious or malicious script using AutoIt software instead of regular terminal like powershell or cmd. Calculator will popup when the script is executed successfully.. Command/Steps: Start-Process -FilePath \\\"#{autoit_path}\\\" -ArgumentList \\\"#{script_path}\\\"\n"
+from = "now-9m"
+rule_id = "5f75aefb-adc2-431b-b393-c13ba7a1cc5d"
+language = "kql"
+name = "Atomic Test: T1059 - AutoIt Script Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059/T1059.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059", "a9b93f17-31cb-435d-a462-5e838a2a6026", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*-FilePath*\\\" AND powershell.script_block_text : \\\"*C:\\\\Program*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*-FilePath*\\\" AND process.command_line : \\\"*C:\\\\Program*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059"
+name = "AutoIt Script Execution"
+reference = "https://attack.mitre.org/techniques/T1059"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059"
+
+

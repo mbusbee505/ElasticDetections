@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Terminal Server Client Connection History Cleared' (GUID: 3448824b-3c35-4a9e-a8f5-f887f68bea21) of technique T1112 (Modify Registry). Test Description: The built-in Windows Remote Desktop Connection (RDP) client (mstsc.exe) saves the remote computer name (or IP address) and the username that is used to login after each successful connection to the remote computer. Command/Steps: reg delete \\\"HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Terminal Server Client\\\\Default\\\" /va /f\nreg delete \\\"HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Terminal Serv..."
+from = "now-9m"
+rule_id = "6933b69c-65f2-438a-8cb2-096fa2e345cc"
+language = "kql"
+name = "Atomic Test: T1112 - Terminal Server Client Connection History Cleared"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "3448824b-3c35-4a9e-a8f5-f887f68bea21", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*delete*\\\" AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Terminal*\\\" AND process.command_line : \\\"*Server*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Terminal Server Client Connection History Cleared"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

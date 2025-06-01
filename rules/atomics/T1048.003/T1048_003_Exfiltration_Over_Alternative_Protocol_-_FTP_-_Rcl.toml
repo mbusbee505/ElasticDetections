@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltration Over Alternative Protocol - FTP - Rclone' (GUID: b854eb97-bf9b-45ab-a1b5-b94e4880c56b) of technique T1048.003 (Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol). Test Description: Rclone may be used by an adversary to exfiltrate data to a publicly hosted FTP server.\n[Reference](https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/). Command/Steps: $rclone_bin = Get-ChildItem C:\\\\Users\\\\Public\\\\Downloads\\\\ -Recurse -Include \\\"rclone.exe\\\" | Select-Object -ExpandProperty FullName\n$exfil_pack = Get-Child..."
+from = "now-9m"
+rule_id = "3806317a-239c-4c07-9c73-d85a5ff66691"
+language = "kql"
+name = "Atomic Test: T1048.003 - Exfiltration Over Alternative Protocol - FTP - Rclone"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048.003/T1048.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048.003", "b854eb97-bf9b-45ab-a1b5-b94e4880c56b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$rclone_bin*\\\" AND powershell.script_block_text : \\\"*Get-ChildItem*\\\" AND powershell.script_block_text : \\\"*-Recurse*\\\" OR (process.command_line : \\\"*$rclone_bin*\\\" AND process.command_line : \\\"*Get-ChildItem*\\\" AND process.command_line : \\\"*-Recurse*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048.003"
+name = "Exfiltration Over Alternative Protocol - FTP - Rclone"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute Commands from Clipboard using PowerShell' (GUID: d6dc21af-bec9-4152-be86-326b6babd416) of technique T1115 (Clipboard Data). Test Description: Utilize PowerShell to echo a command to clipboard and execute it. Command/Steps: echo Get-Process | clip\nGet-Clipboard | iex\n"
+from = "now-9m"
+rule_id = "574f90ac-a390-415c-9ca5-58a33d0a565e"
+language = "kql"
+name = "Atomic Test: T1115 - Execute Commands from Clipboard using PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1115/T1115.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1115", "d6dc21af-bec9-4152-be86-326b6babd416", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Process*\\\" AND powershell.script_block_text : \\\"*clip*\\\" AND powershell.script_block_text : \\\"*Get-Clipboard*\\\" OR (process.command_line : \\\"*Get-Process*\\\" AND process.command_line : \\\"*clip*\\\" AND process.command_line : \\\"*Get-Clipboard*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1115"
+name = "Execute Commands from Clipboard using PowerShell"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+

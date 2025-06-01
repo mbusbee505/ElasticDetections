@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Set a file's creation timestamp' (GUID: 8164a4a6-f99c-4661-ac4f-80f5e4e78d2b) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Stomps on the create timestamp of a file\n\nSetting the creation timestamp requires changing the system clock and reverting.\nSudo or root privileges are required to change date. Use with caution.. Command/Steps: NOW=$(date +%m%d%H%M%Y)\ndate 010100001971\ntouch #{target_filename}\ndate \\\"$NOW\\\"\nstat #{target_filename}\n"
+from = "now-9m"
+rule_id = "ba210eb7-2404-4a78-8ebe-07d25e063488"
+language = "kql"
+name = "Atomic Test: T1070.006 - Set a file's creation timestamp"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "8164a4a6-f99c-4661-ac4f-80f5e4e78d2b", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*NOW=$(date*\\\" AND process.command_line : \\\"*+%m%d%H%M%Y)*\\\" AND process.command_line : \\\"*date*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "Set a file's creation timestamp"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

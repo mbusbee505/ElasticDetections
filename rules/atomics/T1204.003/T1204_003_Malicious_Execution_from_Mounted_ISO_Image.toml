@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Malicious Execution from Mounted ISO Image' (GUID: e9795c8d-42aa-4ed4-ad80-551ed793d006) of technique T1204.003 (User Execution: Malicious Image). Test Description: Adversaries may rely on a user running a malicious image to facilitate execution. Command/Steps: IEX (iwr \\\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.003/src/qbot-test.iso\\\" -OutFile \\\"$env:TEMP\\\\qbot-test.iso\\\"..."
+from = "now-9m"
+rule_id = "cfe744c1-4073-4f9f-8747-821968ab3a53"
+language = "kql"
+name = "Atomic Test: T1204.003 - Malicious Execution from Mounted ISO Image"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1204.003/T1204.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1204.003", "e9795c8d-42aa-4ed4-ad80-551ed793d006", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(iwr*\\\" AND powershell.script_block_text : \\\"*-OutFile*\\\" AND powershell.script_block_text : \\\"*Mount-DiskImage*\\\" OR (process.command_line : \\\"*(iwr*\\\" AND process.command_line : \\\"*-OutFile*\\\" AND process.command_line : \\\"*Mount-DiskImage*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1204.003"
+name = "Malicious Execution from Mounted ISO Image"
+reference = "https://attack.mitre.org/techniques/T1204/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1204/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1204/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1204/003"
+
+

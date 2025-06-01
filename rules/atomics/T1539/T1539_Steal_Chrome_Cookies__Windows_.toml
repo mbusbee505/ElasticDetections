@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Steal Chrome Cookies (Windows)' (GUID: 26a6b840-4943-4965-8df5-ef1f9a282440) of technique T1539 (Steal Web Session Cookie). Test Description: This test queries Chrome's SQLite database to steal the encrypted cookie data, designed to function similarly to Zloader/Zbot's cookie theft function. \nOnce an adversary obtains the encrypted cookie info, they could go on to decrypt the encrypted value, potentially allowing for session theft. \nNote: If Chrome is running, the process will be killed to ensure that the DB file isn't locked. \nSee https://www.malwarebytes.com/resources/files/2020/05/the-silent-night-zloader-zbot_final.pdf.. Command/Steps: stop-process -name \\\"chrome\\\" -force -erroraction silentlycontinue\n\\\"select host_key, name, encrypted_value, path, expires_utc, is_secure, is_httponly fr..."
+from = "now-9m"
+rule_id = "5af3fc5f-3e68-4086-b8e6-0d446c7be73a"
+language = "kql"
+name = "Atomic Test: T1539 - Steal Chrome Cookies (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1539/T1539.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1539", "26a6b840-4943-4965-8df5-ef1f9a282440", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*stop-process*\\\" AND powershell.script_block_text : \\\"*-name*\\\" AND powershell.script_block_text : \\\"*chrome*\\\" OR (process.command_line : \\\"*stop-process*\\\" AND process.command_line : \\\"*-name*\\\" AND process.command_line : \\\"*chrome*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1539"
+name = "Steal Chrome Cookies (Windows)"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Hide Files Through Registry' (GUID: f650456b-bd49-4bc1-ae9d-271b5b9581e7) of technique T1564.001 (Hide Artifacts: Hidden Files and Directories). Test Description: Disable Show Hidden files switch in registry. This technique was abused by several malware to hide their files from normal user.\nSee how this trojan abuses this technique - https://www.sophos.com/en-us/threat-center/threat-analyses/viruses-and-spyware/W32~Tiotua-P/detailed-analysis.aspx. Command/Steps: reg add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced /v ShowSuperHidden /t REG_DWORD /d 0 /f\nreg add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windo..."
+from = "now-9m"
+rule_id = "fc30682c-3536-4a43-ae51-600eae4de0d8"
+language = "kql"
+name = "Atomic Test: T1564.001 - Hide Files Through Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.001/T1564.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.001", "f650456b-bd49-4bc1-ae9d-271b5b9581e7", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced*\\\" AND process.command_line : \\\"*ShowSuperHidden*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.001"
+name = "Hide Files Through Registry"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+

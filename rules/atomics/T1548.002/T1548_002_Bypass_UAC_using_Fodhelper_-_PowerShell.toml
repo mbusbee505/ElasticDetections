@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bypass UAC using Fodhelper - PowerShell' (GUID: 3f627297-6c38-4e7d-a278-fc2563eaaeaa) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: PowerShell code to bypass User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.\nUpon execution command prompt will be opened.. Command/Steps: New-Item \\\"HKCU:\\\\software\\\\classes\\\\ms-settings\\\\shell\\\\open\\\\command\\\" -Force\nNew-ItemProperty \\\"HKCU:\\\\software\\\\classes\\\\ms-settings\\\\shell\\\\open\\\\command\\\" -Name..."
+from = "now-9m"
+rule_id = "88684202-4177-4931-a7b5-507b6601f7d2"
+language = "kql"
+name = "Atomic Test: T1548.002 - Bypass UAC using Fodhelper - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "3f627297-6c38-4e7d-a278-fc2563eaaeaa", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\software\\\\classes\\\\ms-settings\\\\shell\\\\open\\\\command*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*HKCU:\\\\software\\\\classes\\\\ms-settings\\\\shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Bypass UAC using Fodhelper - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

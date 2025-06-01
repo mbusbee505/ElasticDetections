@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI' (GUID: 14d55b96-b2f5-428d-8fed-49dc4d9dd616) of technique T1562.010 (Impair Defenses: Downgrade Attack). Test Description: An adversary will change the VIB acceptance level to CommunitySupported to downgrade the acceptance criteria via ESXCLI. Afterwards an adversary may proceed to installing malicious VIBs on the host.\n[Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-detection-hardening). Command/Steps: echo \\\"\\\" | \\\"#{plink_file}\\\" \\\"#{vm_host}\\\" -ssh  -l \\\"#{vm_user}\\\" -pw \\\"#{vm_pass}\\\" -m \\\"#{cli_script}\\\"\n"
+from = "now-9m"
+rule_id = "b52a54c3-e083-402f-b168-e9b2dfede53d"
+language = "kql"
+name = "Atomic Test: T1562.010 - ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.010/T1562.010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.010", "14d55b96-b2f5-428d-8fed-49dc4d9dd616", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*atomic.local*\\\" AND process.command_line : \\\"*-ssh*\\\" AND process.command_line : \\\"*root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.010"
+name = "ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+

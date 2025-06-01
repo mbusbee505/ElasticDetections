@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bypass UAC using sdclt DelegateExecute' (GUID: 3be891eb-4608-4173-87e8-78b494c029b7) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: Bypasses User Account Control using a fileless method, registry only.\nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1). Command/Steps: New-Item -Force -Path \\\"HKCU:\\\\Software\\\\Classes\\\\Folder\\\\shell\\\\open\\\\command\\\" -Value '#{command_to_execute}'\nNew-ItemProperty -Force -Path \\\"HKCU:\\\\Software\\\\..."
+from = "now-9m"
+rule_id = "102a875c-5459-4a7c-8c24-3e3ae766d478"
+language = "kql"
+name = "Atomic Test: T1548.002 - Bypass UAC using sdclt DelegateExecute"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "3be891eb-4608-4173-87e8-78b494c029b7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Force*\\\" AND process.command_line : \\\"*-Path*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Bypass UAC using sdclt DelegateExecute"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

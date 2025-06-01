@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Office365 - Email Forwarding' (GUID: 3234117e-151d-4254-9150-3d0bac41e38c) of technique T1114.003 (Email Collection: Email Forwarding Rule). Test Description: Creates a new Inbox Rule to forward emails to an external user via the \\\"ForwardTo\\\" property of the New-InboxRule Powershell cmdlet.. Command/Steps: $secure_pwd = \\\"#{password}\\\" | ConvertTo-SecureString -AsPlainText -Force\n$creds = New-Object System.Management.Automation.PSCredential -ArgumentList \\\"..."
+from = "now-9m"
+rule_id = "3bc2f3af-29a8-43c5-9079-baa68e75b756"
+language = "kql"
+name = "Atomic Test: T1114.003 - Office365 - Email Forwarding"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1114.003/T1114.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1114.003", "3234117e-151d-4254-9150-3d0bac41e38c", "office-365",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$secure_pwd*\\\" AND powershell.script_block_text : \\\"*ConvertTo-SecureString*\\\" AND powershell.script_block_text : \\\"*-AsPlainText*\\\" OR (process.command_line : \\\"*$secure_pwd*\\\" AND process.command_line : \\\"*ConvertTo-SecureString*\\\" AND process.command_line : \\\"*-AsPlainText*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1114.003"
+name = "Office365 - Email Forwarding"
+reference = "https://attack.mitre.org/techniques/T1114/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1114/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1114/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1114/003"
+
+

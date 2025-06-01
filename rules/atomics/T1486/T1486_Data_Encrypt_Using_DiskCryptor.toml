@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Data Encrypt Using DiskCryptor' (GUID: 44b68e11-9da2-4d45-a0d9-893dabd60f30) of technique T1486 (Data Encrypted for Impact). Test Description: DiskCryptor, an open source encryption utility, can be exploited by adversaries for encrypting all disk partitions, including system partitions. This tool was identified in a ransomware campaign, as reported on https://thedfirreport.com/2021/11/15/exchange-exploit-leads-to-domain-wide-ransomware/. The documentation for DiskCryptor can be found at https://github.com/DavidXanatos/DiskCryptor. During the installation process, running dcrypt.exe starts the encryption console. It's important to note that a system reboot is necessary as part of the installation.. Command/Steps: \\\"\\\"%PROGRAMFILES%\\\\dcrypt\\\"\\\\#{dcrypt_exe}\\\"\n"
+from = "now-9m"
+rule_id = "02aafdab-79f0-498f-82fb-83a615022cf5"
+language = "kql"
+name = "Atomic Test: T1486 - Data Encrypt Using DiskCryptor"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "44b68e11-9da2-4d45-a0d9-893dabd60f30", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%PROGRAMFILES%\\\\dcrypt\\\"\\\\dcrypt.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "Data Encrypt Using DiskCryptor"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

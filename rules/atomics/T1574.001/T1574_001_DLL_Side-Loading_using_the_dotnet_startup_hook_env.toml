@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DLL Side-Loading using the dotnet startup hook environment variable' (GUID: d322cdd7-7d60-46e3-9111-648848da7c02) of technique T1574.001 (Hijack Execution Flow: DLL). Test Description: Utilizing the dotnet_startup_hooks environment variable, this method allows for registering a global method in an assembly that will be executed whenever a .net core application is started. This unlocks a whole range of scenarios, from injecting a profiler to tweaking a static context in a given environment. [blog post](https://medium.com/criteo-engineering/c-have-some-fun-with-net-core-startup-hooks-498b9ad001e1). Command/Steps: set DOTNET_STARTUP_HOOKS=\\\"#{preloader_dll}\\\"\ndotnet -h > nul\necho.\n"
+from = "now-9m"
+rule_id = "759fa22c-fe4c-4bbb-b59b-5a57a207b8a4"
+language = "kql"
+name = "Atomic Test: T1574.001 - DLL Side-Loading using the dotnet startup hook environment variable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.001/T1574.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.001", "d322cdd7-7d60-46e3-9111-648848da7c02", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*dotnet*\\\" AND process.command_line : \\\"*echo.*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.001"
+name = "DLL Side-Loading using the dotnet startup hook environment variable"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+

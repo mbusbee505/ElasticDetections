@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Encrypts collected data with AES-256 and Base64' (GUID: a743e3a6-e8b2-4a30-abe7-ca85d201b5d3) of technique T1560.001 (Archive Collected Data: Archive via Utility). Test Description: An adversary may compress all the collected data, encrypt and send them to a C2 server using base64 encoding. \nThis atomic test tries to emulate the behaviour of the FLEXIROOT backdoor to archive the collected data. FLEXIROOT typically utilizes AES encryption and base64 encoding to transfer the encrypted data to the C2 server. \nIn this test, standard zip compression and the OpenSSL library are used to encrypt the compressed data.\nhttps://attack.mitre.org/versions/v7/software/S0267/. Command/Steps: zip -r  #{input_folder}/#{input_file}.zip #{input_folder}\nopenssl enc -aes-256-cbc -pass pass:#{enc_pass} -p -in #{input_folder}/#{input_file}.zip -ou..."
+from = "now-9m"
+rule_id = "56a1e5c9-4a36-4174-a3eb-f2cf5c23b498"
+language = "kql"
+name = "Atomic Test: T1560.001 - Encrypts collected data with AES-256 and Base64"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1560.001/T1560.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1560.001", "a743e3a6-e8b2-4a30-abe7-ca85d201b5d3", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*openssl*\\\" AND process.command_line : \\\"*-aes-256-cbc*\\\" AND process.command_line : \\\"*-pass*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1560.001"
+name = "Encrypts collected data with AES-256 and Base64"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+

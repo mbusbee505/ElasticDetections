@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Stage data from Discovery.bat' (GUID: 107706a5-6f9f-451a-adae-bab8c667829f) of technique T1074.001 (Data Staged: Local Data Staging). Test Description: Utilize powershell to download discovery.bat and save to a local file. This emulates an attacker downloading data collection tools onto the host. Upon execution,\nverify that the file is saved in the temp directory.. Command/Steps: Invoke-WebRequest \\\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.bat\\\" -OutFile #{output_file}\n"
+from = "now-9m"
+rule_id = "184947f1-b634-48da-9d56-3d5dc5f1074d"
+language = "kql"
+name = "Atomic Test: T1074.001 - Stage data from Discovery.bat"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1074.001/T1074.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1074.001", "107706a5-6f9f-451a-adae-bab8c667829f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*-OutFile*\\\" AND powershell.script_block_text : \\\"*\\\\discovery.bat*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*-OutFile*\\\" AND process.command_line : \\\"*\\\\discovery.bat*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1074.001"
+name = "Stage data from Discovery.bat"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+

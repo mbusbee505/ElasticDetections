@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'XOR Encoded data.' (GUID: c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08) of technique T1132.001 (Data Encoding: Standard Encoding). Test Description: XOR encodes the data with a XOR key.\nReference - https://gist.github.com/loadenmb/8254cee0f0287b896a05dcdc8a30042f. Command/Steps: $plaintext = ([system.Text.Encoding]::UTF8.getBytes(\\\"#{plaintext}\\\"))\n$key = \\\"#{key}\\\"\n$cyphertext =  @();\nfor ($i = 0; $i -lt $plaintext.Count; $i++) {..."
+from = "now-9m"
+rule_id = "4320e775-9366-4e3b-8c27-dce4b7272fa4"
+language = "kql"
+name = "Atomic Test: T1132.001 - XOR Encoded data."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1132.001/T1132.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1132.001", "c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$plaintext*\\\" AND powershell.script_block_text : \\\"*$key*\\\" AND powershell.script_block_text : \\\"*abcdefghijklmnopqrstuvwxyz123456*\\\" OR (process.command_line : \\\"*$plaintext*\\\" AND process.command_line : \\\"*$key*\\\" AND process.command_line : \\\"*abcdefghijklmnopqrstuvwxyz123456*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1132.001"
+name = "XOR Encoded data."
+reference = "https://attack.mitre.org/techniques/T1132/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1132/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1132/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1132/001"
+
+

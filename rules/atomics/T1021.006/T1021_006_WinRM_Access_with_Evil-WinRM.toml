@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WinRM Access with Evil-WinRM' (GUID: efe86d95-44c4-4509-ae42-7bfd9d1f5b3d) of technique T1021.006 (Remote Services: Windows Remote Management). Test Description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems that have WinRM enabled. Command/Steps: evil-winrm -i #{destination_address} -u #{user_name} -p #{password}"
+from = "now-9m"
+rule_id = "8fa7e2eb-acc1-49be-8e09-d10ed087c039"
+language = "kql"
+name = "Atomic Test: T1021.006 - WinRM Access with Evil-WinRM"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.006/T1021.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.006", "efe86d95-44c4-4509-ae42-7bfd9d1f5b3d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*evil-winrm*\\\" AND powershell.script_block_text : \\\"*Target*\\\" AND powershell.script_block_text : \\\"*Domain\\\\Administrator*\\\" OR (process.command_line : \\\"*evil-winrm*\\\" AND process.command_line : \\\"*Target*\\\" AND process.command_line : \\\"*Domain\\\\Administrator*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.006"
+name = "WinRM Access with Evil-WinRM"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+

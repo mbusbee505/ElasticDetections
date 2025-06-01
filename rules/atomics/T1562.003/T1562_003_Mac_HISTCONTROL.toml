@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mac HISTCONTROL' (GUID: 468566d5-83e5-40c1-b338-511e1659628d) of technique T1562.003 (Impair Defenses: Impair Command History Logging). Test Description: The HISTCONTROL variable is set to ignore (not write to the history file) command that are a duplicate of something already in the history \nand commands that start with a space. This atomic sets this variable in the current session and also writes it to the current user's ~/.bash_profile \nso that it will apply to all future settings as well.\nhttps://www.linuxjournal.com/content/using-bash-history-more-efficiently-histcontrol. Command/Steps: 1. export HISTCONTROL=ignoreboth\n2. echo export \\\"HISTCONTROL=ignoreboth\\\" >> ~/.bash_profile\n3. ls\n4. whoami > recon.txt\n"
+from = "now-9m"
+rule_id = "a35ce1cb-d5b6-44ae-b41a-f7bf8ffe422e"
+language = "kql"
+name = "Atomic Test: T1562.003 - Mac HISTCONTROL"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.003/T1562.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.003", "468566d5-83e5-40c1-b338-511e1659628d", "macos", "linux",]
+type = "query"
+query = "process.command_line : \\\"*export*\\\" AND process.command_line : \\\"*HISTCONTROL=ignoreboth*\\\" AND process.command_line : \\\"*export*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.003"
+name = "Mac HISTCONTROL"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+

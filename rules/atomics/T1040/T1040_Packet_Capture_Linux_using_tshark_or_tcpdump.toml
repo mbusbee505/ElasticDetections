@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Packet Capture Linux using tshark or tcpdump' (GUID: 7fe741f7-b265-4951-a7c7-320889083b3e) of technique T1040 (Network Sniffing). Test Description: Perform a PCAP. Wireshark will be required for tshark. TCPdump may already be installed.\n\nUpon successful execution, tshark or tcpdump will execute and capture 5 packets on interface ens33.. Command/Steps: tcpdump -c 5 -nnni #{interface}\ntshark -c 5 -i #{interface}\n"
+from = "now-9m"
+rule_id = "907125f2-abc4-4a58-a953-eca99b1a84c9"
+language = "kql"
+name = "Atomic Test: T1040 - Packet Capture Linux using tshark or tcpdump"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "7fe741f7-b265-4951-a7c7-320889083b3e", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*tcpdump*\\\" AND process.command_line : \\\"*-nnni*\\\" AND process.command_line : \\\"*ens33*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Packet Capture Linux using tshark or tcpdump"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

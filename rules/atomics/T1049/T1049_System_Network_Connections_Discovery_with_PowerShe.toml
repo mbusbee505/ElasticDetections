@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Network Connections Discovery with PowerShell' (GUID: f069f0f1-baad-4831-aa2b-eddac4baac4a) of technique T1049 (System Network Connections Discovery). Test Description: Get a listing of network connections.\n\nUpon successful execution, powershell.exe will execute `get-NetTCPConnection`. Results will output via stdout.. Command/Steps: Get-NetTCPConnection\n"
+from = "now-9m"
+rule_id = "f69045b1-cdde-4d50-bdc0-7cf14ec8bb3d"
+language = "kql"
+name = "Atomic Test: T1049 - System Network Connections Discovery with PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1049/T1049.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1049", "f069f0f1-baad-4831-aa2b-eddac4baac4a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-NetTCPConnection*\\\" OR (process.command_line : \\\"*Get-NetTCPConnection*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1049"
+name = "System Network Connections Discovery with PowerShell"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+

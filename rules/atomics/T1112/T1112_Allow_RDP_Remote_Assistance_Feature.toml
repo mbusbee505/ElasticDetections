@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Allow RDP Remote Assistance Feature' (GUID: 86677d0e-0b5e-4a2b-b302-454175f9aa9e) of technique T1112 (Modify Registry). Test Description: Modify the registry of the currently logged in user using reg.exe via cmd console to allow rdp remote assistance feature. This feature allow specific\nuser to rdp connect on the targeted machine.\nSee how azorult malware abuses this technique- https://app.any.run/tasks/a6f2ffe2-e6e2-4396-ae2e-04ea0143f2d8/. Command/Steps: reg add \\\"HKLM\\\\System\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\" /v fAllowToGetHelp /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "ca35b26b-0cdf-4a13-89ed-b0fb5824d318"
+language = "kql"
+name = "Atomic Test: T1112 - Allow RDP Remote Assistance Feature"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "86677d0e-0b5e-4a2b-b302-454175f9aa9e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\System\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server*\\\" AND process.command_line : \\\"*fAllowToGetHelp*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Allow RDP Remote Assistance Feature"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

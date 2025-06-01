@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create SysV Service' (GUID: 760fe8d2-79d9-494f-905e-a239a3df86f6) of technique T1543.002 (Create or Modify System Process: SysV/Systemd Service). Test Description: This test creates a SysV service unit file and enables it as a service.. Command/Steps: echo '#\\\\!/bin/sh' > #{rc_service_path}/#{rc_service_file}\necho ' ' >> #{rc_service_path}/#{rc_service_file}\necho '#' >> #{rc_service_path}/#{rc_servic..."
+from = "now-9m"
+rule_id = "3b254910-12e0-4af2-9aff-6d2922985ac7"
+language = "kql"
+name = "Atomic Test: T1543.002 - Create SysV Service"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.002/T1543.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.002", "760fe8d2-79d9-494f-905e-a239a3df86f6", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*#\\\\!/bin/sh*\\\" AND process.command_line : \\\"*/usr/local/etc/rc.d/art-test*\\\" AND process.command_line : \\\"*/usr/local/etc/rc.d/art-test*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.002"
+name = "Create SysV Service"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+

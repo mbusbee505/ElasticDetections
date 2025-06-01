@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Service Installation PowerShell' (GUID: 491a4af6-a521-4b74-b23b-f7b3f1ee9e77) of technique T1543.003 (Create or Modify System Process: Windows Service). Test Description: Installs A Local Service via PowerShell.\nUpon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.. Command/Steps: New-Service -Name \\\"#{service_name}\\\" -BinaryPathName \\\"#{binary_path}\\\"\nStart-Service -Name \\\"#{service_name}\\\"\n"
+from = "now-9m"
+rule_id = "a9927ee8-f041-4aa4-8571-55165ff9f112"
+language = "kql"
+name = "Atomic Test: T1543.003 - Service Installation PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.003/T1543.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.003", "491a4af6-a521-4b74-b23b-f7b3f1ee9e77", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Service*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*AtomicTestService_PowerShell*\\\" OR (process.command_line : \\\"*New-Service*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*AtomicTestService_PowerShell*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.003"
+name = "Service Installation PowerShell"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+

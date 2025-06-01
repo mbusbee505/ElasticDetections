@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Juicy Potato' (GUID: f095e373-b936-4eb4-8d22-f47ccbfbe64a) of technique T1134.001 (Access Token Manipulation: Token Impersonation/Theft). Test Description: This Atomic utilizes Juicy Potato to obtain privilege escalation. \nUpon successful execution of this test, a vulnerable CLSID will be used to execute a process with system permissions.\nThis tactic has been previously observed in SnapMC Ransomware, amongst numerous other campaigns. \n[Reference](https://blog.fox-it.com/2021/10/11/snapmc-skips-ransomware-steals-data/). Command/Steps: cmd /c '#{potato_path}' -l '#{listening_port}' -t * -p '#{target_exe}' -c '#{target_CLSID}'\n"
+from = "now-9m"
+rule_id = "557a8252-9fde-44ab-95f7-47f48f9bc97d"
+language = "kql"
+name = "Atomic Test: T1134.001 - Juicy Potato"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.001/T1134.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.001", "f095e373-b936-4eb4-8d22-f47ccbfbe64a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$env:windir\\\\system32\\\\notepad.exe*\\\" AND powershell.script_block_text : \\\"*{F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4}*\\\" OR (process.command_line : \\\"*$env:windir\\\\system32\\\\notepad.exe*\\\" AND process.command_line : \\\"*{F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4}*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.001"
+name = "Juicy Potato"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+

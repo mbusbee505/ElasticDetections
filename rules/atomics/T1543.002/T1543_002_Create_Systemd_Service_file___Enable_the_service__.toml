@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Systemd Service file,  Enable the service , Modify and Reload the service.' (GUID: c35ac4a8-19de-43af-b9f8-755da7e89c89) of technique T1543.002 (Create or Modify System Process: SysV/Systemd Service). Test Description: This test creates a systemd service unit file and enables it to autostart on boot. Once service is created and enabled, it also modifies this same service file showcasing both Creation and Modification of system process.. Command/Steps: echo \\\"#!/bin/bash\\\" > /etc/init.d/T1543.002\necho \\\"### BEGIN INIT INFO\\\" >> /etc/init.d/T1543.002\necho \\\"# Provides : Atomic Test T1543.002\\\" >> /etc/init...."
+from = "now-9m"
+rule_id = "a29351fe-dc26-4c11-b4be-6bd1fe20d145"
+language = "kql"
+name = "Atomic Test: T1543.002 - Create Systemd Service file,  Enable the service , Modify and Reload the service."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.002/T1543.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.002", "c35ac4a8-19de-43af-b9f8-755da7e89c89", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*#!/bin/bash*\\\" AND process.command_line : \\\"*BEGIN*\\\" AND process.command_line : \\\"*INIT*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.002"
+name = "Create Systemd Service file,  Enable the service , Modify and Reload the service."
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - EC2 Enumeration from Cloud Instance' (GUID: 99ee161b-dcb1-4276-8ecb-7cfdcb207820) of technique T1580 (Cloud Infrastructure Discovery). Test Description: This atomic runs several API calls (sts:GetCallerIdentity, s3:ListBuckets, iam:GetAccountSummary, iam:ListRoles, iam:ListUsers, iam:GetAccountAuthorizationDetails, ec2:DescribeSnapshots, cloudtrail:DescribeTrails, guardduty:ListDetectors) from the context of an EC2 instance role. This simulates an attacker compromising an EC2 instance and running initial discovery commands on it. This atomic test leverages a tool called stratus-red-team built by DataDog (https://github.com/DataDog/stratus-red-team). Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.discovery.ec2-enumerate-from-instance/. Command/Steps: export AWS_REGION=#{aws_region}\ncd #{stratus_path}\necho \\\"Stratus: Start Warmup.\\\"\n./stratus warmup aws.discovery.ec2-enumerate-from-instance\necho \\\"Stra..."
+from = "now-9m"
+rule_id = "fcf8bb13-296e-46f9-ba42-e709816a3eca"
+language = "kql"
+name = "Atomic Test: T1580 - AWS - EC2 Enumeration from Cloud Instance"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1580/T1580.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1580", "99ee161b-dcb1-4276-8ecb-7cfdcb207820", "linux", "macos", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*export*\\\" AND process.command_line : \\\"*AWS_REGION=us-west-2*\\\" AND process.command_line : \\\"*Stratus:*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1580"
+name = "AWS - EC2 Enumeration from Cloud Instance"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+

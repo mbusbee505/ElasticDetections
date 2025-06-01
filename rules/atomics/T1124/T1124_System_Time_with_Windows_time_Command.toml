@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Time with Windows time Command' (GUID: 53ead5db-7098-4111-bb3f-563be390e72e) of technique T1124 (System Time Discovery). Test Description: Displays the current system time via the Windows builtin time command: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/time\nRecently observed in use in the wild during an incident involving Ursnif malware:\nhttps://github.com/The-DFIR-Report/Sigma-Rules/blob/dc72f0b557fc63347379be0a33439788256761c8/rules/windows/process_creation/proc_creation_win_system_time_lookup.yml\nhttps://thedfirreport.com/2023/01/09/unwrapping-ursnifs-gifts/. Command/Steps: time\n"
+from = "now-9m"
+rule_id = "05a08eef-8b7e-4ff2-aba6-36bd243120b6"
+language = "kql"
+name = "Atomic Test: T1124 - System Time with Windows time Command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1124/T1124.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1124", "53ead5db-7098-4111-bb3f-563be390e72e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*time*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1124"
+name = "System Time with Windows time Command"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+

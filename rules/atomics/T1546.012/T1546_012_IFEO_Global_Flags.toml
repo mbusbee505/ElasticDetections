@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'IFEO Global Flags' (GUID: 46b1f278-c8ee-4aa5-acce-65e77b11f3c1) of technique T1546.012 (Event Triggered Execution: Image File Execution Options Injection). Test Description: Leverage Global Flags Settings. Command/Steps: REG ADD \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Image File Execution Options\\\\#{target_binary}\\\" /v GlobalFlag /t REG_DWORD /d 512\nREG ADD \\\"H..."
+from = "now-9m"
+rule_id = "33ba9756-0d16-4c6f-8b5b-4bd9ea54c3b6"
+language = "kql"
+name = "Atomic Test: T1546.012 - IFEO Global Flags"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.012/T1546.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.012", "46b1f278-c8ee-4aa5-acce-65e77b11f3c1", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Image*\\\" AND process.command_line : \\\"*File*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.012"
+name = "IFEO Global Flags"
+reference = "https://attack.mitre.org/techniques/T1546/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/012"
+
+

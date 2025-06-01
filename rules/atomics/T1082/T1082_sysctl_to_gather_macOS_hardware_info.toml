@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'sysctl to gather macOS hardware info' (GUID: c8d40da9-31bd-47da-a497-11ea55d1ef6c) of technique T1082 (System Information Discovery). Test Description: Gets the macOS hardware information, which can be used to determine whether the target macOS host is running on a physical or virtual machine. sysctl can be used to gather interesting macOS host data, including hardware information, memory size, logical cpu information, etc.. Command/Steps: sysctl -n hw.model"
+from = "now-9m"
+rule_id = "4e053b59-4573-462b-8fb7-b0a0a0a27aab"
+language = "kql"
+name = "Atomic Test: T1082 - sysctl to gather macOS hardware info"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "c8d40da9-31bd-47da-a497-11ea55d1ef6c", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*sysctl*\\\" AND process.command_line : \\\"*hw.model*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "sysctl to gather macOS hardware info"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

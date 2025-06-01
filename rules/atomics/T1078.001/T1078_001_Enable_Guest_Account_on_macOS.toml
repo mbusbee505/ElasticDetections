@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable Guest Account on macOS' (GUID: 0315bdff-4178-47e9-81e4-f31a6d23f7e4) of technique T1078.001 (Valid Accounts: Default Accounts). Test Description: This test enables the guest account on macOS using sysadminctl utility.. Command/Steps: sudo sysadminctl -guestAccount on"
+from = "now-9m"
+rule_id = "f76074ed-7854-4ff6-8aca-eb1239fc1185"
+language = "kql"
+name = "Atomic Test: T1078.001 - Enable Guest Account on macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.001/T1078.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.001", "0315bdff-4178-47e9-81e4-f31a6d23f7e4", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*sysadminctl*\\\" AND process.command_line : \\\"*-guestAccount*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.001"
+name = "Enable Guest Account on macOS"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+

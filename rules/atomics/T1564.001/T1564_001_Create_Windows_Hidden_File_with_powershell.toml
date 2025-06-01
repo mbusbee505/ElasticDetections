@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Windows Hidden File with powershell' (GUID: 7f66d539-4fbe-4cfa-9a56-4a2bf660c58a) of technique T1564.001 (Hide Artifacts: Hidden Files and Directories). Test Description: Creates a file and marks it as hidden through powershell. Upon execution, open File Epxplorer and enable View > Hidden Items. Then, open Properties > Details on the file\nand observe that the Attributes is \\\"H\\\" Hidden.. Command/Steps: $file = Get-Item $env:temp\\\\T1564.001-9.txt -Force\n$file.attributes='Hidden'\n"
+from = "now-9m"
+rule_id = "ddf209d5-e4ad-4192-b11e-6de31ed39ee5"
+language = "kql"
+name = "Atomic Test: T1564.001 - Create Windows Hidden File with powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.001/T1564.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.001", "7f66d539-4fbe-4cfa-9a56-4a2bf660c58a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$file*\\\" AND powershell.script_block_text : \\\"*Get-Item*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*$file*\\\" AND process.command_line : \\\"*Get-Item*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.001"
+name = "Create Windows Hidden File with powershell"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+

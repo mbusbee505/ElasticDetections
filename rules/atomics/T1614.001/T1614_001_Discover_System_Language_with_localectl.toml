@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language with localectl' (GUID: 07ce871a-b3c3-44a3-97fa-a20118fdc7c9) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: Identify System language with the `localectl` command.\n\nUpon successful execution, the key `System Locale` from the output will contain the\n`LANG` environment variable that has the 5 character locale result that can be looked\nup to correlate the language and territory.. Command/Steps: localectl status\n"
+from = "now-9m"
+rule_id = "cf3c8c46-d784-464a-8ca1-33b8ce9db210"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language with localectl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "07ce871a-b3c3-44a3-97fa-a20118fdc7c9", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*localectl*\\\" AND process.command_line : \\\"*status*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language with localectl"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

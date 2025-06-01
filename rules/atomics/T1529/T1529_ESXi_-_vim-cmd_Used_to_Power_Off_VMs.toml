@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - vim-cmd Used to Power Off VMs' (GUID: 622cc1a0-45e7-428c-aed7-c96dd605fbe6) of technique T1529 (System Shutdown/Reboot). Test Description: Adversaries may power off VMs to facilitate the deployment of ransomware payloads.\n[Reference](https://lolesxi-project.github.io/LOLESXi/lolesxi/Binaries/vim-cmd/#power%20off%20vm). Command/Steps: echo \\\"\\\" | \\\"#{plink_file}\\\" -batch \\\"#{vm_host}\\\" -ssh -l #{vm_user} -pw \\\"#{vm_pass}\\\" \\\"for i in `vim-cmd vmsvc/getallvms | awk 'NR>1 {print $1}'`; do vim-..."
+from = "now-9m"
+rule_id = "284e893f-d9a6-4222-ad13-91a09970bccd"
+language = "kql"
+name = "Atomic Test: T1529 - ESXi - vim-cmd Used to Power Off VMs"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1529/T1529.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1529", "622cc1a0-45e7-428c-aed7-c96dd605fbe6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*-batch*\\\" AND process.command_line : \\\"*atomic.local*\\\" AND process.command_line : \\\"*-ssh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1529"
+name = "ESXi - vim-cmd Used to Power Off VMs"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+

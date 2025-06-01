@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 with Control_RunDLL' (GUID: e4c04b6f-c492-4782-82c7-3bf75eb8077e) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Rundll32.exe loading dll with 'control_rundll' within the command-line, loading a .cpl or another file type related to CVE-2021-40444.. Command/Steps: rundll32.exe shell32.dll,Control_RunDLL \\\"#{input_file}\\\"\n"
+from = "now-9m"
+rule_id = "6cb269fb-7006-493e-be6d-7cbf0200a1fe"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 with Control_RunDLL"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "e4c04b6f-c492-4782-82c7-3bf75eb8077e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*shell32.dll,Control_RunDLL*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 with Control_RunDLL"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

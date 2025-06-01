@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Change login shell' (GUID: c7ac59cb-13cc-4622-81dc-6d2fee9bfac7) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: An adversary may want to use a different login shell. The chsh command changes the user login shell. The following test, creates an art user with a /bin/bash shell, changes the users shell to sh, then deletes the art user.. Command/Steps: [ \\\"$(uname)\\\" = 'FreeBSD' ] && pw useradd art -g wheel -s /bin/csh || useradd -s /bin/bash art\ncat /etc/passwd |grep ^art\nchsh -s /bin/sh art\ncat /etc/..."
+from = "now-9m"
+rule_id = "3e2b9bb7-9206-4ff8-a075-27a0c452e5c6"
+language = "kql"
+name = "Atomic Test: T1059.004 - Change login shell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "c7ac59cb-13cc-4622-81dc-6d2fee9bfac7", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(uname)*\\\" AND process.command_line : \\\"*FreeBSD*\\\" AND process.command_line : \\\"*useradd*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Change login shell"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

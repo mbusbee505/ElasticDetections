@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable syslog (freebsd)' (GUID: db9de996-441e-4ae0-947b-61b6871e2fdf) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Disables syslog collection. Command/Steps: service syslogd stop\nsysrc syslogd_enable=\\\"NO\\\"\n"
+from = "now-9m"
+rule_id = "4dc36e6f-05ed-465a-b784-43eeb83f3e28"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable syslog (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "db9de996-441e-4ae0-947b-61b6871e2fdf", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*service*\\\" AND process.command_line : \\\"*syslogd*\\\" AND process.command_line : \\\"*stop*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable syslog (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

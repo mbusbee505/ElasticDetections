@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute commands from clipboard' (GUID: 1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff) of technique T1115 (Clipboard Data). Test Description: Echo a command to clipboard and execute it. Command/Steps: echo ifconfig | pbcopy\n$(pbpaste)"
+from = "now-9m"
+rule_id = "575f7ea3-e05e-4cea-bf75-90bd0cdec68d"
+language = "kql"
+name = "Atomic Test: T1115 - Execute commands from clipboard"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1115/T1115.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1115", "1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ifconfig*\\\" AND process.command_line : \\\"*pbcopy*\\\" AND process.command_line : \\\"*$(pbpaste)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1115"
+name = "Execute commands from clipboard"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1115"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'RDP to DomainController' (GUID: 355d4632-8cb9-449d-91ce-b566d0253d3e) of technique T1021.001 (Remote Services: Remote Desktop Protocol). Test Description: Attempt an RDP session via Remote Desktop Application to a DomainController.. Command/Steps: $Server=#{logonserver}\n$User = Join-Path #{domain} #{username}\n$Password=\\\"#{password}\\\"\ncmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password\nmst..."
+from = "now-9m"
+rule_id = "2174c807-a07e-46cf-b7e4-7297be34ac6a"
+language = "kql"
+name = "Atomic Test: T1021.001 - RDP to DomainController"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.001/T1021.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.001", "355d4632-8cb9-449d-91ce-b566d0253d3e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Server=$ENV:logonserver.TrimStart(\\\"\\\\\\\")*\\\" AND powershell.script_block_text : \\\"*$User*\\\" AND powershell.script_block_text : \\\"*Join-Path*\\\" OR (process.command_line : \\\"*$Server=$ENV:logonserver.TrimStart(\\\"\\\\\\\")*\\\" AND process.command_line : \\\"*$User*\\\" AND process.command_line : \\\"*Join-Path*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.001"
+name = "RDP to DomainController"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+

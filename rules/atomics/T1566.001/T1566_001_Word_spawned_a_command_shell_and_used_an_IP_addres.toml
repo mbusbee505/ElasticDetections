@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Word spawned a command shell and used an IP address in the command line' (GUID: cbb6799a-425c-4f83-9194-5447a909d67f) of technique T1566.001 (Phishing: Spearphishing Attachment). Test Description: Word spawning a command prompt then running a command with an IP address in the command line is an indicator of malicious activity.\nUpon execution, CMD will be launched and ping 8.8.8.8.. Command/Steps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX (iwr \\\"https://raw.githubusercontent.com/redcanaryco/atomic-red-tea..."
+from = "now-9m"
+rule_id = "7e61e4d7-0ba9-4326-97de-81f372fabc56"
+language = "kql"
+name = "Atomic Test: T1566.001 - Word spawned a command shell and used an IP address in the command line"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1566.001/T1566.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1566.001", "cbb6799a-425c-4f83-9194-5447a909d67f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND powershell.script_block_text : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND powershell.script_block_text : \\\"*(iwr*\\\" OR (process.command_line : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND process.command_line : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND process.command_line : \\\"*(iwr*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1566.001"
+name = "Word spawned a command shell and used an IP address in the command line"
+reference = "https://attack.mitre.org/techniques/T1566/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1566/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1566/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1566/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Time Discovery' (GUID: 20aba24b-e61f-4b26-b4ce-4784f763ca20) of technique T1124 (System Time Discovery). Test Description: Identify the system time. Upon execution, the local computer system time and timezone will be displayed.. Command/Steps: net time \\\\\\\\#{computer_name}\nw32tm /tz\n"
+from = "now-9m"
+rule_id = "f34b8698-fd5c-4368-b57f-6a4e845200f7"
+language = "kql"
+name = "Atomic Test: T1124 - System Time Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1124/T1124.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1124", "20aba24b-e61f-4b26-b4ce-4784f763ca20", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*time*\\\" AND process.command_line : \\\"*\\\\\\\\localhost*\\\" AND process.command_line : \\\"*w32tm*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1124"
+name = "System Time Discovery"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+

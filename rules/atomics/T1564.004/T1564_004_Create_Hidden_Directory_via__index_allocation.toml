@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Hidden Directory via $index_allocation' (GUID: 3e6791e7-232c-481c-a680-a52f86b83fdf) of technique T1564.004 (Hide Artifacts: NTFS File Attributes). Test Description: Create an Alternate Data Stream Directory and File with the command prompt. Write access is required. Upon execution,\nrun \\\"dir /A /Q /R\\\" in the %temp% folder to view that the alternate data stream folder exists. To view the data in the\nalternate data stream, run \\\"type %temp%\\\\...$.......::$index_allocation\\\\secrets.txt\\\". Command/Steps: md #{folder_name}\necho too many secrets > #{folder_name}\\\\#{hidden_filename}\n"
+from = "now-9m"
+rule_id = "86f79be8-3f30-4226-84d3-e4d53d5bc71e"
+language = "kql"
+name = "Atomic Test: T1564.004 - Create Hidden Directory via $index_allocation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.004/T1564.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.004", "3e6791e7-232c-481c-a680-a52f86b83fdf", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%temp%\\\\...$.......::$index_allocation*\\\" AND process.command_line : \\\"*many*\\\" AND process.command_line : \\\"*secrets*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.004"
+name = "Create Hidden Directory via $index_allocation"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+

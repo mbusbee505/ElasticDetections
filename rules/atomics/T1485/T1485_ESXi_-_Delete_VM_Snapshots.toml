@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Delete VM Snapshots' (GUID: 1207ddff-f25b-41b3-aa0e-7c26d2b546d1) of technique T1485 (Data Destruction). Test Description: Deletes all snapshots for all Virtual Machines on an ESXi Host\n[Reference](https://lolesxi-project.github.io/LOLESXi/lolesxi/Binaries/vim-cmd/#inhibit%20recovery). Command/Steps: echo \\\"\\\" | \\\"#{plink_file}\\\" -batch \\\"#{vm_host}\\\" -ssh -l #{vm_user} -pw \\\"#{vm_pass}\\\" \\\"for i in `vim-cmd vmsvc/getallvms | awk 'NR>1 {print $1}'`; do vim-..."
+from = "now-9m"
+rule_id = "02f35ef1-e775-4f2c-9ad8-c71dd6761ba9"
+language = "kql"
+name = "Atomic Test: T1485 - ESXi - Delete VM Snapshots"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1485/T1485.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1485", "1207ddff-f25b-41b3-aa0e-7c26d2b546d1", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*-batch*\\\" AND process.command_line : \\\"*atomic.local*\\\" AND process.command_line : \\\"*-ssh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1485"
+name = "ESXi - Delete VM Snapshots"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+

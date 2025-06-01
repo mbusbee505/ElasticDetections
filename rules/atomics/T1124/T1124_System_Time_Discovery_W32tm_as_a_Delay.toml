@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Time Discovery W32tm as a Delay' (GUID: d5d5a6b0-0f92-42d8-985d-47aafa2dd4db) of technique T1124 (System Time Discovery). Test Description: identifies DCRat delay time tactics using w32tm.\nhttps://research.splunk.com/endpoint/b2cc69e7-11ba-42dc-a269-59c069a48870/\nhttps://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains. Command/Steps: W32tm /stripchart /computer:localhost /period:5 /dataonly /samples:2\n"
+from = "now-9m"
+rule_id = "a3358979-d269-4875-8f43-27ffa802b316"
+language = "kql"
+name = "Atomic Test: T1124 - System Time Discovery W32tm as a Delay"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1124/T1124.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1124", "d5d5a6b0-0f92-42d8-985d-47aafa2dd4db", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*W32tm*\\\" AND process.command_line : \\\"*/stripchart*\\\" AND process.command_line : \\\"*/computer:localhost*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1124"
+name = "System Time Discovery W32tm as a Delay"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1124"
+
+

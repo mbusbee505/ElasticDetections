@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Stop service by killing process' (GUID: f3191b84-c38b-400b-867e-3a217a27795f) of technique T1489 (Service Stop). Test Description: Stops a specified service killng the service's process.\nThis technique was used by WannaCry. Upon execution, if the spoolsv service was running \\\"SUCCESS: The process \\\"spoolsv.exe\\\" with PID 2316 has been terminated.\\\"\nwill be displayed. If the service was not running \\\"ERROR: The process \\\"spoolsv.exe\\\" not found.\\\" will be displayed and it can be\nstarted by running the cleanup command.. Command/Steps: taskkill.exe /f /im #{process_name}\n"
+from = "now-9m"
+rule_id = "96fe342d-099e-40d4-a04b-da7fa1a4d5df"
+language = "kql"
+name = "Atomic Test: T1489 - Windows - Stop service by killing process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1489/T1489.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1489", "f3191b84-c38b-400b-867e-3a217a27795f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*taskkill.exe*\\\" AND process.command_line : \\\"*spoolsv.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1489"
+name = "Windows - Stop service by killing process"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+

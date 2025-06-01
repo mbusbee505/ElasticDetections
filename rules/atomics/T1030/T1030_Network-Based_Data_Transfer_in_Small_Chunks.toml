@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Network-Based Data Transfer in Small Chunks' (GUID: f0287b58-f4bc-40f6-87eb-692e126e7f8f) of technique T1030 (Data Transfer Size Limits). Test Description: Simulate transferring data over a network in small chunks to evade detection.. Command/Steps: $file = [System.IO.File]::OpenRead(#{source_file_path})\n$chunkSize = #{chunk_size} * 1KB\n$buffer = New-Object Byte[] $chunkSize\n\nwhile ($bytesRead = $..."
+from = "now-9m"
+rule_id = "804dccc2-9e7d-43ef-acce-f8af1467ed51"
+language = "kql"
+name = "Atomic Test: T1030 - Network-Based Data Transfer in Small Chunks"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1030/T1030.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1030", "f0287b58-f4bc-40f6-87eb-692e126e7f8f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$file*\\\" AND powershell.script_block_text : \\\"*[System.IO.File]::OpenRead([User*\\\" AND powershell.script_block_text : \\\"*specified])*\\\" OR (process.command_line : \\\"*$file*\\\" AND process.command_line : \\\"*[System.IO.File]::OpenRead([User*\\\" AND process.command_line : \\\"*specified])*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1030"
+name = "Network-Based Data Transfer in Small Chunks"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+

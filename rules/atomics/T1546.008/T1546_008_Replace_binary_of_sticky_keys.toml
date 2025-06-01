@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Replace binary of sticky keys' (GUID: 934e90cf-29ca-48b3-863c-411737ad44e3) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Replace sticky keys binary (sethc.exe) with cmd.exe. Command/Steps: IF NOT EXIST C:\\\\Windows\\\\System32\\\\sethc_backup.exe (copy C:\\\\Windows\\\\System32\\\\sethc.exe C:\\\\Windows\\\\System32\\\\sethc_backup.exe) ELSE ( pushd )\ntakeown /F ..."
+from = "now-9m"
+rule_id = "20defa80-abae-40af-8f2a-f6f1e5a73997"
+language = "kql"
+name = "Atomic Test: T1546.008 - Replace binary of sticky keys"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "934e90cf-29ca-48b3-863c-411737ad44e3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*EXIST*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\sethc_backup.exe*\\\" AND process.command_line : \\\"*(copy*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Replace binary of sticky keys"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

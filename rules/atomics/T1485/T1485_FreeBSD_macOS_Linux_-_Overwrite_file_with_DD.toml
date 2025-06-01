@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'FreeBSD/macOS/Linux - Overwrite file with DD' (GUID: 38deee99-fd65-4031-bec8-bfa4f9f26146) of technique T1485 (Data Destruction). Test Description: Overwrites and deletes a file using DD.\nTo stop the test, break the command with CTRL/CMD+C.. Command/Steps: dd of=#{file_to_overwrite} if=#{overwrite_source} count=$(ls -l #{file_to_overwrite} | awk '{print $5}') iflag=count_bytes\n"
+from = "now-9m"
+rule_id = "82d76b92-d865-42a3-a45b-eb70b4217615"
+language = "kql"
+name = "Atomic Test: T1485 - FreeBSD/macOS/Linux - Overwrite file with DD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1485/T1485.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1485", "38deee99-fd65-4031-bec8-bfa4f9f26146", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*of=/var/log/syslog*\\\" AND process.command_line : \\\"*if=/dev/zero*\\\" AND process.command_line : \\\"*count=$(ls*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1485"
+name = "FreeBSD/macOS/Linux - Overwrite file with DD"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+

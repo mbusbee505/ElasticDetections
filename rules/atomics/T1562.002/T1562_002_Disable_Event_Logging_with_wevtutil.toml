@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Event Logging with wevtutil' (GUID: b26a3340-dad7-4360-9176-706269c74103) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: Wevtutil can be used to disable logs. \nNOTE: RansomEXX ransomware uses this to disable Security logs post-encryption.. Command/Steps: wevtutil sl \\\"#{log_name}\\\" /e:false\n"
+from = "now-9m"
+rule_id = "822dde86-c1df-472c-9c7e-694eaefd5c02"
+language = "kql"
+name = "Atomic Test: T1562.002 - Disable Event Logging with wevtutil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "b26a3340-dad7-4360-9176-706269c74103", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wevtutil*\\\" AND process.command_line : \\\"*Microsoft-Windows-IKE/Operational*\\\" AND process.command_line : \\\"*/e:false*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Disable Event Logging with wevtutil"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

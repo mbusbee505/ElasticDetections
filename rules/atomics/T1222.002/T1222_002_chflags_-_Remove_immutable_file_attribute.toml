@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'chflags - Remove immutable file attribute' (GUID: 60eee3ea-2ebd-453b-a666-c52ce08d2709) of technique T1222.002 (File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification). Test Description: Remove's a file's `immutable` attribute using `chflags`.\nThis technique was used by the threat actor Rocke during the compromise of Linux web servers.. Command/Steps: touch #{file_to_modify}\nchflags simmutable #{file_to_modify}\nchflags nosimmutable #{file_to_modify}\n"
+from = "now-9m"
+rule_id = "580fbf06-e8dc-45a2-96df-b0bcd72e9172"
+language = "kql"
+name = "Atomic Test: T1222.002 - chflags - Remove immutable file attribute"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.002/T1222.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.002", "60eee3ea-2ebd-453b-a666-c52ce08d2709", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*chflags*\\\" AND process.command_line : \\\"*simmutable*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.002"
+name = "chflags - Remove immutable file attribute"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+

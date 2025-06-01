@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Logon Scripts' (GUID: d6042746-07d4-4c92-9ad8-e644c114a231) of technique T1037.001 (Boot or Logon Initialization Scripts: Logon Script (Windows)). Test Description: Adds a registry value to run batch script created in the %temp% directory. Upon execution, there will be a new environment variable in the HKCU\\\\Environment key\nthat can be viewed in the Registry Editor.. Command/Steps: echo \\\"#{script_command}\\\" > #{script_path}\nREG.exe ADD HKCU\\\\Environment /v UserInitMprLogonScript /t REG_SZ /d \\\"#{script_path}\\\" /f\n"
+from = "now-9m"
+rule_id = "fd6caa93-9d7d-49da-b8af-c8bc5582639e"
+language = "kql"
+name = "Atomic Test: T1037.001 - Logon Scripts"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1037.001/T1037.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1037.001", "d6042746-07d4-4c92-9ad8-e644c114a231", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Logon*\\\" AND process.command_line : \\\"*Script*\\\" AND process.command_line : \\\"*successful.*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1037.001"
+name = "Logon Scripts"
+reference = "https://attack.mitre.org/techniques/T1037/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1037/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1037/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1037/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a user account on a Linux system' (GUID: 40d8eabd-e394-46f6-8785-b9bfa1d011d2) of technique T1136.001 (Create Account: Local Account). Test Description: Create a user via useradd. Command/Steps: useradd -M -N -r -s /bin/bash -c evil_account #{username}\n"
+from = "now-9m"
+rule_id = "5a6e1c7d-4aa7-4d18-beb5-041723b4db3e"
+language = "kql"
+name = "Atomic Test: T1136.001 - Create a user account on a Linux system"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.001/T1136.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.001", "40d8eabd-e394-46f6-8785-b9bfa1d011d2", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*useradd*\\\" AND process.command_line : \\\"*/bin/bash*\\\" AND process.command_line : \\\"*evil_account*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.001"
+name = "Create a user account on a Linux system"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+

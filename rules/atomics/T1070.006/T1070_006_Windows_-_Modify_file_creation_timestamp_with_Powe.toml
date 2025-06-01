@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Modify file creation timestamp with PowerShell' (GUID: b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Modifies the file creation timestamp of a specified file. This technique was seen in use by the Stitch RAT.\nTo verify execution, use File Explorer to view the Properties of the file and observe that the Created time is the year 1970.. Command/Steps: Get-ChildItem \\\"#{file_path}\\\" | % { $_.CreationTime = \\\"#{target_date_time}\\\" }\n"
+from = "now-9m"
+rule_id = "f4e4c7d5-3d98-486a-bf0d-5d6e4c687642"
+language = "kql"
+name = "Atomic Test: T1070.006 - Windows - Modify file creation timestamp with PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ChildItem*\\\" AND powershell.script_block_text : \\\"*$_.CreationTime*\\\" AND powershell.script_block_text : \\\"*01/01/1970*\\\" OR (process.command_line : \\\"*Get-ChildItem*\\\" AND process.command_line : \\\"*$_.CreationTime*\\\" AND process.command_line : \\\"*01/01/1970*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "Windows - Modify file creation timestamp with PowerShell"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

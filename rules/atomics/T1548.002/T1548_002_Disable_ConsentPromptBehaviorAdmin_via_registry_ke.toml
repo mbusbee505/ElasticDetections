@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable ConsentPromptBehaviorAdmin via registry keys' (GUID: a768aaa2-2442-475c-8990-69cf33af0f4e) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: This atomic regarding setting ConsentPromptBehaviorAdmin to 0 configures the UAC so that it does not prompt for consent or credentials when actions requiring elevated privileges are performed by users in the administrators group. This means that any operation that would normally trigger a UAC prompt will proceed automatically without user interaction.. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\" /v ConsentPromptBehaviorAdmin /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "8833a025-46f3-4657-8175-4e38e3ccfb26"
+language = "kql"
+name = "Atomic Test: T1548.002 - Disable ConsentPromptBehaviorAdmin via registry keys"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "a768aaa2-2442-475c-8990-69cf33af0f4e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\" AND process.command_line : \\\"*ConsentPromptBehaviorAdmin*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Disable ConsentPromptBehaviorAdmin via registry keys"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

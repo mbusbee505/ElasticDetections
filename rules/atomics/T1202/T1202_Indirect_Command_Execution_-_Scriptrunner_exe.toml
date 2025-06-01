@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Indirect Command Execution - Scriptrunner.exe' (GUID: 0fd14730-6226-4f5e-8d67-43c65f1be940) of technique T1202 (Indirect Command Execution). Test Description: The \\\"ScriptRunner.exe\\\" binary can be abused to proxy execution through it and bypass possible whitelisting. Upon test execution, calc.exe should open\nReference: https://x.com/NickTyrer/status/914234924655312896. Command/Steps: Scriptrunner.exe -appvscript \\\"#{payload_path}\\\""
+from = "now-9m"
+rule_id = "6f630fb0-7c7e-4435-9b08-692f5eb0be96"
+language = "kql"
+name = "Atomic Test: T1202 - Indirect Command Execution - Scriptrunner.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1202/T1202.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1202", "0fd14730-6226-4f5e-8d67-43c65f1be940", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Scriptrunner.exe*\\\" AND powershell.script_block_text : \\\"*-appvscript*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\" OR (process.command_line : \\\"*Scriptrunner.exe*\\\" AND process.command_line : \\\"*-appvscript*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1202"
+name = "Indirect Command Execution - Scriptrunner.exe"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+

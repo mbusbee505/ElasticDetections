@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'File and Directory Discovery (PowerShell)' (GUID: 2158908e-b7ef-4c21-8a83-3ce4dd05a924) of technique T1083 (File and Directory Discovery). Test Description: Find or discover files on the file system. Upon execution, file and folder information will be displayed.. Command/Steps: ls -recurse\nget-childitem -recurse\ngci -recurse\n"
+from = "now-9m"
+rule_id = "5385fb78-e939-41c2-9c46-3c82d03654fa"
+language = "kql"
+name = "Atomic Test: T1083 - File and Directory Discovery (PowerShell)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1083/T1083.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1083", "2158908e-b7ef-4c21-8a83-3ce4dd05a924", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-recurse*\\\" AND powershell.script_block_text : \\\"*get-childitem*\\\" AND powershell.script_block_text : \\\"*-recurse*\\\" OR (process.command_line : \\\"*-recurse*\\\" AND process.command_line : \\\"*get-childitem*\\\" AND process.command_line : \\\"*-recurse*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1083"
+name = "File and Directory Discovery (PowerShell)"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+

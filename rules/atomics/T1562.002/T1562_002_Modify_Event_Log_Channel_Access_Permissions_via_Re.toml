@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify Event Log Channel Access Permissions via Registry 2 - PowerShell' (GUID: 85e6eff8-3ed4-4e03-ae50-aa6a404898a5) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: This test simulates an adversary modifying access permissions for a Windows Event Log Channel by altering the \\\"ChannelAccess\\\" registry value. Specifically, it changes the Security Descriptor Definition Language (SDDL) string. These modifications can restrict or grant access to specific users or groups, potentially aiding in defense evasion by controlling who can view or modify a event log channel.\nUpon execution, the user shouldn't be able to access the event log channel via the event viewer or via utilities such as \\\"Get-EventLog\\\" or \\\"wevtutil\\\".. Command/Steps: New-Item -Path #{ChannelPath} -Force\nSet-ItemProperty -Path #{ChannelPath} -Name \\\"ChannelAccess\\\" -Value \\\"O:SYG:SYD:(D;;0x1;;;WD)\\\"\nRestart-Service -Nam..."
+from = "now-9m"
+rule_id = "efcd3a5a-8d15-4faf-8b60-f45991c4aebc"
+language = "kql"
+name = "Atomic Test: T1562.002 - Modify Event Log Channel Access Permissions via Registry 2 - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "85e6eff8-3ed4-4e03-ae50-aa6a404898a5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\EventLog\\\\Setup*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\EventLog\\\\Setup*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Modify Event Log Channel Access Permissions via Registry 2 - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persistence using STARTUP-PATH in MS-WORD' (GUID: f0027655-25ef-47b0-acaf-3d83d106156c) of technique T1546 (Event Triggered Execution). Test Description: When Word starts, it searches for the registry key HKCU\\\\Software\\\\Microsoft\\\\Office\\\\<version>\\\\Word\\\\Options\\\\STARTUP-PATH and if it exists,\nit will treat it as a user specific start-up folder and load the contents of the folder with file extensions of .wll,.lnk,.dotm,.dot,.dotx\nThe registry key can be abused to load malware from the mentioned path. Reboot might be required.. Command/Steps: reg add \\\"HKCU\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Word\\\\Options\\\" /v STARTUP-PATH /t REG_SZ /d \\\"C:\\\\Users\\\\%USERNAME%\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Recent\\\"..."
+from = "now-9m"
+rule_id = "1b778ac2-dbf3-482c-8870-c8324891f22d"
+language = "kql"
+name = "Atomic Test: T1546 - Persistence using STARTUP-PATH in MS-WORD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546/T1546.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546", "f0027655-25ef-47b0-acaf-3d83d106156c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Word\\\\Options*\\\" AND process.command_line : \\\"*STARTUP-PATH*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546"
+name = "Persistence using STARTUP-PATH in MS-WORD"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+

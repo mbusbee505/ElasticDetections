@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerDump Hashes and Usernames from Registry' (GUID: 804f28fc-68fc-40da-b5a2-e9d0bce5c193) of technique T1003.002 (OS Credential Dumping: Security Account Manager). Test Description: Executes a hashdump by reading the hashes from the registry.. Command/Steps: Write-Host \\\"STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON\\\" -fore green\nImport-Module \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\PowerDump.ps1..."
+from = "now-9m"
+rule_id = "cd1329bc-1c1a-4ab4-9554-c1340f5380b2"
+language = "kql"
+name = "Atomic Test: T1003.002 - PowerDump Hashes and Usernames from Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.002/T1003.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.002", "804f28fc-68fc-40da-b5a2-e9d0bce5c193", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Write-Host*\\\" AND powershell.script_block_text : \\\"*STARTING*\\\" AND powershell.script_block_text : \\\"*BYPASS*\\\" OR (process.command_line : \\\"*Write-Host*\\\" AND process.command_line : \\\"*STARTING*\\\" AND process.command_line : \\\"*BYPASS*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.002"
+name = "PowerDump Hashes and Usernames from Registry"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+

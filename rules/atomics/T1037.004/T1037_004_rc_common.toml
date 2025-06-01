@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'rc.common' (GUID: c33f3d80-5f04-419b-a13a-854d1cbdbf3a) of technique T1037.004 (Boot or Logon Initialization Scripts: Rc.common). Test Description: Modify rc.common. Command/Steps: filename='/etc/rc.common';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.common.original;fi\nprintf '%s\\\\n' '#!/bin/bash..."
+from = "now-9m"
+rule_id = "973dbe54-0788-43b7-911f-1e0c239cb8e9"
+language = "kql"
+name = "Atomic Test: T1037.004 - rc.common"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1037.004/T1037.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1037.004", "c33f3d80-5f04-419b-a13a-854d1cbdbf3a", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*filename='/etc/rc.common';if*\\\" AND process.command_line : \\\"*$filename*\\\" AND process.command_line : \\\"*];then*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1037.004"
+name = "rc.common"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+

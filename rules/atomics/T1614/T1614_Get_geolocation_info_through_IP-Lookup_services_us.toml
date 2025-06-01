@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get geolocation info through IP-Lookup services using curl freebsd, linux or macos' (GUID: 552b4db3-8850-412c-abce-ab5cc8a86604) of technique T1614 (System Location Discovery). Test Description: Get geolocation info through IP-Lookup services using curl Windows. The default URL of the IP-Lookup service is https://ipinfo.io/. References: https://securelist.com/transparent-tribe-part-1/98127/ and https://news.sophos.com/en-us/2016/05/03/location-based-ransomware-threat-research/. Command/Steps: curl -k #{ip_lookup_url}\n"
+from = "now-9m"
+rule_id = "e392e08d-f69e-458c-a34d-02dc34d6c341"
+language = "kql"
+name = "Atomic Test: T1614 - Get geolocation info through IP-Lookup services using curl freebsd, linux or macos"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614/T1614.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614", "552b4db3-8850-412c-abce-ab5cc8a86604", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*curl*\\\" AND process.command_line : \\\"*https://ipinfo.io/*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614"
+name = "Get geolocation info through IP-Lookup services using curl freebsd, linux or macos"
+reference = "https://attack.mitre.org/techniques/T1614"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614"
+
+

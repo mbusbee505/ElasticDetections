@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltrate data with rclone to cloud Storage - AWS S3' (GUID: a4b74723-5cee-4300-91c3-5e34166909b4) of technique T1567.002 (Exfiltration Over Web Service: Exfiltration to Cloud Storage). Test Description: This test uses rclone to exfiltrate data to a remote cloud storage instance. (AWS S3)\nSee https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/. Command/Steps: Write-Host \\\"Deploying AWS infrastructure... \\\" -NoNewLine\n$awsAccessKey = \\\"#{aws_access_key}\\\"\n$awsSecretKey = \\\"#{aws_secret_key}\\\"\ncd PathToAtomicsFolde..."
+from = "now-9m"
+rule_id = "c1fe9b05-659f-4b61-9f84-662962e5acfa"
+language = "kql"
+name = "Atomic Test: T1567.002 - Exfiltrate data with rclone to cloud Storage - AWS S3"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1567.002/T1567.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1567.002", "a4b74723-5cee-4300-91c3-5e34166909b4", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Write-Host*\\\" AND powershell.script_block_text : \\\"*Deploying*\\\" AND powershell.script_block_text : \\\"*infrastructure...*\\\" OR (process.command_line : \\\"*Write-Host*\\\" AND process.command_line : \\\"*Deploying*\\\" AND process.command_line : \\\"*infrastructure...*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1567.002"
+name = "Exfiltrate data with rclone to cloud Storage - AWS S3"
+reference = "https://attack.mitre.org/techniques/T1567/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1567/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1567/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1567/002"
+
+

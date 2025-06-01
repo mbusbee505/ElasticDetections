@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Compress Data for Exfiltration With Rar' (GUID: 02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0) of technique T1560.001 (Archive Collected Data: Archive via Utility). Test Description: An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.\nWhen the test completes you should find the txt files from the %USERPROFILE% directory compressed in a file called T1560.001-data.rar in the %USERPROFILE% directory. Command/Steps: \\\"#{rar_exe}\\\" a -r #{output_file} #{input_path}\\\\*#{file_extension}\n"
+from = "now-9m"
+rule_id = "ae4cde06-36d1-4afe-acad-776528aa582d"
+language = "kql"
+name = "Atomic Test: T1560.001 - Compress Data for Exfiltration With Rar"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1560.001/T1560.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1560.001", "02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%programfiles%/WinRAR/Rar.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1560.001"
+name = "Compress Data for Exfiltration With Rar"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+

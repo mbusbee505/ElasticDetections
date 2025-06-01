@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Capture Linux Desktop using Import Tool' (GUID: 9cd1cccb-91e4-4550-9139-e20a586fcea1) of technique T1113 (Screen Capture). Test Description: Use import command from ImageMagick to collect a full desktop screenshot. Command/Steps: import -window root #{output_file}\n"
+from = "now-9m"
+rule_id = "f156a60b-f79d-42e4-ba04-625d8f7d3958"
+language = "kql"
+name = "Atomic Test: T1113 - Capture Linux Desktop using Import Tool"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1113/T1113.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1113", "9cd1cccb-91e4-4550-9139-e20a586fcea1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*import*\\\" AND process.command_line : \\\"*-window*\\\" AND process.command_line : \\\"*root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1113"
+name = "Capture Linux Desktop using Import Tool"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+

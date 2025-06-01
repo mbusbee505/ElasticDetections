@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Network Share Discovery PowerShell' (GUID: 1b0814d1-bb24-402d-9615-1b20c50733fb) of technique T1135 (Network Share Discovery). Test Description: Network Share Discovery utilizing PowerShell. The computer name variable may need to be modified to point to a different host\nUpon execution, available network shares will be displayed in the powershell session. Command/Steps: get-smbshare\n"
+from = "now-9m"
+rule_id = "3aa2ead6-6209-4ca3-818c-6eba3b107fa4"
+language = "kql"
+name = "Atomic Test: T1135 - Network Share Discovery PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1135/T1135.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1135", "1b0814d1-bb24-402d-9615-1b20c50733fb", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*get-smbshare*\\\" OR (process.command_line : \\\"*get-smbshare*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1135"
+name = "Network Share Discovery PowerShell"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+

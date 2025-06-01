@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Auditing Configuration Changes on Linux Host' (GUID: 212cfbcf-4770-4980-bc21-303e37abd0e3) of technique T1562.006 (Impair Defenses: Indicator Blocking). Test Description: Emulates modification of auditd configuration files. Command/Steps: sed -i '$ a #art_test_1562_006_1' /etc/audisp/#{audisp_config_file_name}\nif [ -f \\\"/etc/#{auditd_config_file_name}\\\" ];\nthen sed -i '$ a #art_test_1562_..."
+from = "now-9m"
+rule_id = "243261b6-6009-417d-8d04-0c8e2fa7e547"
+language = "kql"
+name = "Atomic Test: T1562.006 - Auditing Configuration Changes on Linux Host"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.006/T1562.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.006", "212cfbcf-4770-4980-bc21-303e37abd0e3", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*#art_test_1562_006_1*\\\" AND process.command_line : \\\"*/etc/audisp/audispd.conf*\\\" AND process.command_line : \\\"*/etc/auditd.conf*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.006"
+name = "Auditing Configuration Changes on Linux Host"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+

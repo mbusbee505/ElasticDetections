@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Reactivate a locked/expired account (FreeBSD)' (GUID: 09e3380a-fae5-4255-8b19-9950be0252cf) of technique T1078.003 (Valid Accounts: Local Accounts). Test Description: A system administrator may have locked and expired a user account rather than deleting it. \\\"the user is coming back, at some stage\\\" An adversary may reactivate a inactive account in an attempt to appear legitimate. \n\nIn this test we create a \\\"art\\\" user with the password art, lock and expire the account, try to su to art and fail, unlock and renew the account, su successfully, then delete the account.. Command/Steps: pw useradd art -g wheel -s /bin/sh\necho $(openssl passwd -1 art) | pw mod user testuser1 -h 0\npw lock art\npw usermod art -e +1d\npw unlock art\npw user ..."
+from = "now-9m"
+rule_id = "738a47c7-d532-42fc-87b8-31854ab51ecd"
+language = "kql"
+name = "Atomic Test: T1078.003 - Reactivate a locked/expired account (FreeBSD)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.003/T1078.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.003", "09e3380a-fae5-4255-8b19-9950be0252cf", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*useradd*\\\" AND process.command_line : \\\"*wheel*\\\" AND process.command_line : \\\"*/bin/sh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.003"
+name = "Reactivate a locked/expired account (FreeBSD)"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+

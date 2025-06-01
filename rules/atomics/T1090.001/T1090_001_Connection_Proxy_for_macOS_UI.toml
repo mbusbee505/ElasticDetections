@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Connection Proxy for macOS UI' (GUID: 648d68c1-8bcd-4486-9abe-71c6655b6a2c) of technique T1090.001 (Proxy: Internal Proxy). Test Description: Enable traffic redirection on macOS UI (not terminal).\nThe test will modify and enable the \\\"Web Proxy\\\" and \\\"Secure Web Proxy\\\" settings  in System Preferences => Network => Advanced => Proxies for the specified network interface.\n\nNote that this test may conflict with pre-existing system configuration.. Command/Steps: networksetup -setwebproxy #{interface} #{proxy_server} #{proxy_port}\nnetworksetup -setsecurewebproxy #{interface} #{proxy_server} #{proxy_port}\n"
+from = "now-9m"
+rule_id = "9553fed2-8f5d-4d0b-9c1f-7dd513c630d8"
+language = "kql"
+name = "Atomic Test: T1090.001 - Connection Proxy for macOS UI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1090.001/T1090.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1090.001", "648d68c1-8bcd-4486-9abe-71c6655b6a2c", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*networksetup*\\\" AND process.command_line : \\\"*-setwebproxy*\\\" AND process.command_line : \\\"*Wi-Fi*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1090.001"
+name = "Connection Proxy for macOS UI"
+reference = "https://attack.mitre.org/techniques/T1090/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1090/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1090/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1090/001"
+
+

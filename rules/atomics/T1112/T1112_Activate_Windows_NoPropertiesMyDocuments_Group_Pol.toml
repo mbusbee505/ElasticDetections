@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Activate Windows NoPropertiesMyDocuments Group Policy Feature' (GUID: 20fc9daa-bd48-4325-9aff-81b967a84b1d) of technique T1112 (Modify Registry). Test Description: Modify the registry of the currently logged in user using reg.exe via cmd console to hide Properties from \\\"My Documents icon\\\" Group Policy. \nTake note that some Group Policy changes might require a restart to take effect.\nSee how ransomware abuses this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\Explorer\\\" /v NoPropertiesMyDocuments /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "015e970e-aa84-4267-a6e3-a09388a8f523"
+language = "kql"
+name = "Atomic Test: T1112 - Activate Windows NoPropertiesMyDocuments Group Policy Feature"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "20fc9daa-bd48-4325-9aff-81b967a84b1d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\Explorer*\\\" AND process.command_line : \\\"*NoPropertiesMyDocuments*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Activate Windows NoPropertiesMyDocuments Group Policy Feature"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

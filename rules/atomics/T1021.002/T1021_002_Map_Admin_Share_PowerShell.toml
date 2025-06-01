@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Map Admin Share PowerShell' (GUID: 514e9cd7-9207-4882-98b1-c8f791bae3c5) of technique T1021.002 (Remote Services: SMB/Windows Admin Shares). Test Description: Map Admin share utilizing PowerShell. Command/Steps: New-PSDrive -name #{map_name} -psprovider filesystem -root \\\\\\\\#{computer_name}\\\\#{share_name}\n"
+from = "now-9m"
+rule_id = "a3efc90f-d21e-4b5d-851b-053b5549b982"
+language = "kql"
+name = "Atomic Test: T1021.002 - Map Admin Share PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.002/T1021.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.002", "514e9cd7-9207-4882-98b1-c8f791bae3c5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-PSDrive*\\\" AND powershell.script_block_text : \\\"*-name*\\\" AND powershell.script_block_text : \\\"*-psprovider*\\\" OR (process.command_line : \\\"*New-PSDrive*\\\" AND process.command_line : \\\"*-name*\\\" AND process.command_line : \\\"*-psprovider*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.002"
+name = "Map Admin Share PowerShell"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+

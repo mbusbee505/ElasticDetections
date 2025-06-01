@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS S3 Enumeration' (GUID: 3c7094f8-71ec-4917-aeb8-a633d7ec4ef5) of technique T1619 (Cloud Storage Object Discovery). Test Description: This test will enumerate all the S3 buckets in the user account and lists all the files in each bucket.. Command/Steps: for bucket in \\\"$(aws s3 ls | cut -d \\\" \\\" -f3)\\\"; do aws s3api list-objects-v2 --bucket $bucket --output text; done\n"
+from = "now-9m"
+rule_id = "fac0920e-f5df-45f4-8502-c24af1eadbfd"
+language = "kql"
+name = "Atomic Test: T1619 - AWS S3 Enumeration"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1619/T1619.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1619", "3c7094f8-71ec-4917-aeb8-a633d7ec4ef5", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*bucket*\\\" AND process.command_line : \\\"*$(aws*\\\" AND process.command_line : \\\"*-f3)\\\"*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1619"
+name = "AWS S3 Enumeration"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+

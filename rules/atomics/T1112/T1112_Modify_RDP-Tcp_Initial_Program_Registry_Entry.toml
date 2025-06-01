@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify RDP-Tcp Initial Program Registry Entry' (GUID: c691cee2-8d17-4395-b22f-00644c7f1c2d) of technique T1112 (Modify Registry). Test Description: If the fInheritInitialProgram value is set to 1, the exe indicated in the InitialProgram value is automatically started on RDP connection.\nOnce the test commands are run, notepad will execute automatically on new RDP connection. Command/Steps: reg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\\WinStations\\\\RDP-Tcp\\\" /v fInheritInitialProgram /t REG_DWORD /d 1 /f\nreg add \\\"HKLM\\\\SYSTE..."
+from = "now-9m"
+rule_id = "2707d77f-e9ef-4402-978b-8445f343c612"
+language = "kql"
+name = "Atomic Test: T1112 - Modify RDP-Tcp Initial Program Registry Entry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "c691cee2-8d17-4395-b22f-00644c7f1c2d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server\\\\WinStations\\\\RDP-Tcp*\\\" AND process.command_line : \\\"*fInheritInitialProgram*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Modify RDP-Tcp Initial Program Registry Entry"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

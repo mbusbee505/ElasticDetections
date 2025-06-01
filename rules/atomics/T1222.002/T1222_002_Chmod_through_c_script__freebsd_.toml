@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Chmod through c script (freebsd)' (GUID: da40b5fe-3098-4b3b-a410-ff177e49ee2e) of technique T1222.002 (File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification). Test Description: chmods a file using a c script. Command/Steps: #{compiled_file} /tmp/ T1222002\n"
+from = "now-9m"
+rule_id = "a277fdcb-94a7-48e3-bdb0-8a3600910a9a"
+language = "kql"
+name = "Atomic Test: T1222.002 - Chmod through c script (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.002/T1222.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.002", "da40b5fe-3098-4b3b-a410-ff177e49ee2e", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.002"
+name = "Chmod through c script (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+

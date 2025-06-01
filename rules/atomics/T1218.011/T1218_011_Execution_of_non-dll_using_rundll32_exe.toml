@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execution of non-dll using rundll32.exe' (GUID: ae3a8605-b26e-457c-b6b3-2702fd335bac) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Rundll32.exe running non-dll. Command/Steps: rundll32.exe #{input_file}, StartW\n"
+from = "now-9m"
+rule_id = "d839fe92-0f84-42a1-aabb-d018ff1ebb7f"
+language = "kql"
+name = "Atomic Test: T1218.011 - Execution of non-dll using rundll32.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "ae3a8605-b26e-457c-b6b3-2702fd335bac", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*rundll32.exe*\\\" AND powershell.script_block_text : \\\"*StartW*\\\" OR (process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*StartW*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Execution of non-dll using rundll32.exe"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

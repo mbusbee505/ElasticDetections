@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 with desk.cpl' (GUID: 83a95136-a496-423c-81d3-1c6750133917) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Rundll32.exe loading an executable renamed as .scr using desk.cpl \nReference: \n  - [LOLBAS - Libraries/Desk](https://lolbas-project.github.io/lolbas/Libraries/Desk/)\nSIGMA rules:\n  - [SCR File Write Event](https://github.com/SigmaHQ/sigma/blob/b53f08b081e0a50099be9b9e8eced82097fdbaf2/rules/windows/file_event/file_event_win_new_src_file.yml)\n  - [Rundll32 InstallScreenSaver Execution](https://github.com/SigmaHQ/sigma/blob/b53f08b081e0a50099be9b9e8eced82097fdbaf2/rules/windows/process_creation/proc_creation_win_lolbin_rundll32_installscreensaver.yml). Command/Steps: copy #{exe_to_launch} not_an_scr.scr\nrundll32.exe desk.cpl,InstallScreenSaver not_an_scr.scr\n"
+from = "now-9m"
+rule_id = "018891ee-7171-44fe-96f3-21433d59748b"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 with desk.cpl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "83a95136-a496-423c-81d3-1c6750133917", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\calc.exe*\\\" AND process.command_line : \\\"*not_an_scr.scr*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 with desk.cpl"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

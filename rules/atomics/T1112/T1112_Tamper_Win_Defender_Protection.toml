@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tamper Win Defender Protection' (GUID: 3b625eaa-c10d-4635-af96-3eae7d2a2f3c) of technique T1112 (Modify Registry). Test Description: Tamper Win Defender Protection. RedLine Stealer is executing another component file to modify this win defender feature in registry. \nTake note that this modification might not be enough to disable this feature but can be a good indicator of malicious process that \ntries to tamper this Win Defender feature settings.. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows Defender\\\\Features\\\" /v \\\"TamperProtection\\\" /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "a1554fad-8fd7-445f-8e22-b9460155182c"
+language = "kql"
+name = "Atomic Test: T1112 - Tamper Win Defender Protection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "3b625eaa-c10d-4635-af96-3eae7d2a2f3c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*Defender\\\\Features*\\\" AND process.command_line : \\\"*TamperProtection*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Tamper Win Defender Protection"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

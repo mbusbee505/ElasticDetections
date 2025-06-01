@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Import XML Schedule Task with Hidden Attribute' (GUID: cd925593-fbb4-486d-8def-16cbdf944bf4) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Create an scheduled task that executes calc.exe after user login from XML that contains hidden setting attribute. \nThis technique was seen several times in tricbot malware and also with the targetted attack campaigne the industroyer2.. Command/Steps: $xml = [System.IO.File]::ReadAllText(\\\"#{xml_path}\\\")\nInvoke-CimMethod -ClassName PS_ScheduledTask -NameSpace \\\"Root\\\\Microsoft\\\\Windows\\\\TaskScheduler\\\" -Me..."
+from = "now-9m"
+rule_id = "93c4f305-045f-4a60-acce-542bfce814f2"
+language = "kql"
+name = "Atomic Test: T1053.005 - Import XML Schedule Task with Hidden Attribute"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "cd925593-fbb4-486d-8def-16cbdf944bf4", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$xml*\\\" AND powershell.script_block_text : \\\"*Invoke-CimMethod*\\\" AND powershell.script_block_text : \\\"*-ClassName*\\\" OR (process.command_line : \\\"*$xml*\\\" AND process.command_line : \\\"*Invoke-CimMethod*\\\" AND process.command_line : \\\"*-ClassName*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Import XML Schedule Task with Hidden Attribute"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

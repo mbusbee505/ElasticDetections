@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Allow SMB and RDP on Microsoft Defender Firewall' (GUID: d9841bf8-f161-4c73-81e9-fd773a5ff8c1) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Allow all SMB and RDP rules on the Microsoft Defender Firewall for all profiles.\nCaution if you access remotely the host where the test runs! Especially with the cleanup command which will reset the firewall and risk disabling those services.... Command/Steps: netsh advfirewall firewall set rule group=\\\"remote desktop\\\" new enable=Yes\nnetsh advfirewall firewall set rule group=\\\"file and printer sharing\\\" new ena..."
+from = "now-9m"
+rule_id = "0844e984-0dbe-4327-9aa6-2e12ad79a0b0"
+language = "kql"
+name = "Atomic Test: T1562.004 - Allow SMB and RDP on Microsoft Defender Firewall"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "d9841bf8-f161-4c73-81e9-fd773a5ff8c1", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*advfirewall*\\\" AND process.command_line : \\\"*firewall*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Allow SMB and RDP on Microsoft Defender Firewall"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

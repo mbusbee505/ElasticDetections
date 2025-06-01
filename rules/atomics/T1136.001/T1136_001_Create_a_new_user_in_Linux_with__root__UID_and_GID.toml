@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new user in Linux with `root` UID and GID.' (GUID: a1040a30-d28b-4eda-bd99-bb2861a4616c) of technique T1136.001 (Create Account: Local Account). Test Description: Creates a new user in Linux and adds the user to the `root` group. This technique was used by adversaries during the Butter attack campaign.. Command/Steps: useradd -g 0 -M -d /root -s /bin/bash #{username}\nif [ $(cat /etc/os-release | grep -i 'Name=\\\"ubuntu\\\"') ]; then echo \\\"#{username}:#{password}\\\" | sudo ..."
+from = "now-9m"
+rule_id = "75b007c9-292f-42d6-a7ab-faf0ff26ebaa"
+language = "kql"
+name = "Atomic Test: T1136.001 - Create a new user in Linux with `root` UID and GID."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.001/T1136.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.001", "a1040a30-d28b-4eda-bd99-bb2861a4616c", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*useradd*\\\" AND process.command_line : \\\"*/root*\\\" AND process.command_line : \\\"*/bin/bash*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.001"
+name = "Create a new user in Linux with `root` UID and GID."
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+

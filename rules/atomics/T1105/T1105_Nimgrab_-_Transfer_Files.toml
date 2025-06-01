@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Nimgrab - Transfer Files' (GUID: b1729c57-9384-4d1c-9b99-9b220afb384e) of technique T1105 (Ingress Tool Transfer). Test Description: Use nimgrab.exe to download a file from the web.. Command/Steps: cmd /c \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\nimgrab.exe\\\" #{remote_file} #{destination_path}\n"
+from = "now-9m"
+rule_id = "04b6f60c-89db-4c59-b6cd-68d17277a441"
+language = "kql"
+name = "Atomic Test: T1105 - Nimgrab - Transfer Files"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "b1729c57-9384-4d1c-9b99-9b220afb384e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*\\\\Atomic-license.txt*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Nimgrab - Transfer Files"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

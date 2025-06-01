@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MSFT Get-GPO Cmdlet' (GUID: 52778a8f-a10b-41a4-9eae-52ddb74072bf) of technique T1615 (Group Policy Discovery). Test Description: The Get-GPO cmdlet gets one Group Policy Object (GPO) or all the GPOs in a domain. Tested on Windows Server 2019 as a domain user with computer joined to domain. Reference: https://docs.microsoft.com/en-us/powershell/module/grouppolicy/get-gpo?view=windowsserver2022-ps. Command/Steps: Get-GPO -Domain $ENV:userdnsdomain #{gpo_param} >> #{gpo_output}"
+from = "now-9m"
+rule_id = "038de836-24ee-491f-9483-69990b16dc65"
+language = "kql"
+name = "Atomic Test: T1615 - MSFT Get-GPO Cmdlet"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1615/T1615.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1615", "52778a8f-a10b-41a4-9eae-52ddb74072bf", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-GPO*\\\" AND powershell.script_block_text : \\\"*-Domain*\\\" AND powershell.script_block_text : \\\"*$ENV:userdnsdomain*\\\" OR (process.command_line : \\\"*Get-GPO*\\\" AND process.command_line : \\\"*-Domain*\\\" AND process.command_line : \\\"*$ENV:userdnsdomain*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1615"
+name = "MSFT Get-GPO Cmdlet"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+

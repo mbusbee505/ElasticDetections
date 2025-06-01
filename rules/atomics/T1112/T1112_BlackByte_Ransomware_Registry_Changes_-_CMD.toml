@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'BlackByte Ransomware Registry Changes - CMD' (GUID: 4f4e2f9f-6209-4fcf-9b15-3b7455706f5b) of technique T1112 (Modify Registry). Test Description: This task recreates the steps taken by BlackByte ransomware before it worms to other machines.  See \\\"Preparing to Worm\\\" section: https://redcanary.com/blog/blackbyte-ransomware/\nThe steps are as follows:\n<ol>\n    <li>1. Elevate Local Privilege by disabling UAC Remote Restrictions</li>\n    <li>2. Enable OS to share network connections between different privilege levels</li>\n    <li>3. Enable long path values for file paths, names, and namespaces to ensure encryption of all file names and paths</li>\n</ol>\nThe registry keys and their respective values will be created upon successful execution.. Command/Steps: cmd.exe /c reg add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f\ncmd.exe /c reg..."
+from = "now-9m"
+rule_id = "8beec99d-406a-4fac-b0e5-82dea51f7d12"
+language = "kql"
+name = "Atomic Test: T1112 - BlackByte Ransomware Registry Changes - CMD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "4f4e2f9f-6209-4fcf-9b15-3b7455706f5b", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cmd.exe*\\\" AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\" AND process.command_line : \\\"*LocalAccountTokenFilterPolicy*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "BlackByte Ransomware Registry Changes - CMD"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

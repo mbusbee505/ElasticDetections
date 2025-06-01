@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Private Keys' (GUID: 520ce462-7ca7-441e-b5a5-f8347f632696) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: Find private keys on the Windows file system.\nFile extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc. Command/Steps: dir c:\\\\ /b /s .key | findstr /e .key\n"
+from = "now-9m"
+rule_id = "807c03dd-1ab4-4a7b-a40f-7e7df5ef43f6"
+language = "kql"
+name = "Atomic Test: T1552.004 - Private Keys"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "520ce462-7ca7-441e-b5a5-f8347f632696", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*.key*\\\" AND process.command_line : \\\"*findstr*\\\" AND process.command_line : \\\"*.key*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "Private Keys"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

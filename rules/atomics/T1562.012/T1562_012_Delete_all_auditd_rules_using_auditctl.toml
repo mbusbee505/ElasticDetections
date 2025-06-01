@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete all auditd rules using auditctl' (GUID: 33a29ab1-cabb-407f-9448-269041bf2856) of technique T1562.012 (Impair Defenses: Disable or Modify Linux Audit System). Test Description: Using 'auditctl -D' deletes all existing audit rules, resulting in the loss of previously configured monitoring settings and the audit trail. This action reduces visibility into system activities, potentially leading to compliance concerns and hampering security monitoring efforts. Additionally, it poses a risk of covering unauthorized activities by erasing evidence from audit logs.. Command/Steps: auditctl -D\n"
+from = "now-9m"
+rule_id = "e58fa2b4-e0da-4fe7-a920-70a4ae8c7431"
+language = "kql"
+name = "Atomic Test: T1562.012 - Delete all auditd rules using auditctl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.012/T1562.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.012", "33a29ab1-cabb-407f-9448-269041bf2856", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*auditctl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.012"
+name = "Delete all auditd rules using auditctl"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+

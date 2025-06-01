@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language by Windows API Query' (GUID: e39b99e9-ce7f-4b24-9c88-0fbad069e6c6) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: This test executes a custom script called LanguageKeyboardLayout.exe which outputs the values of the following Windows API functions to the user terminal: \n\n`GetKeyboardLayout`, `GetKeyboardLayoutList`, `GetUserDefaultUILanguage`, `GetSystemDefaultUILanguage`, `GetUserDefaultLangID`.\n\nDocumentation for these functions is located [here](https://learn.microsoft.com/en-us/windows/win32/api/winuser/).. Command/Steps: PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\LanguageKeyboardLayout.exe\n"
+from = "now-9m"
+rule_id = "fb779677-15af-4f43-a299-b39dcb20cffb"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language by Windows API Query"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "e39b99e9-ce7f-4b24-9c88-0fbad069e6c6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language by Windows API Query"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

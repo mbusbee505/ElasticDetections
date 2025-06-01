@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Discovery - ps' (GUID: 4ff64f0b-aaf2-4866-b39d-38d9791407cc) of technique T1057 (Process Discovery). Test Description: Utilize ps to identify processes.\n\nUpon successful execution, sh will execute ps and output to /tmp/loot.txt.. Command/Steps: ps >> #{output_file}\nps aux >> #{output_file}\n"
+from = "now-9m"
+rule_id = "bf394426-bb1e-4eee-86fd-58e00c471a04"
+language = "kql"
+name = "Atomic Test: T1057 - Process Discovery - ps"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "4ff64f0b-aaf2-4866-b39d-38d9791407cc", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Process Discovery - ps"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

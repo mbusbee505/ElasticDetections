@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MAZE FTP Upload' (GUID: 57799bc2-ad1e-4130-a793-fb0c385130ba) of technique T1048.003 (Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol). Test Description: This test simulates MAZE's ransomware's ability to exfiltrate data via FTP.\nUpon successful execution, all 7z files within the %windir%\\\\temp directory will be uploaded to a remote FTP server. \nReference: https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents. Command/Steps: $Dir_to_copy = \\\"$env:windir\\\\temp\\\"\n$ftp = \\\"ftp://#{ftp_server}/\\\"\n$web_client = New-Object System.Net.WebClient\n$web_client.Credentials = New-Object Sys..."
+from = "now-9m"
+rule_id = "8a736cb7-af5b-4b78-b49b-463c3b6141e8"
+language = "kql"
+name = "Atomic Test: T1048.003 - MAZE FTP Upload"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048.003/T1048.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048.003", "57799bc2-ad1e-4130-a793-fb0c385130ba", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Dir_to_copy*\\\" AND powershell.script_block_text : \\\"*$env:windir\\\\temp*\\\" AND powershell.script_block_text : \\\"*$ftp*\\\" OR (process.command_line : \\\"*$Dir_to_copy*\\\" AND process.command_line : \\\"*$env:windir\\\\temp*\\\" AND process.command_line : \\\"*$ftp*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048.003"
+name = "MAZE FTP Upload"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - nslookup' (GUID: baa01aaa-5e13-45ec-8a0d-e46c93c9760f) of technique T1018 (Remote System Discovery). Test Description: Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.\n\nUpon successful execution, powershell will identify the ip range (via ipconfig) and perform a for loop and execute nslookup against that IP range. Output will be via stdout.. Command/Steps: $localip = ((ipconfig | findstr [0-9].\\\\.)[0]).Split()[-1]\n$pieces = $localip.split(\\\".\\\")\n$firstOctet = $pieces[0]\n$secondOctet = $pieces[1]\n$thirdOctet..."
+from = "now-9m"
+rule_id = "f8191304-6d9c-4322-8053-0ef5decb1e5e"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - nslookup"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "baa01aaa-5e13-45ec-8a0d-e46c93c9760f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$localip*\\\" AND powershell.script_block_text : \\\"*((ipconfig*\\\" AND powershell.script_block_text : \\\"*findstr*\\\" OR (process.command_line : \\\"*$localip*\\\" AND process.command_line : \\\"*((ipconfig*\\\" AND process.command_line : \\\"*findstr*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - nslookup"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

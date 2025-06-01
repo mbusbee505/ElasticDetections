@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new user in FreeBSD with `root` GID.' (GUID: d141afeb-d2bc-4934-8dd5-b7dba0f9f67a) of technique T1136.001 (Create Account: Local Account). Test Description: Creates a new user in FreeBSD and adds the user to the `root` group. This technique was used by adversaries during the Butter attack campaign.. Command/Steps: pw useradd #{username} -g 0 -d /root -s /bin/sh\necho \\\"#{password}\\\" | pw usermod #{username} -h 0\n"
+from = "now-9m"
+rule_id = "78491013-3f87-49c8-8081-2cae019d7ca8"
+language = "kql"
+name = "Atomic Test: T1136.001 - Create a new user in FreeBSD with `root` GID."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.001/T1136.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.001", "d141afeb-d2bc-4934-8dd5-b7dba0f9f67a", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*useradd*\\\" AND process.command_line : \\\"*butter*\\\" AND process.command_line : \\\"*/root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.001"
+name = "Create a new user in FreeBSD with `root` GID."
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+

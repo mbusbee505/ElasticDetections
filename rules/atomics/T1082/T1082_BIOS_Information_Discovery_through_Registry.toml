@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'BIOS Information Discovery through Registry' (GUID: f2f91612-d904-49d7-87c2-6c165d23bead) of technique T1082 (System Information Discovery). Test Description: Looks up for BIOS information in the registry. BIOS information is often read in order to detect sandboxing environments.  Upon execution, BIOS information will be displayed.\n- https://tria.ge/210111-eaz8mqhgh6/behavioral1\n- https://evasions.checkpoint.com/techniques/registry.html. Command/Steps: reg query HKEY_LOCAL_MACHINE\\\\HARDWARE\\\\DESCRIPTION\\\\System /v SystemBiosVersion\nreg query HKEY_LOCAL_MACHINE\\\\HARDWARE\\\\DESCRIPTION\\\\System /v VideoBiosVer..."
+from = "now-9m"
+rule_id = "b482ca6d-0b16-4671-a927-178b7a812eba"
+language = "kql"
+name = "Atomic Test: T1082 - BIOS Information Discovery through Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "f2f91612-d904-49d7-87c2-6c165d23bead", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\HARDWARE\\\\DESCRIPTION\\\\System*\\\" AND process.command_line : \\\"*SystemBiosVersion*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "BIOS Information Discovery through Registry"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

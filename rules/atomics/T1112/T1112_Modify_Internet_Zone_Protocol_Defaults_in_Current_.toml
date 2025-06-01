@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell' (GUID: b1a4d687-ba52-4057-81ab-757c3dc0d3b5) of technique T1112 (Modify Registry). Test Description: This test simulates an adversary modifying the Internet Zone Protocol Defaults in the registry of the currently logged-in user using PowerShell. Such modifications can be indicative of an adversary attempting to weaken browser security settings. \nTo verify the effects of the test:\n1. Open the Registry Editor (regedit.exe).\n2. Navigate to \\\"HKEY_CURRENT_USER\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\\\\ZoneMap\\\\ProtocolDefaults\\\".\n3. Check for the presence of the \\\"http\\\" and \\\"https\\\" DWORD values set to `0`.\nOr run:\n```powershell\nGet-ItemProperty -Path 'HKCU:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\\\\ZoneMap\\\\ProtocolDefaults' | Select-Object http,https\n```. Command/Steps: # Set the registry values for http and https to 0\nSet-ItemProperty -Path 'HKCU:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\\\\ZoneMap\\\\Pr..."
+from = "now-9m"
+rule_id = "5cd229a2-2268-42a9-9338-523b5b54b943"
+language = "kql"
+name = "Atomic Test: T1112 - Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "b1a4d687-ba52-4057-81ab-757c3dc0d3b5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*registry*\\\" AND powershell.script_block_text : \\\"*values*\\\" AND powershell.script_block_text : \\\"*http*\\\" OR (process.command_line : \\\"*registry*\\\" AND process.command_line : \\\"*values*\\\" AND process.command_line : \\\"*http*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

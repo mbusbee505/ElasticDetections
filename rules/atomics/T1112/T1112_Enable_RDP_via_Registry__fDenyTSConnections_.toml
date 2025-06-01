@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable RDP via Registry (fDenyTSConnections)' (GUID: 16bdbe52-371c-4ccf-b708-79fba61f1db4) of technique T1112 (Modify Registry). Test Description: Modify the registry value of fDenyTSConnections to allow incoming RDP connections. \nThis activity has been observed by multiple ransomware groups, including Hive ransomware. \n[Reference](https://www.rapid7.com/blog/post/2023/01/11/increasing-the-sting-of-hive-ransomware/). Command/Steps: reg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\" /v fDenyTSConnections /t REG_DWORD /d 0 /f"
+from = "now-9m"
+rule_id = "ce081fa5-c5b3-4f34-b90f-e54a1b16437d"
+language = "kql"
+name = "Atomic Test: T1112 - Enable RDP via Registry (fDenyTSConnections)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "16bdbe52-371c-4ccf-b708-79fba61f1db4", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server*\\\" AND process.command_line : \\\"*fDenyTSConnections*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Enable RDP via Registry (fDenyTSConnections)"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

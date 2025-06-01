@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Check Software Inventory Logging (SIL) status via Registry' (GUID: 5c784969-1d43-4ac7-8c3d-ed6d025ed10d) of technique T1012 (Query Registry). Test Description: Microsoft's Software Inventory Logging (SIL) collects information about software installed per host basis. Adversary can use such logs to passively \ncheck for existence of software of interest to them. Status of SIL can be checked via registry.\n[Reference](https://blog.talosintelligence.com/chinese-hacking-group-apt41-compromised-taiwanese-government-affiliated-research-institute-with-shadowpad-and-cobaltstrike-2/). Command/Steps: reg.exe query hklm\\\\software\\\\microsoft\\\\windows\\\\softwareinventorylogging /v collectionstate /reg:64\n"
+from = "now-9m"
+rule_id = "0cb68322-b7c1-4be5-a63d-c4b8ee9c8f27"
+language = "kql"
+name = "Atomic Test: T1012 - Check Software Inventory Logging (SIL) status via Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1012/T1012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1012", "5c784969-1d43-4ac7-8c3d-ed6d025ed10d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*hklm\\\\software\\\\microsoft\\\\windows\\\\softwareinventorylogging*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1012"
+name = "Check Software Inventory Logging (SIL) status via Registry"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+

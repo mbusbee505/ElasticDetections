@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Make and modify binary from C source' (GUID: 896dfe97-ae43-4101-8e96-9a7996555d80) of technique T1548.001 (Abuse Elevation Control Mechanism: Setuid and Setgid). Test Description: Make, change owner, and change file attributes on a C source code file. Command/Steps: cp #{payload} /tmp/hello.c\nsudo chown root /tmp/hello.c\nsudo make /tmp/hello\nsudo chown root /tmp/hello\nsudo chmod u+s /tmp/hello\n/tmp/hello\n"
+from = "now-9m"
+rule_id = "aa89a7ca-2891-4004-b330-7bcdc7486600"
+language = "kql"
+name = "Atomic Test: T1548.001 - Make and modify binary from C source"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.001/T1548.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.001", "896dfe97-ae43-4101-8e96-9a7996555d80", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*chown*\\\" AND process.command_line : \\\"*root*\\\" AND process.command_line : \\\"*make*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.001"
+name = "Make and modify binary from C source"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+

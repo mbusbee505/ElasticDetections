@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new Windows admin user' (GUID: fda74566-a604-4581-a4cc-fbbe21d66559) of technique T1136.001 (Create Account: Local Account). Test Description: Creates a new admin user in a command prompt.. Command/Steps: net user /add \\\"#{username}\\\" \\\"#{password}\\\"\nnet localgroup administrators \\\"#{username}\\\" /add\n"
+from = "now-9m"
+rule_id = "ff993775-74de-4e75-8854-8c36ef361496"
+language = "kql"
+name = "Atomic Test: T1136.001 - Create a new Windows admin user"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.001/T1136.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.001", "fda74566-a604-4581-a4cc-fbbe21d66559", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*/add*\\\" AND process.command_line : \\\"*localgroup*\\\" AND process.command_line : \\\"*administrators*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.001"
+name = "Create a new Windows admin user"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/001"
+
+

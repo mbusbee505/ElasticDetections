@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language with dism.exe' (GUID: 69f625ba-938f-4900-bdff-82ada3df5d9c) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: The Windows utility DISM (Deployment Image Servicing and Management) can be used to display information about international settings and languages on the currently installed Windows image using an elevated terminal.. Command/Steps: dism.exe /online /Get-Intl\n"
+from = "now-9m"
+rule_id = "32c90206-b190-416f-83ab-65716a615d87"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language with dism.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "69f625ba-938f-4900-bdff-82ada3df5d9c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*dism.exe*\\\" AND process.command_line : \\\"*/online*\\\" AND process.command_line : \\\"*/Get-Intl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language with dism.exe"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

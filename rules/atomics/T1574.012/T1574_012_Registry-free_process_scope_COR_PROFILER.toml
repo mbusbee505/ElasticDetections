@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Registry-free process scope COR_PROFILER' (GUID: 79d57242-bbef-41db-b301-9d01d9f6e817) of technique T1574.012 (Hijack Execution Flow: COR_PROFILER). Test Description: Creates process scope environment variables to enable a .NET profiler (COR_PROFILER) without making changes to the registry. The unmanaged profiler DLL (`T1574.012x64.dll`) executes when the CLR is loaded by PowerShell.\n\nReference: https://redcanary.com/blog/cor_profiler-for-persistence/. Command/Steps: $env:COR_ENABLE_PROFILING = 1\n$env:COR_PROFILER = '#{clsid_guid}'\n$env:COR_PROFILER_PATH = '\\\"#{file_name}\\\"'\nPOWERSHELL -c 'Start-Sleep 1'\n"
+from = "now-9m"
+rule_id = "ef4bda5d-1b1b-4ef4-97f2-9d0109adb236"
+language = "kql"
+name = "Atomic Test: T1574.012 - Registry-free process scope COR_PROFILER"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.012/T1574.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.012", "79d57242-bbef-41db-b301-9d01d9f6e817", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$env:COR_ENABLE_PROFILING*\\\" AND powershell.script_block_text : \\\"*$env:COR_PROFILER*\\\" AND powershell.script_block_text : \\\"*{09108e71-974c-4010-89cb-acf471ae9e2c}*\\\" OR (process.command_line : \\\"*$env:COR_ENABLE_PROFILING*\\\" AND process.command_line : \\\"*$env:COR_PROFILER*\\\" AND process.command_line : \\\"*{09108e71-974c-4010-89cb-acf471ae9e2c}*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.012"
+name = "Registry-free process scope COR_PROFILER"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+

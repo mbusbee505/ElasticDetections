@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create local account (Linux)' (GUID: 02a91c34-8a5b-4bed-87af-501103eb5357) of technique T1078.003 (Valid Accounts: Local Accounts). Test Description: An adversary may wish to create an account with admin privileges to work with. In this test we create a \\\"art\\\" user with the password art, switch to art, execute whoami, exit and delete the art user.. Command/Steps: password=$(openssl passwd -1 art)\n([ \\\"$(uname)\\\" = 'Linux' ] && useradd --shell /bin/bash --create-home --password $password art) || (pw useradd art -g..."
+from = "now-9m"
+rule_id = "1246af4b-021f-493a-8c61-29884838f5c3"
+language = "kql"
+name = "Atomic Test: T1078.003 - Create local account (Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.003/T1078.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.003", "02a91c34-8a5b-4bed-87af-501103eb5357", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*password=$(openssl*\\\" AND process.command_line : \\\"*passwd*\\\" AND process.command_line : \\\"*art)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.003"
+name = "Create local account (Linux)"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+

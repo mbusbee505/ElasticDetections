@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Extract binary files via VBA' (GUID: 6afe288a-8a8b-4d33-a629-8d03ba9dad3a) of technique T1564 (Hide Artifacts). Test Description: This module extracts a binary (calc.exe) from inside of another binary. \n\nIn the wild maldoc authors will use this technique to hide binaries inside of files stored \nwithin the office document itself. An example of this technique can be seen in sample\n\nf986040c7dd75b012e7dfd876acb33a158abf651033563ab068800f07f508226\n\nThis sample contains a document inside of itself. Document 1 is the actual maldoc itself, document 2\nis the same document without all the malicious code. Document 1 will copy Document 2 to the file system\nand then \\\"peek\\\" inside of this document and pull out the oleObject.bin file. Contained inside of this\noleObject.bin file is a payload that is parsed out and executed on the file system.. Command/Steps: $macro = [System.IO.File]::ReadAllText(\\\"PathToAtomicsFolder\\\\T1564\\\\src\\\\T1564-macrocode.txt\\\")\n$macro = $macro -replace \\\"aREPLACEMEa\\\", \\\"PathToAtomicsFold..."
+from = "now-9m"
+rule_id = "b7fddb52-8db3-4ca9-81cd-c33a67bd711e"
+language = "kql"
+name = "Atomic Test: T1564 - Extract binary files via VBA"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564/T1564.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564", "6afe288a-8a8b-4d33-a629-8d03ba9dad3a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$macro*\\\" AND powershell.script_block_text : \\\"*$macro*\\\" AND powershell.script_block_text : \\\"*$macro*\\\" OR (process.command_line : \\\"*$macro*\\\" AND process.command_line : \\\"*$macro*\\\" AND process.command_line : \\\"*$macro*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564"
+name = "Extract binary files via VBA"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+

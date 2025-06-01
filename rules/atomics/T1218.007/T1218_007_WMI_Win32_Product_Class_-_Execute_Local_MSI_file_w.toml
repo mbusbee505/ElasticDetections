@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMI Win32_Product Class - Execute Local MSI file with an embedded EXE' (GUID: 55080eb0-49ae-4f55-a440-4167b7974f79) of technique T1218.007 (Signed Binary Proxy Execution: Msiexec). Test Description: Executes an MSI containing an embedded EXE using the WMI Win32_Product class. Command/Steps: Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }\n"
+from = "now-9m"
+rule_id = "5ea87397-9a36-4e7d-91c0-788d6dd751bd"
+language = "kql"
+name = "Atomic Test: T1218.007 - WMI Win32_Product Class - Execute Local MSI file with an embedded EXE"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.007/T1218.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.007", "55080eb0-49ae-4f55-a440-4167b7974f79", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-CimMethod*\\\" AND powershell.script_block_text : \\\"*-ClassName*\\\" AND powershell.script_block_text : \\\"*Win32_Product*\\\" OR (process.command_line : \\\"*Invoke-CimMethod*\\\" AND process.command_line : \\\"*-ClassName*\\\" AND process.command_line : \\\"*Win32_Product*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.007"
+name = "WMI Win32_Product Class - Execute Local MSI file with an embedded EXE"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+

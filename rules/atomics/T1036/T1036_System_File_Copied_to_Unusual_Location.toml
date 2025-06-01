@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System File Copied to Unusual Location' (GUID: 51005ac7-52e2-45e0-bdab-d17c6d4916cd) of technique T1036 (Masquerading). Test Description: It may be suspicious seeing a file copy of an EXE in System32 or SysWOW64 to a non-system directory or executing from a non-system directory.. Command/Steps: copy-item \\\"$env:windir\\\\System32\\\\cmd.exe\\\" -destination \\\"$env:allusersprofile\\\\cmd.exe\\\"\nstart-process \\\"$env:allusersprofile\\\\cmd.exe\\\"\nsleep -s 5 \nstop-pro..."
+from = "now-9m"
+rule_id = "37ac659c-7689-4787-b8c8-43e18799038e"
+language = "kql"
+name = "Atomic Test: T1036 - System File Copied to Unusual Location"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036/T1036.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036", "51005ac7-52e2-45e0-bdab-d17c6d4916cd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*copy-item*\\\" AND powershell.script_block_text : \\\"*$env:windir\\\\System32\\\\cmd.exe*\\\" AND powershell.script_block_text : \\\"*-destination*\\\" OR (process.command_line : \\\"*copy-item*\\\" AND process.command_line : \\\"*$env:windir\\\\System32\\\\cmd.exe*\\\" AND process.command_line : \\\"*-destination*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036"
+name = "System File Copied to Unusual Location"
+reference = "https://attack.mitre.org/techniques/T1036"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036"
+
+

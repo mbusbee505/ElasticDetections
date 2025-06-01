@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Psiphon' (GUID: 14d55ca0-920e-4b44-8425-37eedd72b173) of technique T1090.003 (Proxy: Multi-hop Proxy). Test Description: Psiphon 3 is a circumvention tool from Psiphon Inc. that utilizes VPN, SSH and HTTP Proxy technology to provide you\nwith uncensored access to Internet.\nThis process will launch Psiphon 3 and establish a connection. Shortly after it will be shut down via process kill commands.\nMore information can be found about Psiphon using the following urls\nhttp://s3.amazonaws.com/0ubz-2q11-gi9y/en.html\nhttps://psiphon.ca/faq.html. Command/Steps: & \\\"PathToAtomicsFolder\\\\T1090.003\\\\src\\\\Psiphon.bat\\\"\n"
+from = "now-9m"
+rule_id = "154187a7-beef-49dd-85c3-0201b7c52ebd"
+language = "kql"
+name = "Atomic Test: T1090.003 - Psiphon"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1090.003/T1090.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1090.003", "14d55ca0-920e-4b44-8425-37eedd72b173", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1090.003"
+name = "Psiphon"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+

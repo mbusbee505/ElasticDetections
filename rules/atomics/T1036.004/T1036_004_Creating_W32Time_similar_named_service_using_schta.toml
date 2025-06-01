@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Creating W32Time similar named service using schtasks' (GUID: f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9) of technique T1036.004 (Masquerading: Masquerade Task or Service). Test Description: Creating W32Time similar named service (win32times) using schtasks just like threat actor dubbed \\\"Operation Wocao\\\". Command/Steps: schtasks /create /ru system /sc daily /tr \\\"cmd /c powershell.exe -ep bypass -file c:\\\\T1036.004_NonExistingScript.ps1\\\" /tn win32times /f\nschtasks /quer..."
+from = "now-9m"
+rule_id = "c23517d1-6316-4240-ad15-e451174a66f7"
+language = "kql"
+name = "Atomic Test: T1036.004 - Creating W32Time similar named service using schtasks"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.004/T1036.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.004", "f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*schtasks*\\\" AND process.command_line : \\\"*/create*\\\" AND process.command_line : \\\"*system*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.004"
+name = "Creating W32Time similar named service using schtasks"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+

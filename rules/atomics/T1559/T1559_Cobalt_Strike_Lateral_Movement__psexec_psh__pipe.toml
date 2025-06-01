@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Cobalt Strike Lateral Movement (psexec_psh) pipe' (GUID: 830c8b6c-7a70-4f40-b975-8bbe74558acd) of technique T1559 (Inter-Process Communication). Test Description: Uses the [Named Pipes Micro Emulation](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/named_pipes) executable from the Center for Threat Informed Defense to create a named pipe for inter-process communication.\n\nThe named pipe executable will pause for 30 seconds to allow the client and server to exchange a message through the pipe.. Command/Steps: \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\build\\\\namedpipes_executor.exe\\\" --pipe 2\n"
+from = "now-9m"
+rule_id = "831ab1e9-1058-47ee-ac0f-9a75bd0b7601"
+language = "kql"
+name = "Atomic Test: T1559 - Cobalt Strike Lateral Movement (psexec_psh) pipe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1559/T1559.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1559", "830c8b6c-7a70-4f40-b975-8bbe74558acd", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*--pipe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1559"
+name = "Cobalt Strike Lateral Movement (psexec_psh) pipe"
+reference = "https://attack.mitre.org/techniques/T1559"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1559"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1559"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1559"
+
+

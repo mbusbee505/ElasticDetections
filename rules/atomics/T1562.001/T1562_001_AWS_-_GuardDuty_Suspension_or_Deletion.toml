@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - GuardDuty Suspension or Deletion' (GUID: 11e65d8d-e7e4-470e-a3ff-82bc56ad938e) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Enables GuardDuty in AWS, upon successful creation this test will suspend and then delete the GuardDuty configuration.. Command/Steps: detectorId=$(aws guardduty create-detector --enable --region \\\"#{region}\\\" | grep -oP '(?<=\\\"DetectorId\\\": \\\")[^\\\"]*')\naws guardduty update-detector --no-en..."
+from = "now-9m"
+rule_id = "e91f134c-642e-41ef-a9de-2116bd4dc11b"
+language = "kql"
+name = "Atomic Test: T1562.001 - AWS - GuardDuty Suspension or Deletion"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "11e65d8d-e7e4-470e-a3ff-82bc56ad938e", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*detectorId=$(aws*\\\" AND process.command_line : \\\"*guardduty*\\\" AND process.command_line : \\\"*create-detector*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "AWS - GuardDuty Suspension or Deletion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

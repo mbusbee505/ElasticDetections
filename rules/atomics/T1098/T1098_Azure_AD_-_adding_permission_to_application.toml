@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure AD - adding permission to application' (GUID: 94ea9cc3-81f9-4111-8dde-3fb54f36af4b) of technique T1098 (Account Manipulation). Test Description: The adversaries want to add permission to newly created application. Application could be then used for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.\nThis technique will create a new app, with the provided name, and give it the provided permission. But if you prefer to add credentials to an existing app, replace in the code: \\\"Get-AzureADApplication\\\" instead of \\\"New-AzureADServicePrincipal\\\".\nThe DirectoryRecommendations.Read.All permissions has been selected as the default.\n\nThe account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.\n\nDetection hint - check Operation Name \\\"Add app role assignment to service principal\\\" in subscriptions Activity Logs.\nYou can also take a look at the materials:\nhttps://learnsentinel.blog/2022/01/04/azuread-privesc-sentinel/\nhttps://github.com/reprise99/Sentinel-Queries\nhttps://docs.google.com/presentation/d/1AWx1w0Xcq8ENvOmSjAJswEgEio-il09QWZlGg9PbHqE/edit#slide=id.g10460eb209c_0_2766\nhttps://gist.github.com/andyrobbins/7c3dd62e6ed8678c97df9565ff3523fb. Command/Steps: Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force\n$Credential = New-Object -TypeName System.Manage..."
+from = "now-9m"
+rule_id = "e4201ad1-f9a0-4ec1-8f88-5ec81506d249"
+language = "kql"
+name = "Atomic Test: T1098 - Azure AD - adding permission to application"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098/T1098.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098", "94ea9cc3-81f9-4111-8dde-3fb54f36af4b", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*AzureAD*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*AzureAD*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098"
+name = "Azure AD - adding permission to application"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+

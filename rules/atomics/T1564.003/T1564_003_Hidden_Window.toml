@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Hidden Window' (GUID: f151ee37-9e2b-47e6-80e4-550b9f999b7a) of technique T1564.003 (Hide Artifacts: Hidden Window). Test Description: Launch PowerShell with the \\\"-WindowStyle Hidden\\\" argument to conceal PowerShell windows by setting the WindowStyle parameter to hidden.\nUpon execution a hidden PowerShell window will launch calc.exe. Command/Steps: Start-Process #{powershell_command}\n"
+from = "now-9m"
+rule_id = "b1d04925-c06e-49ab-8cd4-66da62c5a2f9"
+language = "kql"
+name = "Atomic Test: T1564.003 - Hidden Window"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.003/T1564.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.003", "f151ee37-9e2b-47e6-80e4-550b9f999b7a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*powershell.exe*\\\" AND powershell.script_block_text : \\\"*-WindowStyle*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*-WindowStyle*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.003"
+name = "Hidden Window"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+

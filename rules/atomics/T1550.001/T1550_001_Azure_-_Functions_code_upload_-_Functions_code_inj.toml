@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token' (GUID: 67aaf4cb-54ce-42e2-ab56-e0a9bcc089b1) of technique T1550.001 (Use Alternate Authentication Material: Application Access Token). Test Description: This test injects code into an Azure Function (RCE) to perform Subscription Privilege Escalation by retrieving the identity access token of an Azure functions instance.\n\nAttack idea/reference: https://orca.security/resources/blog/azure-shared-key-authorization-exploitation/\n\nOnce executed, the \\\"https://changeme\\\" will retrieve the access token when the function app is executed on behalf of the tenant. The function may be triggered manually from authorized people, triggered in regular intervals, or in various other ways. The access token can then be used to perform further attack steps with the permissions that the function app holds (e.g. listening virtual machines).\n\nNote: \n- The Azure Function modified in this test must be hosted via Azure Files in a File Share (Info on storage considerations for Azure Function: https://learn.microsoft.com/en-us/azure/azure-functions/storage-considerations).\n- For Function code upload to Azure Functions that are hosted via Azure Blob storage, refer to T1550.001 \\\"Azure - Functions code upload - Functions code injection via Blob upload\\\".\n- The required input fields can be retrieved in a reconnaissance step in test T1619 \\\"Azure - Enumerate Storage Account Objects via Key-based authentication using Azure CLI\\\". The code of function apps may be inspected and prepared from the result of test T1530 \\\"Azure - Dump Azure Storage Account Objects via Azure CLI\\\".\n- Important: Change the https://changeme.net in code_to_insert_path to a self-controlled endpoint. This endpoint can be hosted e.g. as request bin via Pipedream to display the body of incoming POST requests.\n- The default injected code to retrieve the access token can be replaced by arbitrary other code. In this case: Replace the code defined in code_to_insert_path\n\nRequirements:\n- The test is intended to be executed in interactive mode (with -Interactive parameter) in order to complete the az login command when MFA is required.\n- The EntraID user must have the role \\\"Storage Account Contributor\\\", or a role with similar permissions.\n\nExecution options: Defined by the input field execution_option\n- insert_code: This option (1) downloads the existing funciton code into a tmp file, (2) injects the code from code_to_insert_path at the beginning of the file, and (3) uploads the tampered file to the targeted Azure Function code (Azure File Share File).\n- replace_file: This option uploads the function code defined in code_to_insert_path to the targeted Azure Function code (Azure File Share File).. Command/Steps: az login    # Log in to Azure CLI\n\n$allowSharedKeyAccess = az storage account show --name \\\"#{storage_account_name}\\\" --query \\\"allowSharedKeyAccess\\\"\n\nif..."
+from = "now-9m"
+rule_id = "06c8190d-a97e-4313-9c4e-b7c2ed404f39"
+language = "kql"
+name = "Atomic Test: T1550.001 - Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1550.001/T1550.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1550.001", "67aaf4cb-54ce-42e2-ab56-e0a9bcc089b1", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*login*\\\" AND powershell.script_block_text : \\\"*Azure*\\\" AND powershell.script_block_text : \\\"*$allowSharedKeyAccess*\\\" OR (process.command_line : \\\"*login*\\\" AND process.command_line : \\\"*Azure*\\\" AND process.command_line : \\\"*$allowSharedKeyAccess*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1550.001"
+name = "Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token"
+reference = "https://attack.mitre.org/techniques/T1550/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1550/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1550/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1550/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Access /etc/{shadow,passwd,master.passwd} with shell builtins' (GUID: f5aa6543-6cb2-4fae-b9c2-b96e14721713) of technique T1003.008 (OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow). Test Description: Dump /etc/passwd, /etc/master.passwd and /etc/shadow using sh builtins. Command/Steps: testcat(){ (while read line; do echo $line >> #{output_file}; done < $1) }\n[ \\\"$(uname)\\\" = 'FreeBSD' ] && testcat /etc/master.passwd\ntestcat /etc/passw..."
+from = "now-9m"
+rule_id = "02e7c65e-fbea-43ae-890c-88f3e940b554"
+language = "kql"
+name = "Atomic Test: T1003.008 - Access /etc/{shadow,passwd,master.passwd} with shell builtins"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.008/T1003.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.008", "f5aa6543-6cb2-4fae-b9c2-b96e14721713", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*testcat(){*\\\" AND process.command_line : \\\"*(while*\\\" AND process.command_line : \\\"*read*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.008"
+name = "Access /etc/{shadow,passwd,master.passwd} with shell builtins"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+

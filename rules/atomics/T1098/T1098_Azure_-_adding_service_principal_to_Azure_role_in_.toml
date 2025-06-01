@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - adding service principal to Azure role in subscription' (GUID: c8f4bc29-a151-48da-b3be-4680af56f404) of technique T1098 (Account Manipulation). Test Description: The adversaries want to add service principal to some Azure role, also called Azure resource role. Threat actor \nmay be interested primarily in highly privileged roles, e.g. Owner, Contributor.\nBy default, the role Reader is assigned to service principal in this test.\n\nNew-AzRoleAssignment cmdlet could be also use to assign user/service principal to resource, resource group and management group.\n\nThe account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write \n(e.g. such as User Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All \nand Microsoft Graph Directory.Read.All permissions.\n\nDetection hint - check Operation Name \\\"Create role assignment\\\" in subscriptions Activity Logs.. Command/Steps: Import-Module -Name Az.Resources\n$PWord = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force\n$Credential = New-Object -TypeName System.M..."
+from = "now-9m"
+rule_id = "6af10f9f-9081-4fd0-98fa-60a1757347e6"
+language = "kql"
+name = "Atomic Test: T1098 - Azure - adding service principal to Azure role in subscription"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098/T1098.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098", "c8f4bc29-a151-48da-b3be-4680af56f404", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*Az.Resources*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*Az.Resources*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098"
+name = "Azure - adding service principal to Azure role in subscription"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+

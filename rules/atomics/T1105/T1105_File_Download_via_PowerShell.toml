@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'File Download via PowerShell' (GUID: 54a4daf1-71df-4383-9ba7-f1a295d8b6d2) of technique T1105 (Ingress Tool Transfer). Test Description: Use PowerShell to download and write an arbitrary file from the internet. Example is from the 2021 Threat Detection Report by Red Canary.. Command/Steps: (New-Object Net.WebClient).DownloadString('#{target_remote_file}') | Out-File #{output_file}; Invoke-Item #{output_file}\n"
+from = "now-9m"
+rule_id = "6c312efd-cd3b-4021-b867-54d799b489b6"
+language = "kql"
+name = "Atomic Test: T1105 - File Download via PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "54a4daf1-71df-4383-9ba7-f1a295d8b6d2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(New-Object*\\\" AND powershell.script_block_text : \\\"*Out-File*\\\" AND powershell.script_block_text : \\\"*LICENSE.txt*\\\" OR (process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*Out-File*\\\" AND process.command_line : \\\"*LICENSE.txt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "File Download via PowerShell"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

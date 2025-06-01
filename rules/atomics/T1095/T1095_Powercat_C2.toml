@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powercat C2' (GUID: 3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e) of technique T1095 (Non-Application Layer Protocol). Test Description: Start C2 Session Using Powercat\nTo start the listener on a Linux device, type the following: \nnc -l -p <port>. Command/Steps: IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/..."
+from = "now-9m"
+rule_id = "eb39c611-082f-4b59-ae3d-570c64ac3c22"
+language = "kql"
+name = "Atomic Test: T1095 - Powercat C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1095/T1095.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1095", "3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(New-Object*\\\" AND powershell.script_block_text : \\\"*System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')*\\\" AND powershell.script_block_text : \\\"*powercat*\\\" OR (process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')*\\\" AND process.command_line : \\\"*powercat*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1095"
+name = "Powercat C2"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+

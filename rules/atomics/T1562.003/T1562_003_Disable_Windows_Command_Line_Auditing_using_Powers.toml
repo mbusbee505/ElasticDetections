@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows Command Line Auditing using Powershell Cmdlet' (GUID: 95f5c72f-6dfe-45f3-a8c1-d8faa07176fa) of technique T1562.003 (Impair Defenses: Impair Command History Logging). Test Description: In Windows operating systems, command line auditing is controlled through the following registry value:\n\n  Registry Path: HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\Audit\n  \n  Registry Value: ProcessCreationIncludeCmdLine_Enabled\n\nWhen command line auditing is enabled, the system records detailed information about command execution, including the command executed, the user account responsible for executing the command, and the timestamp of the execution.\nThis information is crucial for security monitoring and forensic analysis, as it helps organizations detect and investigate unauthorized or malicious activities within their systems.\nBy default, command line auditing may not be enabled in Windows systems, and administrators must manually configure the appropriate registry settings to activate it.\nConversely, attackers may attempt to tamper with these registry keys to disable command line auditing, as part of their efforts to evade detection and cover their tracks while perpetrating malicious activities.\n\nBecause this attack runs a Powershell cmdlet, this attack can be detected by monitoring both:\n  Powershell Logging (Windows Powershell Event ID 400, 800, 4103, 4104)\n  Registry events (Windows Event ID 4657, Sysmon Event ID 13)\n\nRead more here:\nhttps://securitydatasets.com/notebooks/atomic/windows/defense_evasion/SDWIN-220703123711.html\nhttps://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-itemproperty?view=powershell-7.4#example-2-add-a-registry-entry-to-a-key. Command/Steps: New-ItemProperty -Path \\\"HKLM:Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\Audit\\\" -Name \\\"ProcessCreationIncludeCmdLine_Enabled\\\" -Value 0 -..."
+from = "now-9m"
+rule_id = "339cc7bc-88a9-410f-8945-a7e4d1998303"
+language = "kql"
+name = "Atomic Test: T1562.003 - Disable Windows Command Line Auditing using Powershell Cmdlet"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.003/T1562.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.003", "95f5c72f-6dfe-45f3-a8c1-d8faa07176fa", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\Audit*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\Audit*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.003"
+name = "Disable Windows Command Line Auditing using Powershell Cmdlet"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+

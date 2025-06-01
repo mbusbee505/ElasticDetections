@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows Defender with DISM' (GUID: 871438ac-7d6e-432a-b27d-3e7db69faf58) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: The following Atomic will attempt to disable Windows-Defender using the built in DISM.exe, Deployment Image Servicing and Management tool. \nDISM is used to enumerate, install, uninstall, configure, and update features and packages in Windows images.\nA successful execution will not standard-out any details. Remove the quiet switch if verbosity is needed.\nThis method will remove Defender and it's package.. Command/Steps: Dism /online /Disable-Feature /FeatureName:Windows-Defender /Remove /NoRestart /quiet"
+from = "now-9m"
+rule_id = "c04ef79e-f582-4c00-9342-830b25a75484"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Windows Defender with DISM"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "871438ac-7d6e-432a-b27d-3e7db69faf58", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Dism*\\\" AND process.command_line : \\\"*/online*\\\" AND process.command_line : \\\"*/Disable-Feature*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Windows Defender with DISM"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

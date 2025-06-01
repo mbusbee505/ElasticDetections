@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Microsoft.Workflow.Compiler.exe Payload Execution' (GUID: 7cbb0f26-a4c1-4f77-b180-a009aa05637e) of technique T1218 (Signed Binary Proxy Execution). Test Description: Emulates attack with Microsoft.Workflow.Compiler.exe running a .Net assembly that launches calc.exe. Command/Steps: #{mwcpath}\\\\#{mwcname} \\\"#{xml_payload}\\\" output.txt\n"
+from = "now-9m"
+rule_id = "5e9390cc-3219-4d5b-acbb-cf9844f60bcb"
+language = "kql"
+name = "Atomic Test: T1218 - Microsoft.Workflow.Compiler.exe Payload Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "7cbb0f26-a4c1-4f77-b180-a009aa05637e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\microsoft.workflow.compiler.exe*\\\" AND powershell.script_block_text : \\\"*output.txt*\\\" OR (process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\microsoft.workflow.compiler.exe*\\\" AND process.command_line : \\\"*output.txt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "Microsoft.Workflow.Compiler.exe Payload Execution"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Set a firewall rule using New-NetFirewallRule' (GUID: 94be7646-25f6-467e-af23-585fb13000c8) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: This test will attempt to create a new inbound/outbound firewall rule using the New-NetFirewallRule commandlet.. Command/Steps: New-NetFirewallRule -DisplayName \\\"New rule\\\" -Direction \\\"#{direction}\\\" -LocalPort \\\"#{local_port}\\\" -Protocol \\\"#{protocol}\\\" -Action \\\"#{action}\\\""
+from = "now-9m"
+rule_id = "cc73e57b-214a-4692-8ada-3b773ca0187c"
+language = "kql"
+name = "Atomic Test: T1562.004 - Set a firewall rule using New-NetFirewallRule"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "94be7646-25f6-467e-af23-585fb13000c8", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-NetFirewallRule*\\\" AND powershell.script_block_text : \\\"*-DisplayName*\\\" AND powershell.script_block_text : \\\"*rule*\\\" OR (process.command_line : \\\"*New-NetFirewallRule*\\\" AND process.command_line : \\\"*-DisplayName*\\\" AND process.command_line : \\\"*rule*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Set a firewall rule using New-NetFirewallRule"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

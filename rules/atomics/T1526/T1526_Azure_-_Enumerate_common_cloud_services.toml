@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Enumerate common cloud services' (GUID: 58f57c8f-db14-4e62-a4d3-5aaf556755d7) of technique T1526 (Cloud Service Discovery). Test Description: Upon successful execution, this test will enumerate common resources that are contained within a valid Azure subscription.. Command/Steps: Import-Module \\\"PathToAtomicsFolder\\\\T1526\\\\src\\\\AzureDiscovery.ps1\\\"\n$client_id = \\\"#{client_id}\\\"\n$client_secret = \\\"#{client_secret}\\\"\n$tenant_id = \\\"#{tenan..."
+from = "now-9m"
+rule_id = "080364be-7f29-4658-9027-a9ce67d9628e"
+language = "kql"
+name = "Atomic Test: T1526 - Azure - Enumerate common cloud services"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1526/T1526.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1526", "58f57c8f-db14-4e62-a4d3-5aaf556755d7", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*$client_id*\\\" AND powershell.script_block_text : \\\"*$client_secret*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*$client_id*\\\" AND process.command_line : \\\"*$client_secret*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1526"
+name = "Azure - Enumerate common cloud services"
+reference = "https://attack.mitre.org/techniques/T1526"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1526"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1526"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1526"
+
+

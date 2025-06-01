@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Golden SAML' (GUID: b16a03bc-1089-4dcc-ad98-30fe8f3a2b31) of technique T1606.002 (Forge Web Credentials: SAML token). Test Description: Forge a \\\"Golden SAML\\\" token which allows to impersonate any Azure AD user, and authenticate to AADGraph (as a proof). \nYou will need the ADFS token signing certificate (see T1552.004 to export it).\nMore info here : https://o365blog.com/post/adfs/. Command/Steps: Import-Module AADInternals -Force\n$saml = New-AADIntSAMLToken -ImmutableID \\\"#{immutable_id}\\\" -PfxFileName \\\"#{certificate_path}\\\" -Issuer \\\"#{issuer_uri}..."
+from = "now-9m"
+rule_id = "18a19cf3-dede-4bed-90a6-e254ba05ba87"
+language = "kql"
+name = "Atomic Test: T1606.002 - Golden SAML"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1606.002/T1606.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1606.002", "b16a03bc-1089-4dcc-ad98-30fe8f3a2b31", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*AADInternals*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*AADInternals*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1606.002"
+name = "Golden SAML"
+reference = "https://attack.mitre.org/techniques/T1606/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1606/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1606/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1606/002"
+
+

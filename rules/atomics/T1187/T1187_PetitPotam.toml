@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PetitPotam' (GUID: 485ce873-2e65-4706-9c7e-ae3ab9e14213) of technique T1187 (Forced Authentication). Test Description: This module runs the Windows executable of PetitPotam in order to coerce authentication for a remote system.. Command/Steps: & \\\"#{petitpotam_path}\\\" #{captureServerIP} #{targetServerIP} #{efsApi}\nWrite-Host \\\"End of PetitPotam attack\\\"\n"
+from = "now-9m"
+rule_id = "8bfebc89-7674-4e9a-aec9-ee972e418167"
+language = "kql"
+name = "Atomic Test: T1187 - PetitPotam"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1187/T1187.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1187", "485ce873-2e65-4706-9c7e-ae3ab9e14213", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*10.0.0.3*\\\" AND powershell.script_block_text : \\\"*10.0.0.2*\\\" AND powershell.script_block_text : \\\"*Write-Host*\\\" OR (process.command_line : \\\"*10.0.0.3*\\\" AND process.command_line : \\\"*10.0.0.2*\\\" AND process.command_line : \\\"*Write-Host*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1187"
+name = "PetitPotam"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+

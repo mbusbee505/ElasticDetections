@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Command prompt writing script to file then executes it' (GUID: 00682c9f-7df4-4df8-950b-6dcaaa3ad9af) of technique T1059.003 (Command and Scripting Interpreter: Windows Command Shell). Test Description: Simulate DarkGate malware's second stage by writing a VBscript to disk directly from the command prompt then executing it.\n    The script will execute 'whoami' then exit.. Command/Steps:  c:\\\\windows\\\\system32\\\\cmd.exe /c cd /d #{script_path} & echo Set objShell = CreateObject(\\\"WScript.Shell\\\"):Set objExec = objShell.Exec(\\\"whoami\\\"):Set obj..."
+from = "now-9m"
+rule_id = "405ca5f9-bc97-411b-9631-f12dfdbcf810"
+language = "kql"
+name = "Atomic Test: T1059.003 - Command prompt writing script to file then executes it"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.003/T1059.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.003", "00682c9f-7df4-4df8-950b-6dcaaa3ad9af", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*c:\\\\windows\\\\system32\\\\cmd.exe*\\\" AND process.command_line : \\\"*%TEMP%\\\\*\\\" AND process.command_line : \\\"*objShell*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.003"
+name = "Command prompt writing script to file then executes it"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+

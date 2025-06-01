@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AMSI Bypass - Remove AMSI Provider Reg Key' (GUID: 13f09b91-c953-438e-845b-b585e51cac9b) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\\\\Software\\\\Microsoft\\\\AMSI to disable AMSI inspection.\nThis test removes the Windows Defender provider registry key. Upon execution, no output is displayed.\nOpen Registry Editor and navigate to \\\"HKLM:\\\\SOFTWARE\\\\Microsoft\\\\AMSI\\\\Providers\\\\\\\" to verify that it is gone.. Command/Steps: Remove-Item -Path \\\"HKLM:\\\\SOFTWARE\\\\Microsoft\\\\AMSI\\\\Providers\\\\{2781761E-28E0-4109-99FE-B9D127C57AFE}\\\" -Recurse\n"
+from = "now-9m"
+rule_id = "c9ff9f23-dcc7-4368-bb8b-e9a361910835"
+language = "kql"
+name = "Atomic Test: T1562.001 - AMSI Bypass - Remove AMSI Provider Reg Key"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "13f09b91-c953-438e-845b-b585e51cac9b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Remove-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\AMSI\\\\Providers\\\\{2781761E-28E0-4109-99FE-B9D127C57AFE}*\\\" OR (process.command_line : \\\"*Remove-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\AMSI\\\\Providers\\\\{2781761E-28E0-4109-99FE-B9D127C57AFE}*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "AMSI Bypass - Remove AMSI Provider Reg Key"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

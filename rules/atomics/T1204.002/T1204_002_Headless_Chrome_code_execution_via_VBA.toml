@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Headless Chrome code execution via VBA' (GUID: a19ee671-ed98-4e9d-b19c-d1954a51585a) of technique T1204.002 (User Execution: Malicious File). Test Description: This module uses Google Chrome combined with ScriptControl to achieve code execution. It spawns a local\nwebserver hosting our malicious payload. Headless Google Chrome will then reach out to this webserver\nand pull down the script and execute it. By default the payload will execute calc.exe on the system.. Command/Steps: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX (iwr \\\"https://raw.githubusercontent.com/redcanaryco/atomic-red-tea..."
+from = "now-9m"
+rule_id = "2fb0b78f-599d-4352-b529-40684973f136"
+language = "kql"
+name = "Atomic Test: T1204.002 - Headless Chrome code execution via VBA"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1204.002/T1204.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1204.002", "a19ee671-ed98-4e9d-b19c-d1954a51585a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND powershell.script_block_text : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND powershell.script_block_text : \\\"*(iwr*\\\" OR (process.command_line : \\\"*[Net.ServicePointManager]::SecurityProtocol*\\\" AND process.command_line : \\\"*[Net.SecurityProtocolType]::Tls12*\\\" AND process.command_line : \\\"*(iwr*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1204.002"
+name = "Headless Chrome code execution via VBA"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+

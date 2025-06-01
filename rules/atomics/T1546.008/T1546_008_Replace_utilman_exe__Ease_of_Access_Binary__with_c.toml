@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Replace utilman.exe (Ease of Access Binary) with cmd.exe' (GUID: 1db380da-3422-481d-a3c8-6d5770dba580) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Replace utilman.exe (Ease of Access binary) with cmd.exe. This allows the user to launch an elevated command prompt by clicking the Ease of Access button on the login screen.. Command/Steps: IF NOT EXIST C:\\\\Windows\\\\System32\\\\utilman_backup.exe (copy C:\\\\Windows\\\\System32\\\\utilman.exe C:\\\\Windows\\\\System32\\\\utilman_backup.exe) ELSE ( pushd )\ntakeo..."
+from = "now-9m"
+rule_id = "92df60a3-96e2-414d-aba0-8fb3b3e27e9e"
+language = "kql"
+name = "Atomic Test: T1546.008 - Replace utilman.exe (Ease of Access Binary) with cmd.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "1db380da-3422-481d-a3c8-6d5770dba580", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*EXIST*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\utilman_backup.exe*\\\" AND process.command_line : \\\"*(copy*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Replace utilman.exe (Ease of Access Binary) with cmd.exe"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

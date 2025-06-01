@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Dump Azure Instance Metadata from Virtual Machines' (GUID: cc99e772-4e18-4f1f-b422-c5cdd1bfd7b7) of technique T1552.005 (Unsecured Credentials: Cloud Instance Metadata API). Test Description: This test invokes a web request to the default Instance Metadata API of 169.254.169.254 in order to dump the data contained within it to a file. \nSee: https://www.sans.org/blog/cloud-instance-metadata-services-imds-/. Command/Steps: Invoke-RestMethod -Headers @{\\\"Metadata\\\"=\\\"true\\\"} -Method GET -Uri \\\"http://169.254.169.254/metadata/instance?api-version=2021-02-01\\\" | ConvertTo-Json -D..."
+from = "now-9m"
+rule_id = "03d0b8cd-f043-4161-890e-09ee1b2e74dd"
+language = "kql"
+name = "Atomic Test: T1552.005 - Azure - Dump Azure Instance Metadata from Virtual Machines"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.005/T1552.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.005", "cc99e772-4e18-4f1f-b422-c5cdd1bfd7b7", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-RestMethod*\\\" AND powershell.script_block_text : \\\"*-Headers*\\\" AND powershell.script_block_text : \\\"*@{\\\"Metadata\\\"=\\\"true\\\"}*\\\" OR (process.command_line : \\\"*Invoke-RestMethod*\\\" AND process.command_line : \\\"*-Headers*\\\" AND process.command_line : \\\"*@{\\\"Metadata\\\"=\\\"true\\\"}*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.005"
+name = "Azure - Dump Azure Instance Metadata from Virtual Machines"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+

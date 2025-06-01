@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltration via Encrypted FTP' (GUID: 5b380e96-b0ef-4072-8a8e-f194cb9eb9ac) of technique T1020 (Automated Exfiltration). Test Description: Simulates encrypted file transfer to an FTP server. For testing purposes, a free FTP testing portal is available at https://sftpcloud.io/tools/free-ftp-server, providing a temporary FTP server for 60 minutes. Use this service responsibly for testing and validation only.. Command/Steps: $sampleData = \\\"Sample data for exfiltration test\\\"\nSet-Content -Path \\\"#{sampleFile}\\\" -Value $sampleData\n$ftpUrl = \\\"#{ftpServer}\\\"\n$creds = Get-Credentia..."
+from = "now-9m"
+rule_id = "87844efc-ec12-409c-a5bd-b0c895672631"
+language = "kql"
+name = "Atomic Test: T1020 - Exfiltration via Encrypted FTP"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1020/T1020.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1020", "5b380e96-b0ef-4072-8a8e-f194cb9eb9ac", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$sampleData*\\\" AND powershell.script_block_text : \\\"*Sample*\\\" AND powershell.script_block_text : \\\"*data*\\\" OR (process.command_line : \\\"*$sampleData*\\\" AND process.command_line : \\\"*Sample*\\\" AND process.command_line : \\\"*data*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1020"
+name = "Exfiltration via Encrypted FTP"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execution through API - CreateProcess' (GUID: 99be2089-c52d-4a4a-b5c3-261ee42c8b62) of technique T1106 (Native API). Test Description: Execute program by leveraging Win32 API's. By default, this will launch calc.exe from the command prompt.. Command/Steps: C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\csc.exe /out:\\\"#{output_file}\\\" /target:exe \\\"#{source_file}\\\"\n%tmp%/T1106.exe\n"
+from = "now-9m"
+rule_id = "2a395a2e-b5e5-46aa-a6f8-ec343e5a3c3a"
+language = "kql"
+name = "Atomic Test: T1106 - Execution through API - CreateProcess"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1106/T1106.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1106", "99be2089-c52d-4a4a-b5c3-261ee42c8b62", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\csc.exe*\\\" AND process.command_line : \\\"*/target:exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1106"
+name = "Execution through API - CreateProcess"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+

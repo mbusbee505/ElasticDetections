@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install Outlook Home Page Persistence' (GUID: 7a91ad51-e6d2-4d43-9471-f26362f5738e) of technique T1137.004 (Office Application Startup: Outlook Home Page). Test Description: This test simulates persistence being added to a host via the Outlook Home Page functionality. This causes Outlook to retrieve URL containing a malicious payload every time the targeted folder is viewed.\n\nTriggering the payload requires manually opening Outlook and viewing the targetted folder (e.g. Inbox).. Command/Steps: reg.exe add HKCU\\\\Software\\\\Microsoft\\\\Office\\\\#{outlook_version}\\\\Outlook\\\\WebView\\\\#{outlook_folder} /v URL /t REG_SZ /d #{url} /f\n"
+from = "now-9m"
+rule_id = "e8afca77-7a17-4e33-9a9f-ba84fdff7f0b"
+language = "kql"
+name = "Atomic Test: T1137.004 - Install Outlook Home Page Persistence"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1137.004/T1137.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1137.004", "7a91ad51-e6d2-4d43-9471-f26362f5738e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*HKCU\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Outlook\\\\WebView\\\\Inbox*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1137.004"
+name = "Install Outlook Home Page Persistence"
+reference = "https://attack.mitre.org/techniques/T1137/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1137/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1137/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1137/004"
+
+

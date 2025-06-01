@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete System Logs Using Clear-EventLog' (GUID: b13e9306-3351-4b4b-a6e8-477358b0b498) of technique T1070.001 (Indicator Removal on Host: Clear Windows Event Logs). Test Description: Clear event logs using built-in PowerShell commands.\nUpon successful execution, you should see the list of deleted event logs\nUpon execution, open the Security.evtx logs at C:\\\\Windows\\\\System32\\\\winevt\\\\Logs and verify that it is now empty or has very few logs in it.. Command/Steps: $logs = Get-EventLog -List | ForEach-Object {$_.Log}\n$logs | ForEach-Object {Clear-EventLog -LogName $_ }\nGet-EventLog -list\n"
+from = "now-9m"
+rule_id = "20e36f53-f2c5-4bb8-951a-5e36844a4885"
+language = "kql"
+name = "Atomic Test: T1070.001 - Delete System Logs Using Clear-EventLog"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.001/T1070.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.001", "b13e9306-3351-4b4b-a6e8-477358b0b498", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$logs*\\\" AND powershell.script_block_text : \\\"*Get-EventLog*\\\" AND powershell.script_block_text : \\\"*-List*\\\" OR (process.command_line : \\\"*$logs*\\\" AND process.command_line : \\\"*Get-EventLog*\\\" AND process.command_line : \\\"*-List*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.001"
+name = "Delete System Logs Using Clear-EventLog"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe Memory using Windows Task Manager' (GUID: dea6c349-f1c6-44f3-87a1-1ed33a59a607) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task\nManager and administrative permissions.. Command/Steps: 1. Open Task Manager:\n  On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking\n  on the..."
+from = "now-9m"
+rule_id = "f75c8474-d69c-4153-8876-5f7ef76b53d6"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe Memory using Windows Task Manager"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "dea6c349-f1c6-44f3-87a1-1ed33a59a607", "windows",]
+type = "query"
+query = "process.command_line : \\\"*Open*\\\" AND process.command_line : \\\"*Task*\\\" AND process.command_line : \\\"*Manager:*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe Memory using Windows Task Manager"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

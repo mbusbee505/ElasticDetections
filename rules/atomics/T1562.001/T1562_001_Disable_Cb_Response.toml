@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Cb Response' (GUID: ae8943f7-0f8d-44de-962d-fbc2e2f03eb8) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Disable the Cb Response service. Command/Steps: if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq \\\"6\\\" ];\nthen\n  service cbdaemon stop\n  chkconfig off cbdaemon\nelse if [ $(rpm -q --queryfo..."
+from = "now-9m"
+rule_id = "887a1801-1842-481c-b91f-c454dd97777b"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Cb Response"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "ae8943f7-0f8d-44de-962d-fbc2e2f03eb8", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(rpm*\\\" AND process.command_line : \\\"*--queryformat*\\\" AND process.command_line : \\\"*%{VERSION}*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Cb Response"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Pad Binary to Change Hash - Linux/macOS dd' (GUID: ffe2346c-abd5-4b45-a713-bf5f1ebd573a) of technique T1027.001 (Obfuscated Files or Information: Binary Padding). Test Description: Uses dd to add a zero byte, high-quality random data, and low-quality random data to the binary to change the hash.\n\nUpon successful execution, dd will modify `/tmp/evil-binary`, therefore the expected hash will change.. Command/Steps: dd if=/dev/zero bs=1 count=1 >> #{file_to_pad} #adds null bytes\ndd if=/dev/random bs=1 count=1 >> #{file_to_pad} #adds high-quality random data\ndd if=..."
+from = "now-9m"
+rule_id = "34d1b3f9-2363-40be-b7f4-f6f4e7b01dc0"
+language = "kql"
+name = "Atomic Test: T1027.001 - Pad Binary to Change Hash - Linux/macOS dd"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.001/T1027.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.001", "ffe2346c-abd5-4b45-a713-bf5f1ebd573a", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*if=/dev/zero*\\\" AND process.command_line : \\\"*bs=1*\\\" AND process.command_line : \\\"*count=1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.001"
+name = "Pad Binary to Change Hash - Linux/macOS dd"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+

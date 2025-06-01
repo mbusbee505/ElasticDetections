@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Potentially Unwanted Applications (PUA)' (GUID: 02f35d62-9fdc-4a97-b899-a5d9a876d295) of technique T1204.002 (User Execution: Malicious File). Test Description: The Potentially Unwanted Applications (PUA) protection feature in antivirus software can identify and block PUAs from downloading and installing on endpoints in your network. These applications are not considered viruses, malware, or other types of threats, but might perform actions on endpoints that adversely affect their performance or use. This file is similar to EICAR test virus file, but is considered a Potentially Unwanted Application (PUA) instead of a VIRUS (i.e. not actually malicious, but is flagged as it to verify anti-pua protection).. Command/Steps: Invoke-WebRequest #{pua_url} -OutFile #{pua_file}\n& \\\"#{pua_file}\\\"\n"
+from = "now-9m"
+rule_id = "3d2c88d8-6b60-4e79-ab6d-82af81c7af30"
+language = "kql"
+name = "Atomic Test: T1204.002 - Potentially Unwanted Applications (PUA)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1204.002/T1204.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1204.002", "02f35d62-9fdc-4a97-b899-a5d9a876d295", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*http://amtso.eicar.org/PotentiallyUnwanted.exe*\\\" AND powershell.script_block_text : \\\"*-OutFile*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*http://amtso.eicar.org/PotentiallyUnwanted.exe*\\\" AND process.command_line : \\\"*-OutFile*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1204.002"
+name = "Potentially Unwanted Applications (PUA)"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+

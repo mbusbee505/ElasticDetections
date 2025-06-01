@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Injection via Extra Window Memory (EWM) x64 executable' (GUID: 93ca40d2-336c-446d-bcef-87f14d438018) of technique T1055.011 (Process Injection: Extra Window Memory Injection). Test Description: Hooks functions of main process to inject a payload via Extra Window Memory (EWM) injection technique. Command/Steps: #{exe_binary}"
+from = "now-9m"
+rule_id = "ec7a7d9f-4b6c-4a6e-bc7c-d0f890fffc32"
+language = "kql"
+name = "Atomic Test: T1055.011 - Process Injection via Extra Window Memory (EWM) x64 executable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055.011/T1055.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055.011", "93ca40d2-336c-446d-bcef-87f14d438018", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055.011"
+name = "Process Injection via Extra Window Memory (EWM) x64 executable"
+reference = "https://attack.mitre.org/techniques/T1055/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055/011"
+
+

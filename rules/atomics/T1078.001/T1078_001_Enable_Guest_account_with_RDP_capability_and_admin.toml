@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable Guest account with RDP capability and admin privileges' (GUID: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0) of technique T1078.001 (Valid Accounts: Default Accounts). Test Description: After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,\nand desktop will allow multiple RDP connections.. Command/Steps: net user #{guest_user} /active:yes\nnet user #{guest_user} #{guest_password}\nnet localgroup #{local_admin_group} #{guest_user} /add\nnet localgroup \\\"#{r..."
+from = "now-9m"
+rule_id = "6b9550fe-3e00-4fb2-b528-5c591f82908f"
+language = "kql"
+name = "Atomic Test: T1078.001 - Enable Guest account with RDP capability and admin privileges"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.001/T1078.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.001", "99747561-ed8d-47f2-9c91-1e5fde1ed6e0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*guest*\\\" AND process.command_line : \\\"*/active:yes*\\\" AND process.command_line : \\\"*guest*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.001"
+name = "Enable Guest account with RDP capability and admin privileges"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+

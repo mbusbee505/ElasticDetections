@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'dump volume shadow copy hives with System.IO.File' (GUID: 9d77fed7-05f8-476e-a81b-8ff0472c64d0) of technique T1003.002 (OS Credential Dumping: Security Account Manager). Test Description: Dump hives from volume shadow copies with System.IO.File. [CVE-2021-36934](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-36934). Command/Steps: 1..#{limit} | % { \n try { [System.IO.File]::Copy(\\\"\\\\\\\\?\\\\GLOBALROOT\\\\Device\\\\HarddiskVolumeShadowCopy$_\\\\Windows\\\\System32\\\\config\\\\#{target_hive}\\\" , \\\"$env:TEM..."
+from = "now-9m"
+rule_id = "46e7b1a4-83b0-4b01-8dd7-274409c74b08"
+language = "kql"
+name = "Atomic Test: T1003.002 - dump volume shadow copy hives with System.IO.File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.002/T1003.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.002", "9d77fed7-05f8-476e-a81b-8ff0472c64d0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*1..10*\\\" AND powershell.script_block_text : \\\"*[System.IO.File]::Copy(\\\"\\\\\\\\?\\\\GLOBALROOT\\\\Device\\\\HarddiskVolumeShadowCopy$_\\\\Windows\\\\System32\\\\config\\\\SAM*\\\" AND powershell.script_block_text : \\\"*true\\\")*\\\" OR (process.command_line : \\\"*1..10*\\\" AND process.command_line : \\\"*[System.IO.File]::Copy(\\\"\\\\\\\\?\\\\GLOBALROOT\\\\Device\\\\HarddiskVolumeShadowCopy$_\\\\Windows\\\\System32\\\\config\\\\SAM*\\\" AND process.command_line : \\\"*true\\\")*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.002"
+name = "dump volume shadow copy hives with System.IO.File"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+

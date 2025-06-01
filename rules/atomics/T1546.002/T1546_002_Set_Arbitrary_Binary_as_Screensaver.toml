@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Set Arbitrary Binary as Screensaver' (GUID: 281201e7-de41-4dc9-b73d-f288938cbb64) of technique T1546.002 (Event Triggered Execution: Screensaver). Test Description: This test copies a binary into the Windows System32 folder and sets it as the screensaver so it will execute for persistence. Requires a reboot and logon.. Command/Steps: reg export \\\"HKEY_CURRENT_USER\\\\Control Panel\\\\Desktop\\\" %userprofile%\\\\backup.reg\ncopy #{input_binary} \\\"%SystemRoot%\\\\System32\\\\evilscreensaver.scr\\\"\nreg.exe..."
+from = "now-9m"
+rule_id = "a7b893d5-41a7-47e1-b7c7-ed776e281aae"
+language = "kql"
+name = "Atomic Test: T1546.002 - Set Arbitrary Binary as Screensaver"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.002/T1546.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.002", "281201e7-de41-4dc9-b73d-f288938cbb64", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*export*\\\" AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Control*\\\" AND process.command_line : \\\"*Panel\\\\Desktop*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.002"
+name = "Set Arbitrary Binary as Screensaver"
+reference = "https://attack.mitre.org/techniques/T1546/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/002"
+
+

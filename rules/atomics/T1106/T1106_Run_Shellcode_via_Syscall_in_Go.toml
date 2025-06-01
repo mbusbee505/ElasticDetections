@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Run Shellcode via Syscall in Go' (GUID: ae56083f-28d0-417d-84da-df4242da1f7c) of technique T1106 (Native API). Test Description: Runs shellcode in the current running process via a syscall.\n\nSteps taken with this technique\n1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write\n2. Use the RtlCopyMemory macro to copy the shellcode to the allocated memory space\n3. Change the memory page permissions to Execute/Read with VirtualProtect\n4. Use syscall to execute the entrypoint of the shellcode\n\n- PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#syscall). Command/Steps: $PathToAtomicsFolder\\T1106\\bin\\u0064\\\\syscall.exe -debug\n"
+from = "now-9m"
+rule_id = "bc517696-bb7e-4bd3-934b-528aafd7f47f"
+language = "kql"
+name = "Atomic Test: T1106 - Run Shellcode via Syscall in Go"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1106/T1106.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1106", "ae56083f-28d0-417d-84da-df4242da1f7c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-debug*\\\" OR (process.command_line : \\\"*-debug*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1106"
+name = "Run Shellcode via Syscall in Go"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1106"
+
+

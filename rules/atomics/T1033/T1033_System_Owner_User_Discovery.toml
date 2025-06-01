@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Owner/User Discovery' (GUID: 2a9b677d-a230-44f4-ad86-782df1ef108c) of technique T1033 (System Owner/User Discovery). Test Description: Identify System owner or users on an endpoint\n\nUpon successful execution, sh will stdout list of usernames.. Command/Steps: users\nw\nwho\n"
+from = "now-9m"
+rule_id = "f4634de2-a595-47e6-8fc8-0694ed7cbddb"
+language = "kql"
+name = "Atomic Test: T1033 - System Owner/User Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1033/T1033.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1033", "2a9b677d-a230-44f4-ad86-782df1ef108c", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*users*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1033"
+name = "System Owner/User Discovery"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+

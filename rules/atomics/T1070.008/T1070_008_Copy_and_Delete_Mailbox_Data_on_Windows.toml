@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy and Delete Mailbox Data on Windows' (GUID: d29f01ea-ac72-4efc-8a15-bea64b77fabf) of technique T1070.008 (Email Collection: Mailbox Manipulation). Test Description: Copies and deletes mail data on Windows. Command/Steps: New-Item -Path \\\"C:\\\\Users\\\\$env:USERNAME\\\\AppData\\\\Local\\\\Comms\\\\Unistore\\\\data\\\\copy\\\" -ItemType Directory -ErrorAction Ignore\nGet-ChildItem -Path \\\"C:\\\\Users\\\\$..."
+from = "now-9m"
+rule_id = "34c133ff-9c99-4106-acb6-5d3ed66c9e83"
+language = "kql"
+name = "Atomic Test: T1070.008 - Copy and Delete Mailbox Data on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.008/T1070.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.008", "d29f01ea-ac72-4efc-8a15-bea64b77fabf", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*-ItemType*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*-ItemType*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.008"
+name = "Copy and Delete Mailbox Data on Windows"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+

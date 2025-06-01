@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'attrib - hide file' (GUID: 32b979da-7b68-42c9-9a99-0e39900fc36c) of technique T1222.001 (File and Directory Permissions Modification: Windows File and Directory Permissions Modification). Test Description: Attackers leverage an existing Windows binary, attrib.exe, to mark specific files or folder as hidden by using specific flags so that\nthe victim does not see the file.. Command/Steps: mkdir #{file_or_folder} >nul 2>&1\necho T1222.001_attrib1 >> #{file_or_folder}\\\\T1222.001_attrib1.txt\necho T1222.001_attrib2 >> #{file_or_folder}\\\\T1222...."
+from = "now-9m"
+rule_id = "c09bace5-44c3-47ec-89cb-e1f15082a201"
+language = "kql"
+name = "Atomic Test: T1222.001 - attrib - hide file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.001/T1222.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.001", "32b979da-7b68-42c9-9a99-0e39900fc36c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*>nul*\\\" AND process.command_line : \\\"*2>&1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.001"
+name = "attrib - hide file"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+

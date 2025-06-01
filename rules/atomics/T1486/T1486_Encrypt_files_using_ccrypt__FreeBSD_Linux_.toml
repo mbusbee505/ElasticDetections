@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Encrypt files using ccrypt (FreeBSD/Linux)' (GUID: 08cbf59f-85da-4369-a5f4-049cffd7709f) of technique T1486 (Data Encrypted for Impact). Test Description: Attempts to encrypt data on target systems as root to simulate an interruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.. Command/Steps: which_ccencrypt=`which ccencrypt`\ncp #{root_input_file_path} #{cped_file_path};\n$which_ccencrypt -T -K #{pwd_for_encrypted_file} #{cped_file_path}\n"
+from = "now-9m"
+rule_id = "1ee680af-4684-4bd4-86ba-33db4cefcde1"
+language = "kql"
+name = "Atomic Test: T1486 - Encrypt files using ccrypt (FreeBSD/Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "08cbf59f-85da-4369-a5f4-049cffd7709f", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*which_ccencrypt=`which*\\\" AND process.command_line : \\\"*ccencrypt`*\\\" AND process.command_line : \\\"*/etc/passwd*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "Encrypt files using ccrypt (FreeBSD/Linux)"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

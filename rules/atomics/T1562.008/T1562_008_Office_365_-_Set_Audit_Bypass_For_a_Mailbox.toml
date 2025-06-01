@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Office 365 - Set Audit Bypass For a Mailbox' (GUID: c9a2f6fe-7197-488c-af6d-10c782121ca6) of technique T1562.008 (Impair Defenses: Disable Cloud Logs). Test Description: Use Exchange Management Shell to Mailbox auditing to bypass. It will prevent any mailbox audit logging entries being generated for the target e-mail box.\nhttps://learn.microsoft.com/en-us/powershell/module/exchange/set-mailboxauditbypassassociation?view=exchange-ps. Command/Steps: $secure_pwd = \\\"#{password}\\\" | ConvertTo-SecureString -AsPlainText -Force\n$creds = New-Object System.Management.Automation.PSCredential -ArgumentList \\\"..."
+from = "now-9m"
+rule_id = "e689e243-2178-4c7d-9f50-999203d37c35"
+language = "kql"
+name = "Atomic Test: T1562.008 - Office 365 - Set Audit Bypass For a Mailbox"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.008/T1562.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.008", "c9a2f6fe-7197-488c-af6d-10c782121ca6", "office-365",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$secure_pwd*\\\" AND powershell.script_block_text : \\\"*o365_password_test*\\\" AND powershell.script_block_text : \\\"*ConvertTo-SecureString*\\\" OR (process.command_line : \\\"*$secure_pwd*\\\" AND process.command_line : \\\"*o365_password_test*\\\" AND process.command_line : \\\"*ConvertTo-SecureString*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.008"
+name = "Office 365 - Set Audit Bypass For a Mailbox"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+

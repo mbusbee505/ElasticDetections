@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Search Azure AD User Attributes for Passwords' (GUID: ae9b2e3e-efa1-4483-86e2-fae529ab9fb6) of technique T1552.005 (Unsecured Credentials: Cloud Instance Metadata API). Test Description: This test uses the MSOnline Powershell module to retrieve all user attributes for a specified account, which can sometimes contain unsecured credentials. \nUpon successful execution, this test will scan all user attributes for any strings containing \\\"password\\\".\nThose unsecured credentials will be output to a text file, as well as the account that they are associated with and the user attribute in which they were found. \nSee: https://github.com/dafthack/CloudPentestCheatsheets/blob/master/cheatsheets/Azure.md. Command/Steps: import-module msonline\n$Password = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force\n$Credential = New-Object -TypeName System.Manageme..."
+from = "now-9m"
+rule_id = "116df007-be26-4cc7-a203-56726f99740c"
+language = "kql"
+name = "Atomic Test: T1552.005 - Azure - Search Azure AD User Attributes for Passwords"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.005/T1552.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.005", "ae9b2e3e-efa1-4483-86e2-fae529ab9fb6", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*import-module*\\\" AND powershell.script_block_text : \\\"*msonline*\\\" AND powershell.script_block_text : \\\"*$Password*\\\" OR (process.command_line : \\\"*import-module*\\\" AND process.command_line : \\\"*msonline*\\\" AND process.command_line : \\\"*$Password*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.005"
+name = "Azure - Search Azure AD User Attributes for Passwords"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/005"
+
+

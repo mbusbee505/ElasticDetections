@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'operating system discovery ' (GUID: 70e13ef4-5a74-47e4-9d16-760b41b0e2db) of technique T1082 (System Information Discovery). Test Description: operating system discovery using get-ciminstance\nhttps://petri.com/getting-operating-system-information-powershell/. Command/Steps: Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, ServicePackMajorVersion, OSArchitecture, CSName, WindowsDirectory | Out-null"
+from = "now-9m"
+rule_id = "5a442d1f-e16c-438a-b64d-d1822f48697b"
+language = "kql"
+name = "Atomic Test: T1082 - operating system discovery "
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "70e13ef4-5a74-47e4-9d16-760b41b0e2db", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-CimInstance*\\\" AND powershell.script_block_text : \\\"*Win32_OperatingSystem*\\\" AND powershell.script_block_text : \\\"*Select-Object*\\\" OR (process.command_line : \\\"*Get-CimInstance*\\\" AND process.command_line : \\\"*Win32_OperatingSystem*\\\" AND process.command_line : \\\"*Select-Object*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "operating system discovery "
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

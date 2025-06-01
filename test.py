@@ -13,8 +13,8 @@ def gather_atomic_tomls():
         # Only check if result is not None to prevent iteration error
         if toml_result is not None:
             for t in toml_result:   
-                os.makedirs(f"atomics/{technique}", exist_ok=True)
-                with open(f"atomics/{technique}/{t[1]}", "w", encoding="utf-8") as f:
+                os.makedirs(f"/rules/atomics/{technique}", exist_ok=True)
+                with open(f"/rules/atomics/{technique}/{t[1]}", "w", encoding="utf-8") as f:
                     f.write(t[0])
         
 

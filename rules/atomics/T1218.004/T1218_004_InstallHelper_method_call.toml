@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'InstallHelper method call' (GUID: d43a5bde-ae28-4c55-a850-3f4c80573503) of technique T1218.004 (Signed Binary Proxy Execution: InstallUtil). Test Description: Executes the InstallHelper class constructor runner instead of executing InstallUtil. Upon execution, no output will be displayed if the test\nexecuted successfuly.. Command/Steps: # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly\n. \\\"#{test_harness}\\\"\n\n$InstallerAssemblyDir = \\\"#{assembly_dir}\\\"\n$..."
+from = "now-9m"
+rule_id = "4a786260-038b-4c54-a6c4-2f4b09698622"
+language = "kql"
+name = "Atomic Test: T1218.004 - InstallHelper method call"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.004/T1218.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.004", "d43a5bde-ae28-4c55-a850-3f4c80573503", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import*\\\" AND powershell.script_block_text : \\\"*required*\\\" AND powershell.script_block_text : \\\"*harness*\\\" OR (process.command_line : \\\"*Import*\\\" AND process.command_line : \\\"*required*\\\" AND process.command_line : \\\"*harness*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.004"
+name = "InstallHelper method call"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+

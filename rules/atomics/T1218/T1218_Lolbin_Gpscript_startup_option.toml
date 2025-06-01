@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Lolbin Gpscript startup option' (GUID: f8da74bb-21b8-4af9-8d84-f2c8e4a220e3) of technique T1218 (Signed Binary Proxy Execution). Test Description: Executes startup scripts configured in Group Policy\nhttps://lolbas-project.github.io/lolbas/Binaries/Gpscript/\nhttps://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/. Command/Steps: Gpscript /startup\n"
+from = "now-9m"
+rule_id = "3384db42-c31b-4856-9c77-2e0c40f4a2a3"
+language = "kql"
+name = "Atomic Test: T1218 - Lolbin Gpscript startup option"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "f8da74bb-21b8-4af9-8d84-f2c8e4a220e3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Gpscript*\\\" AND process.command_line : \\\"*/startup*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "Lolbin Gpscript startup option"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

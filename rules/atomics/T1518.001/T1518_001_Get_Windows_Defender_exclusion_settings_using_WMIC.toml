@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get Windows Defender exclusion settings using WMIC' (GUID: e31564c8-4c60-40cd-a8f4-9261307e8336) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: In this test, a WMIC command is used to probe the local Windows system for the configuration of Windows Defender's exclusions. This command targets the MSFT_MpPreference \nclass within the Windows Management Instrumentation (WMI) namespace, allowing the retrieval of critical settings such as disabled real-time monitoring and specified \nexclusion paths, file extensions, and processes. Attackers might use this approach to understand what is excluded from antivirus scans, enabling further exploitation.. Command/Steps: wmic /Node:localhost /Namespace:\\\\\\\\root\\\\Microsoft\\\\Windows\\\\Defender Path MSFT_MpPreference Get /format:list | findstr /i /C:\\\"DisableRealtimeMonitoring\\\" ..."
+from = "now-9m"
+rule_id = "e8b1ac4a-99a2-4f49-b842-f9c9c62b1bf6"
+language = "kql"
+name = "Atomic Test: T1518.001 - Get Windows Defender exclusion settings using WMIC"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "e31564c8-4c60-40cd-a8f4-9261307e8336", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*/Node:localhost*\\\" AND process.command_line : \\\"*/Namespace:\\\\\\\\root\\\\Microsoft\\\\Windows\\\\Defender*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Get Windows Defender exclusion settings using WMIC"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

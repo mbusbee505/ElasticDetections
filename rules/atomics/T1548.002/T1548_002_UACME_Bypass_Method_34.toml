@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'UACME Bypass Method 34' (GUID: 695b2dac-423e-448e-b6ef-5b88e93011d6) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.\nNote: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor: James Forshaw\n\nType:\tShell API\n\nMethod: Environment variables expansion\n\nTarget:\t\\\\system32\\\\svchost.exe via \\\\system32\\\\schtasks.exe\n\nComponent:\tAttacker defined\n\nImplementation:\tucmDiskCleanupEnvironmentVariable\n\nUCM Method:\tUacMethodDiskSilentCleanup\n\nhttps://github.com/hfiref0x/UACME. Command/Steps: \\\"#{uacme_exe}\\\"\n"
+from = "now-9m"
+rule_id = "6cd6cb77-0813-4e8f-97cd-f3ba5be90ac9"
+language = "kql"
+name = "Atomic Test: T1548.002 - UACME Bypass Method 34"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "695b2dac-423e-448e-b6ef-5b88e93011d6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Akagi64.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "UACME Bypass Method 34"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

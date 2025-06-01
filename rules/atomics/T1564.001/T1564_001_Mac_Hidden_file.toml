@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mac Hidden file' (GUID: cddb9098-3b47-4e01-9d3b-6f5f323288a9) of technique T1564.001 (Hide Artifacts: Hidden Files and Directories). Test Description: Hide a file on MacOS. Command/Steps: xattr -lr * / 2>&1 /dev/null | grep -C 2 \\\"00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00\\\"\n"
+from = "now-9m"
+rule_id = "a308b014-31f5-4b62-a71d-31c3c53c20ff"
+language = "kql"
+name = "Atomic Test: T1564.001 - Mac Hidden file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.001/T1564.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.001", "cddb9098-3b47-4e01-9d3b-6f5f323288a9", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*xattr*\\\" AND process.command_line : \\\"*2>&1*\\\" AND process.command_line : \\\"*/dev/null*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.001"
+name = "Mac Hidden file"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+

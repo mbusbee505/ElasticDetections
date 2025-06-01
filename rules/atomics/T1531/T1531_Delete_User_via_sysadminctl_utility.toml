@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete User via sysadminctl utility' (GUID: d3812c4e-30ee-466a-a0aa-07e355b561d6) of technique T1531 (Account Access Removal). Test Description: This test deletes the user account using the sysadminctl utility.. Command/Steps: sysadminctl -deleteUser #{user_account} #enter admin password\n"
+from = "now-9m"
+rule_id = "5c0114e1-6a49-49dc-aef0-51b6d35ef778"
+language = "kql"
+name = "Atomic Test: T1531 - Delete User via sysadminctl utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1531/T1531.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1531", "d3812c4e-30ee-466a-a0aa-07e355b561d6", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*sysadminctl*\\\" AND process.command_line : \\\"*-deleteUser*\\\" AND process.command_line : \\\"*ARTUserAccount*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1531"
+name = "Delete User via sysadminctl utility"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+

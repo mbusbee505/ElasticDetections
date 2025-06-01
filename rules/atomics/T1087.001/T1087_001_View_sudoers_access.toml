@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'View sudoers access' (GUID: fed9be70-0186-4bde-9f8a-20945f9370c2) of technique T1087.001 (Account Discovery: Local Account). Test Description: (requires root). Command/Steps: if [ -f /etc/sudoers ]; then sudo cat /etc/sudoers > #{output_file}; fi;\nif [ -f /usr/local/etc/sudoers ]; then sudo cat /usr/local/etc/sudoers > #{ou..."
+from = "now-9m"
+rule_id = "dd64b933-cabe-4437-8180-293229e9281d"
+language = "kql"
+name = "Atomic Test: T1087.001 - View sudoers access"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.001/T1087.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.001", "fed9be70-0186-4bde-9f8a-20945f9370c2", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/etc/sudoers*\\\" AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*/etc/sudoers*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.001"
+name = "View sudoers access"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+

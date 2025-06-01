@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ProtocolHandler.exe Downloaded a Suspicious File' (GUID: db020456-125b-4c8b-a4a7-487df8afb5a2) of technique T1218 (Signed Binary Proxy Execution). Test Description: Emulates attack via documents through protocol handler in Microsoft Office.  On successful execution you should see Microsoft Word launch a blank file.. Command/Steps: FOR /F \\\"tokens=2*\\\" %a in ('reg query \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\Winword.exe\\\" /V PATH') do set microsoft_wordpath=%b\ncal..."
+from = "now-9m"
+rule_id = "9e1d4a24-0000-4c1b-8fc0-d835ab1d235d"
+language = "kql"
+name = "Atomic Test: T1218 - ProtocolHandler.exe Downloaded a Suspicious File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "db020456-125b-4c8b-a4a7-487df8afb5a2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*('reg*\\\" AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "ProtocolHandler.exe Downloaded a Suspicious File"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

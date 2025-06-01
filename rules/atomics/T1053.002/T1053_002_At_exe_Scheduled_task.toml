@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'At.exe Scheduled task' (GUID: 4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8) of technique T1053.002 (Scheduled Task/Job: At). Test Description: Executes cmd.exe\nNote: deprecated in Windows 8+\n\nUpon successful execution, cmd.exe will spawn at.exe and create a scheduled task that will spawn cmd at a specific time.. Command/Steps: at 13:20 /interactive cmd\n"
+from = "now-9m"
+rule_id = "af3f5a34-94d6-4ceb-89df-a1f8ffd3a4b0"
+language = "kql"
+name = "Atomic Test: T1053.002 - At.exe Scheduled task"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.002/T1053.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.002", "4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*13:20*\\\" AND process.command_line : \\\"*/interactive*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.002"
+name = "At.exe Scheduled task"
+reference = "https://attack.mitre.org/techniques/T1053/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/002"
+
+

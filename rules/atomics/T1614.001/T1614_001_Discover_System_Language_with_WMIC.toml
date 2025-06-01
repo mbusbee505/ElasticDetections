@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language with WMIC' (GUID: 4758003d-db14-4959-9c0f-9e87558ac69e) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: WMIC (Windows Management Instrumentation Command-line) is a command-line tool that provides a simplified interface to query and manage Windows system configurations, processes, and hardware information using WMI. \n\nThe command in this test retrieves information about the system's locale, operating system language, and multilingual user interface (MUI) languages.. Command/Steps: wmic /node:#{target_host} os get Locale,OSLanguage,MUILanguages /format:#{format_style}\n"
+from = "now-9m"
+rule_id = "197f3370-c0f0-4f1b-8795-6af8d7070dd3"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language with WMIC"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "4758003d-db14-4959-9c0f-9e87558ac69e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*/node:localhost*\\\" AND process.command_line : \\\"*Locale,OSLanguage,MUILanguages*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language with WMIC"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

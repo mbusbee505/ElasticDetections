@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DLL Side-Loading using the Notepad++ GUP.exe binary' (GUID: 65526037-7079-44a9-bda1-2cb624838040) of technique T1574.001 (Hijack Execution Flow: DLL). Test Description: GUP is an open source signed binary used by Notepad++ for software updates, and is vulnerable to DLL Side-Loading, thus enabling the libcurl dll to be loaded.\nUpon execution, calc.exe will be opened.. Command/Steps: \\\"#{gup_executable}\\\"\n"
+from = "now-9m"
+rule_id = "6622336f-2c1a-4f13-95fe-7902bb0d8525"
+language = "kql"
+name = "Atomic Test: T1574.001 - DLL Side-Loading using the Notepad++ GUP.exe binary"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.001/T1574.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.001", "65526037-7079-44a9-bda1-2cb624838040", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.001"
+name = "DLL Side-Loading using the Notepad++ GUP.exe binary"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+

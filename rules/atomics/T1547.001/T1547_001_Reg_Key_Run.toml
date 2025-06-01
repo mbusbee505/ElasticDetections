@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Reg Key Run' (GUID: e55be3fd-3521-4610-9d1a-e210e42dcf05) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: Run Key Persistence\n\nUpon successful execution, cmd.exe will modify the registry by adding \\\\\\\"Atomic Red Team\\\\\\\" to the Run key. Output will be via stdout.. Command/Steps: REG ADD \\\"HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\" /V \\\"Atomic Red Team\\\" /t REG_SZ /F /D \\\"#{command_to_execute}\\\"\n"
+from = "now-9m"
+rule_id = "f8afd89c-1ac2-4b09-a9ed-1815f41804b7"
+language = "kql"
+name = "Atomic Test: T1547.001 - Reg Key Run"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "e55be3fd-3521-4610-9d1a-e210e42dcf05", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run*\\\" AND process.command_line : \\\"*Team*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Reg Key Run"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

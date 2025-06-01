@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows pull file using scp.exe' (GUID: 401667dc-05a6-4da0-a2a7-acfe4819559c) of technique T1105 (Ingress Tool Transfer). Test Description: This test simulates pulling files using SCP on a Windows environment.. Command/Steps: scp.exe #{username}@#{remote_host}:#{remote_path} #{local_path}\n"
+from = "now-9m"
+rule_id = "340109dc-999c-45ed-8750-6226614f6a64"
+language = "kql"
+name = "Atomic Test: T1105 - Windows pull file using scp.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "401667dc-05a6-4da0-a2a7-acfe4819559c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*scp.exe*\\\" AND powershell.script_block_text : \\\"*C:\\\\temp*\\\" OR (process.command_line : \\\"*scp.exe*\\\" AND process.command_line : \\\"*C:\\\\temp*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Windows pull file using scp.exe"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

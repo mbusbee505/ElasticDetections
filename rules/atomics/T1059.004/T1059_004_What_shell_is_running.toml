@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'What shell is running' (GUID: 7b38e5cc-47be-44f0-a425-390305c76c17) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: An adversary will want to discover what shell is running so that they can tailor their attacks accordingly. The following commands will discover what shell is running.. Command/Steps: echo $0\nif $(env |grep \\\"SHELL\\\" >/dev/null); then env |grep \\\"SHELL\\\"; fi\nif $(printenv SHELL >/dev/null); then printenv SHELL; fi\n"
+from = "now-9m"
+rule_id = "5f8268d6-3f1e-4e92-8f51-c6f8056322e7"
+language = "kql"
+name = "Atomic Test: T1059.004 - What shell is running"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "7b38e5cc-47be-44f0-a425-390305c76c17", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(env*\\\" AND process.command_line : \\\"*|grep*\\\" AND process.command_line : \\\"*SHELL*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "What shell is running"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

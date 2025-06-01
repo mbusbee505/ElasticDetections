@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mimic Ransomware - Allow Multiple RDP Sessions per User' (GUID: 35727d9e-7a7f-4d0c-a259-dc3906d6e8b9) of technique T1112 (Modify Registry). Test Description: This test emulates Mimic ransomware's ability to enable multiple RDP sessions per user by modifying the fSingleSessionPerUser value within the Terminal Server registry key. \nSee [Mimic Ransomware Overview] (https://www.trendmicro.com/en_us/research/23/a/new-mimic-ransomware-abuses-everything-apis-for-its-encryption-p.html). Command/Steps: reg add \\\"HKLM\\\\System\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "da44f424-8854-461c-b5bf-5d36ba0301f6"
+language = "kql"
+name = "Atomic Test: T1112 - Mimic Ransomware - Allow Multiple RDP Sessions per User"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "35727d9e-7a7f-4d0c-a259-dc3906d6e8b9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\System\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server*\\\" AND process.command_line : \\\"*fSingleSessionPerUser*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Mimic Ransomware - Allow Multiple RDP Sessions per User"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

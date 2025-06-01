@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Bash History Logging with SSH -T' (GUID: 5f8abd62-f615-43c5-b6be-f780f25790a1) of technique T1070.003 (Indicator Removal on Host: Clear Command History). Test Description: Keeps history clear and stays out of lastlog,wtmp,btmp ssh -T keeps the ssh client from catching a proper TTY, which is what usually gets logged on lastlog. Command/Steps: sshpass -p 'pwd101!' ssh testuser1@localhost -T hostname\n"
+from = "now-9m"
+rule_id = "e3544d9c-70b5-4640-a559-00433ca81475"
+language = "kql"
+name = "Atomic Test: T1070.003 - Disable Bash History Logging with SSH -T"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.003/T1070.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.003", "5f8abd62-f615-43c5-b6be-f780f25790a1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*sshpass*\\\" AND process.command_line : \\\"*pwd101!*\\\" AND process.command_line : \\\"*testuser1@localhost*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.003"
+name = "Disable Bash History Logging with SSH -T"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+

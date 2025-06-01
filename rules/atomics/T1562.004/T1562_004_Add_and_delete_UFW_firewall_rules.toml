@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add and delete UFW firewall rules' (GUID: b2563a4e-c4b8-429c-8d47-d5bcb227ba7a) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Add and delete a rule on the Uncomplicated Firewall (UFW) if installed and enabled.. Command/Steps: ufw prepend deny from 1.2.3.4\nufw status numbered\n"
+from = "now-9m"
+rule_id = "357cea83-2a71-4891-aabc-16709cc6e79b"
+language = "kql"
+name = "Atomic Test: T1562.004 - Add and delete UFW firewall rules"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "b2563a4e-c4b8-429c-8d47-d5bcb227ba7a", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*prepend*\\\" AND process.command_line : \\\"*deny*\\\" AND process.command_line : \\\"*from*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Add and delete UFW firewall rules"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

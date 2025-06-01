@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'File and Directory Discovery (cmd.exe)' (GUID: 0e36303b-6762-4500-b003-127743b80ba6) of technique T1083 (File and Directory Discovery). Test Description: Find or discover files on the file system.  Upon successful execution, this test will output the results of all the data discovery commands to a specified file.. Command/Steps: dir /s c:\\\\ >> #{output_file}\ndir /s \\\"c:\\\\Documents and Settings\\\" >> #{output_file}\ndir /s \\\"c:\\\\Program Files\\\\\\\" >> #{output_file}\ndir \\\"%systemdrive%\\\\User..."
+from = "now-9m"
+rule_id = "1726273e-52f7-431c-bb04-b7a4b6ba8e84"
+language = "kql"
+name = "Atomic Test: T1083 - File and Directory Discovery (cmd.exe)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1083/T1083.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1083", "0e36303b-6762-4500-b003-127743b80ba6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*c:\\\\Documents*\\\" AND process.command_line : \\\"*Settings*\\\" AND process.command_line : \\\"*c:\\\\Program*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1083"
+name = "File and Directory Discovery (cmd.exe)"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+

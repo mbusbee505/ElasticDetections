@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Overwrite Linux Log' (GUID: d304b2dc-90b4-4465-a650-16ddd503f7b5) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test overwrites the specified log. This technique was used by threat actor Rocke during the exploitation of Linux web servers.. Command/Steps: echo 0> #{log_path}\n"
+from = "now-9m"
+rule_id = "3a6423ec-de8b-428a-9715-0febf508c460"
+language = "kql"
+name = "Atomic Test: T1070.002 - Overwrite Linux Log"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "d304b2dc-90b4-4465-a650-16ddd503f7b5", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/var/log/secure*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Overwrite Linux Log"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Edge Chromium Addon - VPN' (GUID: 3d456e2b-a7db-4af8-b5b3-720e7c4d9da5) of technique T1176 (Browser Extensions). Test Description: Adversaries may use VPN extensions in an attempt to hide traffic sent from a compromised host. This will install one (of many) available VPNS in the Edge add-on store.. Command/Steps: 1. Navigate to https://microsoftedge.microsoft.com/addons/detail/fjnehcbecaggobjholekjijaaekbnlgj\nin Edge Chromium\n\n2. Click 'Get'\n"
+from = "now-9m"
+rule_id = "be79a25d-f904-4388-83c3-3609e7489d2f"
+language = "kql"
+name = "Atomic Test: T1176 - Edge Chromium Addon - VPN"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1176/T1176.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1176", "3d456e2b-a7db-4af8-b5b3-720e7c4d9da5", "windows", "macos",]
+type = "query"
+query = "process.command_line : \\\"*Navigate*\\\" AND process.command_line : \\\"*https://microsoftedge.microsoft.com/addons/detail/fjnehcbecaggobjholekjijaaekbnlgj*\\\" AND process.command_line : \\\"*Edge*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1176"
+name = "Edge Chromium Addon - VPN"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1176"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'SOAPHound - Build Cache' (GUID: 4099086c-1470-4223-8085-8186e1ed5948) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Build cache using SOAPHound. Upon execution, a cache will be built and stored in the specified cache filename.\nsrc: https://github.com/FalconForceTeam/SOAPHound. Command/Steps: #{soaphound_path} --user $(#{user})@$(#{domain}) --password #{password} --dc #{dc} --buildcache --cachefilename #{cachefilename}\n"
+from = "now-9m"
+rule_id = "f8566498-6311-4423-a41a-2dc98ac7277e"
+language = "kql"
+name = "Atomic Test: T1059.001 - SOAPHound - Build Cache"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "4099086c-1470-4223-8085-8186e1ed5948", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*--user*\\\" AND powershell.script_block_text : \\\"*$($env:USERNAME)@$($env:USERDOMAIN)*\\\" AND powershell.script_block_text : \\\"*--password*\\\" OR (process.command_line : \\\"*--user*\\\" AND process.command_line : \\\"*$($env:USERNAME)@$($env:USERDOMAIN)*\\\" AND process.command_line : \\\"*--password*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "SOAPHound - Build Cache"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

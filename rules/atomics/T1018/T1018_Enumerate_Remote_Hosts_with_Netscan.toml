@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Remote Hosts with Netscan' (GUID: b8147c9a-84db-4ec1-8eee-4e0da75f0de5) of technique T1018 (Remote System Discovery). Test Description: This test uses Netscan to identify remote hosts in a specified network range.. Command/Steps: cmd /c '#{netscan_path}' /hide /auto:\\\"$env:temp\\\\T1018NetscanOutput.txt\\\" /range:'#{range_to_scan}'"
+from = "now-9m"
+rule_id = "845208ef-2e8b-415e-8868-e9357263b60e"
+language = "kql"
+name = "Atomic Test: T1018 - Enumerate Remote Hosts with Netscan"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "b8147c9a-84db-4ec1-8eee-4e0da75f0de5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*/hide*\\\" AND powershell.script_block_text : \\\"*/range:'127.0.0.1-127.0.0.1*\\\" OR (process.command_line : \\\"*/hide*\\\" AND process.command_line : \\\"*/range:'127.0.0.1-127.0.0.1*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Enumerate Remote Hosts with Netscan"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

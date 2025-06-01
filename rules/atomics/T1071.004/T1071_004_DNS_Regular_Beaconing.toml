@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DNS Regular Beaconing' (GUID: 3efc144e-1af8-46bb-8ca2-1376bb6db8b6) of technique T1071.004 (Application Layer Protocol: DNS). Test Description: This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.\nThis behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.\nA custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.. Command/Steps: Set-Location \\\"PathToAtomicsFolder\\\"\n.\\\\T1071.004\\\\src\\\\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval..."
+from = "now-9m"
+rule_id = "605f4434-c13c-44cd-bb69-94162fb0211e"
+language = "kql"
+name = "Atomic Test: T1071.004 - DNS Regular Beaconing"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1071.004/T1071.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1071.004", "3efc144e-1af8-46bb-8ca2-1376bb6db8b6", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-Location*\\\" AND powershell.script_block_text : \\\"*-Domain*\\\" AND powershell.script_block_text : \\\"*127.0.0.1.nip.io*\\\" OR (process.command_line : \\\"*Set-Location*\\\" AND process.command_line : \\\"*-Domain*\\\" AND process.command_line : \\\"*127.0.0.1.nip.io*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1071.004"
+name = "DNS Regular Beaconing"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+

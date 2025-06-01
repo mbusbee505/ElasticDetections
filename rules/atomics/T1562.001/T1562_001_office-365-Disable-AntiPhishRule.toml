@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'office-365-Disable-AntiPhishRule' (GUID: b9bbae2c-2ba6-4cf3-b452-8e8f908696f3) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Using the Disable-AntiPhishRule cmdlet to disable antiphish rules in your office-365 organization.. Command/Steps: $secure_pwd = \\\"#{password}\\\" | ConvertTo-SecureString -AsPlainText -Force\n$creds = New-Object System.Management.Automation.PSCredential -ArgumentList \\\"..."
+from = "now-9m"
+rule_id = "d397ef7e-63b8-416c-9ecc-bd2fdf215bb8"
+language = "kql"
+name = "Atomic Test: T1562.001 - office-365-Disable-AntiPhishRule"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "b9bbae2c-2ba6-4cf3-b452-8e8f908696f3", "office-365",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$secure_pwd*\\\" AND powershell.script_block_text : \\\"*ConvertTo-SecureString*\\\" AND powershell.script_block_text : \\\"*-AsPlainText*\\\" OR (process.command_line : \\\"*$secure_pwd*\\\" AND process.command_line : \\\"*ConvertTo-SecureString*\\\" AND process.command_line : \\\"*-AsPlainText*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "office-365-Disable-AntiPhishRule"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

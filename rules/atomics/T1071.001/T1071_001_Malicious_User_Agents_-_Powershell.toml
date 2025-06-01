@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Malicious User Agents - Powershell' (GUID: 81c13829-f6c9-45b8-85a6-053366d55297) of technique T1071.001 (Application Layer Protocol: Web Protocols). Test Description: This test simulates an infected host beaconing to command and control. Upon execution, no output will be displayed. \nUse an application such as Wireshark to record the session and observe user agent strings and responses.\n\nInspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat. Command/Steps: Invoke-WebRequest #{domain} -UserAgent \\\"HttpBrowser/1.0\\\" | out-null\nInvoke-WebRequest #{domain} -UserAgent \\\"Wget/1.9+cvs-stable (Red Hat modified)\\\" | ..."
+from = "now-9m"
+rule_id = "7a1c557f-633c-4e80-b39e-6cbe9c4b2780"
+language = "kql"
+name = "Atomic Test: T1071.001 - Malicious User Agents - Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1071.001/T1071.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1071.001", "81c13829-f6c9-45b8-85a6-053366d55297", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*www.google.com*\\\" AND powershell.script_block_text : \\\"*-UserAgent*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*www.google.com*\\\" AND process.command_line : \\\"*-UserAgent*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1071.001"
+name = "Malicious User Agents - Powershell"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+

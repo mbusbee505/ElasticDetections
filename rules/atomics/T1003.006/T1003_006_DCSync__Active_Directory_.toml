@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DCSync (Active Directory)' (GUID: 129efd28-8497-4c87-a1b0-73b9a870ca3e) of technique T1003.006 (OS Credential Dumping: DCSync). Test Description: Active Directory attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.\nWorks against a remote Windows Domain Controller using the replication protocol.\nPrivileges required: domain admin or domain controller account (by default), or any other account with required rights.\n[Reference](https://adsecurity.org/?p=1729). Command/Steps: #{mimikatz_path} \\\"lsadump::dcsync /domain:#{domain} /user:#{user}@#{domain}\\\" \\\"exit\\\"\n"
+from = "now-9m"
+rule_id = "2b8c2083-b598-4a5f-a39f-e5e2cc2d5d2d"
+language = "kql"
+name = "Atomic Test: T1003.006 - DCSync (Active Directory)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.006/T1003.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.006", "129efd28-8497-4c87-a1b0-73b9a870ca3e", "windows",]
+type = "query"
+query = "(process.name : (\\"cmd.exe\\", \\"cmmon32.exe\\") OR process.parent.name : (\\"cmd.exe\\", \\"cmmon32.exe\\")) AND process.command_line : \\"*%tmp%\\mimikatz\\u0064\\\\mimikatz.exe*\\\" AND process.command_line : \\\"*lsadump::dcsync*\\\" AND process.command_line : \\\"*/domain:%userdnsdomain%*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.006"
+name = "DCSync (Active Directory)"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+

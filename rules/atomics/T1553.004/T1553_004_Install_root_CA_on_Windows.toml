@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install root CA on Windows' (GUID: 76f49d86-5eb1-461a-a032-a480f86652f1) of technique T1553.004 (Subvert Trust Controls: Install Root Certificate). Test Description: Creates a root CA with Powershell. Command/Steps: $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\\\\LocalMachine\\\\My\nMove-Item -Path $cert.PSPath -Destination \\\"Cert:\\\\LocalMachin..."
+from = "now-9m"
+rule_id = "396f4cbf-d3cc-4f03-946a-d6866fbb28dd"
+language = "kql"
+name = "Atomic Test: T1553.004 - Install root CA on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.004/T1553.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.004", "76f49d86-5eb1-461a-a032-a480f86652f1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$cert*\\\" AND powershell.script_block_text : \\\"*Import-Certificate*\\\" AND powershell.script_block_text : \\\"*-FilePath*\\\" OR (process.command_line : \\\"*$cert*\\\" AND process.command_line : \\\"*Import-Certificate*\\\" AND process.command_line : \\\"*-FilePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.004"
+name = "Install root CA on Windows"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+

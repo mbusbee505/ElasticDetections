@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy NTDS.dit from Volume Shadow Copy' (GUID: c6237146-9ea6-4711-85c9-c56d263a6b03) of technique T1003.003 (OS Credential Dumping: NTDS). Test Description: This test is intended to be run on a domain Controller.\n\nThe Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.\n\nThis test requires steps taken in the test \\\"Create Volume Shadow Copy with vssadmin\\\".\nA successful test also requires the export of the SYSTEM Registry hive.\nThis test must be executed on a Windows Domain Controller.. Command/Steps: copy #{vsc_name}\\\\Windows\\\\NTDS\\\\NTDS.dit #{extract_path}\\\\ntds.dit\ncopy #{vsc_name}\\\\Windows\\\\System32\\\\config\\\\SYSTEM #{extract_path}\\\\VSC_SYSTEM_HIVE\nreg sa..."
+from = "now-9m"
+rule_id = "b5192848-26d5-4c8c-8bca-8a56652abdd8"
+language = "kql"
+name = "Atomic Test: T1003.003 - Copy NTDS.dit from Volume Shadow Copy"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.003/T1003.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.003", "c6237146-9ea6-4711-85c9-c56d263a6b03", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*\\\\\\\\?\\\\GLOBALROOT\\\\Device\\\\HarddiskVolumeShadowCopy1\\\\Windows\\\\NTDS\\\\NTDS.dit*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\Temp\\\\ntds.dit*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.003"
+name = "Copy NTDS.dit from Volume Shadow Copy"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+

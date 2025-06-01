@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Replace Desktop Wallpaper' (GUID: 30558d53-9d76-41c4-9267-a7bd5184bed3) of technique T1491.001 (Defacement: Internal Defacement). Test Description: Downloads an image from a URL and sets it as the desktop wallpaper.. Command/Steps: $url = \\\"#{url_of_wallpaper}\\\"\n$imgLocation = \\\"#{wallpaper_location}\\\"\n$orgWallpaper = (Get-ItemProperty -Path Registry::'HKEY_CURRENT_USER\\\\Control Panel..."
+from = "now-9m"
+rule_id = "0b86bac9-2221-4142-af7e-6b6ee8e0eeda"
+language = "kql"
+name = "Atomic Test: T1491.001 - Replace Desktop Wallpaper"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1491.001/T1491.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1491.001", "30558d53-9d76-41c4-9267-a7bd5184bed3", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$url*\\\" AND powershell.script_block_text : \\\"*https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png*\\\" AND powershell.script_block_text : \\\"*$imgLocation*\\\" OR (process.command_line : \\\"*$url*\\\" AND process.command_line : \\\"*https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png*\\\" AND process.command_line : \\\"*$imgLocation*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1491.001"
+name = "Replace Desktop Wallpaper"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+

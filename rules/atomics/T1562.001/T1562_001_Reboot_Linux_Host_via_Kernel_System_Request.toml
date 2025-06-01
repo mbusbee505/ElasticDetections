@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Reboot Linux Host via Kernel System Request' (GUID: 6d6d3154-1a52-4d1a-9d51-92ab8148b32e) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: reboot system via system request seen in Awfulshred wiper.. Command/Steps: echo 1> /proc/sys/kernel/sysrq \necho b> /proc/sysrq-trigger \n"
+from = "now-9m"
+rule_id = "004360d0-8450-4a8d-8037-452d9d7fc60d"
+language = "kql"
+name = "Atomic Test: T1562.001 - Reboot Linux Host via Kernel System Request"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "6d6d3154-1a52-4d1a-9d51-92ab8148b32e", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/proc/sys/kernel/sysrq*\\\" AND process.command_line : \\\"*/proc/sysrq-trigger*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Reboot Linux Host via Kernel System Request"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

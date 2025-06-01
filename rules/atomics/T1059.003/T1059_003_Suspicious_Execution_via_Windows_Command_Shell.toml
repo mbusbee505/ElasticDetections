@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Suspicious Execution via Windows Command Shell' (GUID: d0eb3597-a1b3-4d65-b33b-2cda8d397f20) of technique T1059.003 (Command and Scripting Interpreter: Windows Command Shell). Test Description: Command line executed via suspicious invocation. Example is from the 2021 Threat Detection Report by Red Canary.. Command/Steps: %LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file} & type #{output_file}\n"
+from = "now-9m"
+rule_id = "e2f99486-6bf3-4e89-8cc7-15008851f974"
+language = "kql"
+name = "Atomic Test: T1059.003 - Suspicious Execution via Windows Command Shell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.003/T1059.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.003", "d0eb3597-a1b3-4d65-b33b-2cda8d397f20", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%LOCALAPPDATA:~-3,1%md*\\\" AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.003"
+name = "Suspicious Execution via Windows Command Shell"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+

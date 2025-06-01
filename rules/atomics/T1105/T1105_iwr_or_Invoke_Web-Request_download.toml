@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'iwr or Invoke Web-Request download' (GUID: c01cad7f-7a4c-49df-985e-b190dcf6a279) of technique T1105 (Ingress Tool Transfer). Test Description: Use 'iwr' or \\\"Invoke-WebRequest\\\" -URI argument to download a file from the web. Note: without -URI also works in some versions.. Command/Steps: powershell.exe iwr -URI #{remote_file} -Outfile #{local_path}\n"
+from = "now-9m"
+rule_id = "dc9ccfde-e287-46c7-a4cc-c9a712fce5de"
+language = "kql"
+name = "Atomic Test: T1105 - iwr or Invoke Web-Request download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "c01cad7f-7a4c-49df-985e-b190dcf6a279", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*-URI*\\\" AND process.command_line : \\\"*-Outfile*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "iwr or Invoke Web-Request download"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

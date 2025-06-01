@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Compiled HTML Help Local Payload' (GUID: 5cb87818-0d7c-4469-b7ef-9224107aebe8) of technique T1218.001 (Signed Binary Proxy Execution: Compiled HTML File). Test Description: Uses hh.exe to execute a local compiled HTML Help payload.\nUpon execution calc.exe will open. Command/Steps: hh.exe \\\"#{local_chm_file}\\\"\n"
+from = "now-9m"
+rule_id = "eef739ea-8ded-41b0-849f-c92ae18089f7"
+language = "kql"
+name = "Atomic Test: T1218.001 - Compiled HTML Help Local Payload"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.001/T1218.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.001", "5cb87818-0d7c-4469-b7ef-9224107aebe8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*hh.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.001"
+name = "Compiled HTML Help Local Payload"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+

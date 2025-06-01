@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Leverage Virtual Channels to execute custom DLL during successful RDP session' (GUID: fdd45306-74f6-4ade-9a97-0a4895961228) of technique T1547 (Boot or Logon Autostart Execution). Test Description: Virtual Channels can be leveraged to alter RDP behavior using dedicated Addins.The mechanism is implemented using DLLs which can be executed during RDP session automatically. \nThe DLLs are loaded in the host system only after successful connection is established with the remote system.\nOnce the test is run, amsi.dll will be loaded on the host system during successful RDP session.\nBlog :https://learn.microsoft.com/en-us/windows/win32/termserv/terminal-services-virtual-channels?redirectedfrom=MSDN. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Terminal Server Client\\\\Default\\\\Addins\\\\#{Subkey_Added}\\\" /v Name /t REG_SZ /d \\\"#{dll_inf}\\\" /f\n"
+from = "now-9m"
+rule_id = "38cb5546-bfac-4d6d-9be1-6bbe3cbc5cd8"
+language = "kql"
+name = "Atomic Test: T1547 - Leverage Virtual Channels to execute custom DLL during successful RDP session"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547/T1547.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547", "fdd45306-74f6-4ade-9a97-0a4895961228", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Terminal*\\\" AND process.command_line : \\\"*Server*\\\" AND process.command_line : \\\"*Client\\\\Default\\\\Addins\\\\Malware*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547"
+name = "Leverage Virtual Channels to execute custom DLL during successful RDP session"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547"
+
+

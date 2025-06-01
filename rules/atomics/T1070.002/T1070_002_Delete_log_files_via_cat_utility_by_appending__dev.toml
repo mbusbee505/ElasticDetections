@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd)' (GUID: 369878c6-fb04-48d6-8fc2-da9d97b3e054) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: The first sub-test truncates the log file to zero bytes via /dev/null and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero, using cat utility. Command/Steps: cat /dev/null > /var/log/messages #truncating the file to zero bytes\ncat /dev/zero > /var/log/messages #log file filled with null bytes(zeros)\n"
+from = "now-9m"
+rule_id = "0f3d8058-9e76-40d5-9a05-47593d6f7746"
+language = "kql"
+name = "Atomic Test: T1070.002 - Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "369878c6-fb04-48d6-8fc2-da9d97b3e054", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/dev/null*\\\" AND process.command_line : \\\"*/var/log/messages*\\\" AND process.command_line : \\\"*#truncating*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

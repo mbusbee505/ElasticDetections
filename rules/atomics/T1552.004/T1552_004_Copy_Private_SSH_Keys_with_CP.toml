@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy Private SSH Keys with CP' (GUID: 7c247dc7-5128-4643-907b-73a76d9135c3) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: Copy private SSH keys on a Linux system to a staging folder using the `cp` command.. Command/Steps: mkdir #{output_folder}\nfind #{search_path} -name id_rsa 2>/dev/null -exec cp --parents {} #{output_folder} \\\\;\nexit 0\n"
+from = "now-9m"
+rule_id = "87743345-2d23-439a-bddd-01a24b303a62"
+language = "kql"
+name = "Atomic Test: T1552.004 - Copy Private SSH Keys with CP"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "7c247dc7-5128-4643-907b-73a76d9135c3", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*-name*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "Copy Private SSH Keys with CP"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

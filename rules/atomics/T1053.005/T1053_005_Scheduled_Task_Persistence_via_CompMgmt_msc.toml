@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Scheduled Task Persistence via CompMgmt.msc' (GUID: 8fcfa3d5-ea7d-4e1c-bd3e-3c4ed315b7d2) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Adds persistence by abusing `compmgmt.msc` via a scheduled task.\nWhen the Computer Management console is opened, it will run a malicious payload (in this case, `calc.exe`). \nThis technique abuses scheduled tasks and registry modifications to hijack legitimate system processes.. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\Software\\\\Classes\\\\mscfile\\\\shell\\\\open\\\\command\\\" /ve /t REG_EXPAND_SZ /d \\\"c:\\\\windows\\\\System32\\\\#{payload}\\\" /f\nschtasks /Create /..."
+from = "now-9m"
+rule_id = "4095a81f-537a-4e08-be59-51698ccd4677"
+language = "kql"
+name = "Atomic Test: T1053.005 - Scheduled Task Persistence via CompMgmt.msc"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "8fcfa3d5-ea7d-4e1c-bd3e-3c4ed315b7d2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Classes\\\\mscfile\\\\shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*REG_EXPAND_SZ*\\\" AND process.command_line : \\\"*c:\\\\windows\\\\System32\\\\calc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Scheduled Task Persistence via CompMgmt.msc"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

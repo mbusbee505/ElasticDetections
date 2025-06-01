@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Masquerading - powershell.exe running as taskhostw.exe' (GUID: ac9d0fc3-8aa8-4ab5-b11f-682cd63b40aa) of technique T1036.003 (Masquerading: Rename System Utilities). Test Description: Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.\n\nUpon successful execution, powershell.exe is renamed as taskhostw.exe and executed from non-standard path.. Command/Steps: copy %windir%\\\\System32\\\\windowspowershell\\\\v1.0\\\\powershell.exe %APPDATA%\\\\taskhostw.exe /Y\ncmd.exe /K %APPDATA%\\\\taskhostw.exe\n"
+from = "now-9m"
+rule_id = "8416eae1-531d-4554-9ca9-19cbb955ed93"
+language = "kql"
+name = "Atomic Test: T1036.003 - Masquerading - powershell.exe running as taskhostw.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.003/T1036.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.003", "ac9d0fc3-8aa8-4ab5-b11f-682cd63b40aa", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\windowspowershell\\\\v1.0\\\\powershell.exe*\\\" AND process.command_line : \\\"*%APPDATA%\\\\taskhostw.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.003"
+name = "Masquerading - powershell.exe running as taskhostw.exe"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Binary simply packed by UPX' (GUID: b16ef901-00bb-4dda-b4fc-a04db5067e20) of technique T1027.002 (Obfuscated Files or Information: Software Packing). Test Description: Copies and then runs a simple binary (just outputting \\\"the cake is a lie\\\"), that was packed by UPX.\nNo other protection/compression were applied.. Command/Steps: cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin\n"
+from = "now-9m"
+rule_id = "e9a0dd9b-b97e-4a59-8c8d-deed3778caa3"
+language = "kql"
+name = "Atomic Test: T1027.002 - Binary simply packed by UPX"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.002/T1027.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.002", "b16ef901-00bb-4dda-b4fc-a04db5067e20", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.002"
+name = "Binary simply packed by UPX"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+

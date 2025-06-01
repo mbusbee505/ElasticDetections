@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Disable the SR scheduled task' (GUID: 1c68c68d-83a4-4981-974e-8993055fa034) of technique T1490 (Inhibit System Recovery). Test Description: Use schtasks.exe to disable the System Restore (SR) scheduled task. Command/Steps: schtasks.exe /Change /TN \\\"\\\\Microsoft\\\\Windows\\\\SystemRestore\\\\SR\\\" /disable\n"
+from = "now-9m"
+rule_id = "eebc534c-b1e6-4533-aac0-373f7ae218b0"
+language = "kql"
+name = "Atomic Test: T1490 - Windows - Disable the SR scheduled task"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "1c68c68d-83a4-4981-974e-8993055fa034", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*schtasks.exe*\\\" AND process.command_line : \\\"*/Change*\\\" AND process.command_line : \\\"*\\\\Microsoft\\\\Windows\\\\SystemRestore\\\\SR*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Windows - Disable the SR scheduled task"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

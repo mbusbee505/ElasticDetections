@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Disable Windows Recovery Console Repair' (GUID: cf21060a-80b3-4238-a595-22525de4ab81) of technique T1490 (Inhibit System Recovery). Test Description: Disables repair by the Windows Recovery Console on boot. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.\nUpon execution, \\\"The operation completed successfully.\\\" will be displayed in the powershell session.. Command/Steps: bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures\nbcdedit.exe /set {default} recoveryenabled no\n"
+from = "now-9m"
+rule_id = "600ba3e3-a75a-4bbe-96c1-27f2fc24926a"
+language = "kql"
+name = "Atomic Test: T1490 - Windows - Disable Windows Recovery Console Repair"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "cf21060a-80b3-4238-a595-22525de4ab81", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*bcdedit.exe*\\\" AND process.command_line : \\\"*/set*\\\" AND process.command_line : \\\"*{default}*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Windows - Disable Windows Recovery Console Repair"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

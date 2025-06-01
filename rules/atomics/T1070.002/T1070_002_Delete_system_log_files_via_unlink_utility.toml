@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete system log files via unlink utility' (GUID: 03013b4b-01db-437d-909b-1fdaa5010ee8) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test deletes the system log file using unlink utility. Command/Steps: sudo unlink #{system_log_path}\n"
+from = "now-9m"
+rule_id = "c5f7a76e-6364-43be-9e30-17f60e5a15db"
+language = "kql"
+name = "Atomic Test: T1070.002 - Delete system log files via unlink utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "03013b4b-01db-437d-909b-1fdaa5010ee8", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*unlink*\\\" AND process.command_line : \\\"*/var/log/system.log*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Delete system log files via unlink utility"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

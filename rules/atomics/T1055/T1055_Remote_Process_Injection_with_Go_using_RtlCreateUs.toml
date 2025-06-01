@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote Process Injection with Go using RtlCreateUserThread WinAPI' (GUID: a0c1725f-abcd-40d6-baac-020f3cf94ecd) of technique T1055 (Process Injection). Test Description: Executes shellcode in a remote process.\n\nSteps taken with this technique\n1. Get a handle to the target process\n2. Allocate memory for the shellcode with VirtualAllocEx setting the page permissions to Read/Write\n3. Use the WriteProcessMemory to copy the shellcode to the allocated memory space in the remote process\n4. Change the memory page permissions to Execute/Read with VirtualProtectEx\n5. Execute the entrypoint of the shellcode in the remote process with RtlCreateUserThread\n6. Close the handle to the remote process\n\n- PoC Credit: (https://github.com/Ne0nd0g/go-shellcode/tree/master#rtlcreateuserthread)\n- References: \n  - https://www.cobaltstrike.com/blog/cobalt-strikes-process-injection-the-details-cobalt-strike. Command/Steps: $process = Start-Process #{spawn_process_path} -passthru\n$PathToAtomicsFolder\\T1055\\bin\\u0064\\\\RtlCreateUserThread.exe -pid $process.Id -debug\n"
+from = "now-9m"
+rule_id = "3d5fcc8d-42c5-46d3-bb6c-d57f3f481c26"
+language = "kql"
+name = "Atomic Test: T1055 - Remote Process Injection with Go using RtlCreateUserThread WinAPI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "a0c1725f-abcd-40d6-baac-020f3cf94ecd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$process*\\\" AND powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\werfault.exe*\\\" OR (process.command_line : \\\"*$process*\\\" AND process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\werfault.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "Remote Process Injection with Go using RtlCreateUserThread WinAPI"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

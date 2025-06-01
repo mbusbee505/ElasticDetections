@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Find and Display Internet Explorer Browser Version' (GUID: 68981660-6670-47ee-a5fa-7e74806420a4) of technique T1518 (Software Discovery). Test Description: Query the registry to determine the version of internet explorer installed on the system.\nUpon execution, version information about internet explorer will be displayed.. Command/Steps: reg query \\\"HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Internet Explorer\\\" /v svcVersion\n"
+from = "now-9m"
+rule_id = "21f7191b-3188-41f9-a0e8-a22b278b6ef2"
+language = "kql"
+name = "Atomic Test: T1518 - Find and Display Internet Explorer Browser Version"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518/T1518.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518", "68981660-6670-47ee-a5fa-7e74806420a4", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Internet*\\\" AND process.command_line : \\\"*Explorer*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518"
+name = "Find and Display Internet Explorer Browser Version"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+

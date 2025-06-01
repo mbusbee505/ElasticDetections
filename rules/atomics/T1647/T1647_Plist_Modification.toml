@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Plist Modification' (GUID: 394a538e-09bb-4a4a-95d1-b93cf12682a8) of technique T1647 (Plist File Modification). Test Description: Modify MacOS plist file in one of two directories. Command/Steps: 1. Modify a .plist in\n\n    /Library/Preferences\n\n    OR\n\n    ~/Library/Preferences\n\n2. Subsequently, follow the steps for adding and running via [Laun..."
+from = "now-9m"
+rule_id = "f2e5d755-7fd0-4ef2-8de2-26beba40ef39"
+language = "kql"
+name = "Atomic Test: T1647 - Plist Modification"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1647/T1647.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1647", "394a538e-09bb-4a4a-95d1-b93cf12682a8", "macos",]
+type = "query"
+query = "process.command_line : \\\"*Modify*\\\" AND process.command_line : \\\"*.plist*\\\" AND process.command_line : \\\"*/Library/Preferences*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1647"
+name = "Plist Modification"
+reference = "https://attack.mitre.org/techniques/T1647"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1647"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1647"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1647"
+
+

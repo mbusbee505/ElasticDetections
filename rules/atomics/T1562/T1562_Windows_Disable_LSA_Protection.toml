@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Disable LSA Protection' (GUID: 40075d5f-3a70-4c66-9125-f72bee87247d) of technique T1562 (Impair Defenses). Test Description: The following Atomic adds a registry entry to disable LSA Protection.\n\nThe LSA controls and manages user rights information, password hashes and other important bits of information in memory. Attacker tools, such as mimikatz, rely on accessing this content to scrape password hashes or clear-text passwords. Enabling LSA Protection configures Windows to control the information stored in memory in a more secure fashion - specifically, to prevent non-protected processes from accessing that data.\nUpon successful execution, the registry will be modified and RunAsPPL will be set to 0, disabling Lsass protection.\nhttps://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#how-to-disable-lsa-protection\nhttps://blog.netwrix.com/2022/01/11/understanding-lsa-protection/\nhttps://thedfirreport.com/2022/03/21/phosphorus-automates-initial-access-using-proxyshell/. Command/Steps: reg add HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\LSA /v RunAsPPL /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "6b4130a1-1160-4b8f-aed3-3043f5974308"
+language = "kql"
+name = "Atomic Test: T1562 - Windows Disable LSA Protection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562/T1562.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562", "40075d5f-3a70-4c66-9125-f72bee87247d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\LSA*\\\" AND process.command_line : \\\"*RunAsPPL*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562"
+name = "Windows Disable LSA Protection"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+

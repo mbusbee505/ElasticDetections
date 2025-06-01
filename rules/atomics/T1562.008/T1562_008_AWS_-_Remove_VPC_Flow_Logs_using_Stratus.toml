@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - Remove VPC Flow Logs using Stratus' (GUID: 93c150f5-ad7b-4ee3-8992-df06dec2ac79) of technique T1562.008 (Impair Defenses: Disable Cloud Logs). Test Description: This Atomic will attempt to remove AWS VPC Flow Logs configuration. Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.vpc-remove-flow-logs/. Command/Steps: export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \\\"starting warmup\\\"\n./stratus warmup aws.defense-evasion.vpc-remove-flow-logs\necho \\\"starting de..."
+from = "now-9m"
+rule_id = "7e2f314f-ed09-4239-b9c2-96031eb5e278"
+language = "kql"
+name = "Atomic Test: T1562.008 - AWS - Remove VPC Flow Logs using Stratus"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.008/T1562.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.008", "93c150f5-ad7b-4ee3-8992-df06dec2ac79", "linux", "macos", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*export*\\\" AND process.command_line : \\\"*AWS_REGION=us-west-2*\\\" AND process.command_line : \\\"*starting*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.008"
+name = "AWS - Remove VPC Flow Logs using Stratus"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+

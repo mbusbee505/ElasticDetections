@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Phantom Dll Hijacking - ualapi.dll' (GUID: 5898902d-c5ad-479a-8545-6f5ab3cfc87f) of technique T1574.001 (Hijack Execution Flow: DLL). Test Description: Re-starting the Print Spooler service leads to C:\\\\Windows\\\\System32\\\\ualapi.dll being loaded\nA malicious ualapi.dll placed in the System32 directory will lead to its execution whenever the system starts\n\nUpon successful execution, amsi.dll will be copied and renamed to ualapi.dll and then ualapi.dll will be copied to system32 folder for loading during system restart.\nPrint Spooler service is also configured to auto start. Reboot of system is required. Command/Steps: copy %windir%\\\\System32\\\\amsi.dll %APPDATA%\\\\amsi.dll\nren %APPDATA%\\\\amsi.dll ualapi.dll\ncopy %APPDATA%\\\\ualapi.dll %windir%\\\\System32\\\\ualapi.dll\nsc config ..."
+from = "now-9m"
+rule_id = "0e375496-29dc-4629-8266-7c1093655ee3"
+language = "kql"
+name = "Atomic Test: T1574.001 - Phantom Dll Hijacking - ualapi.dll"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.001/T1574.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.001", "5898902d-c5ad-479a-8545-6f5ab3cfc87f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\amsi.dll*\\\" AND process.command_line : \\\"*%APPDATA%\\\\amsi.dll*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.001"
+name = "Phantom Dll Hijacking - ualapi.dll"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Logon Scripts - Mac' (GUID: f047c7de-a2d9-406e-a62b-12a09d9516f4) of technique T1037.002 (Boot or Logon Initialization Scripts: Logon Script (Mac)). Test Description: Mac logon script. Command/Steps: 1. Create the required plist file\n\n    sudo touch /private/var/root/Library/Preferences/com.apple.loginwindow.plist\n\n2. Populate the plist with the lo..."
+from = "now-9m"
+rule_id = "7623ec6b-39d6-44d0-a0ad-5ba848c554f3"
+language = "kql"
+name = "Atomic Test: T1037.002 - Logon Scripts - Mac"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1037.002/T1037.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1037.002", "f047c7de-a2d9-406e-a62b-12a09d9516f4", "macos",]
+type = "query"
+query = "process.command_line : \\\"*Create*\\\" AND process.command_line : \\\"*required*\\\" AND process.command_line : \\\"*plist*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1037.002"
+name = "Logon Scripts - Mac"
+reference = "https://attack.mitre.org/techniques/T1037/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1037/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1037/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1037/002"
+
+

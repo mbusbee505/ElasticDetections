@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'New-Inbox Rule to Hide E-mail in M365' (GUID: 30f7d3d1-78e2-4bf0-9efa-a175b5fce2a9) of technique T1564.008 (Hide Artifacts: Email Hiding Rules). Test Description: This test simulates a user adding an inbox rule in M365 to delete emails with specific keywords in email subject or body.\n Reference: https://www.mandiant.com/sites/default/files/2021-09/rpt-fin4.pdf. Command/Steps: Import-Module ExchangeOnlineManagement\n$password = ConvertTo-SecureString -String \\\"#{auth_password}\\\" -AsPlainText -Force\n$credential = New-Object -Typ..."
+from = "now-9m"
+rule_id = "337e6036-7f81-466e-90da-bf94710633e8"
+language = "kql"
+name = "Atomic Test: T1564.008 - New-Inbox Rule to Hide E-mail in M365"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.008/T1564.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.008", "30f7d3d1-78e2-4bf0-9efa-a175b5fce2a9", "office-365",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*ExchangeOnlineManagement*\\\" AND powershell.script_block_text : \\\"*$password*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*ExchangeOnlineManagement*\\\" AND process.command_line : \\\"*$password*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.008"
+name = "New-Inbox Rule to Hide E-mail in M365"
+reference = "https://attack.mitre.org/techniques/T1564/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/008"
+
+

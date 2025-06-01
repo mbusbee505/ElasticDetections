@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add Executable Shortcut Link to User Startup Folder' (GUID: 24e55612-85f6-4bd6-ae74-a73d02e3441d) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: Adds a non-malicious executable shortcut link to the current users startup directory. Test can be verified by going to the users startup directory and checking if the shortcut link exists.. Command/Steps: $Target = \\\"C:\\\\Windows\\\\System32\\\\calc.exe\\\"\n$ShortcutLocation = \\\"$home\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\calc_exe.lnk\\\"\n$WScri..."
+from = "now-9m"
+rule_id = "b0789e18-03dd-49d1-a28a-4734adcd9c1f"
+language = "kql"
+name = "Atomic Test: T1547.001 - Add Executable Shortcut Link to User Startup Folder"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "24e55612-85f6-4bd6-ae74-a73d02e3441d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Target*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\" AND powershell.script_block_text : \\\"*$ShortcutLocation*\\\" OR (process.command_line : \\\"*$Target*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\" AND process.command_line : \\\"*$ShortcutLocation*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Add Executable Shortcut Link to User Startup Folder"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

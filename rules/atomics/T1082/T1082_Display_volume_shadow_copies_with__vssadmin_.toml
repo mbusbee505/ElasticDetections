@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Display volume shadow copies with \\\"vssadmin\\\"' (GUID: 7161b085-816a-491f-bab4-d68e974b7995) of technique T1082 (System Information Discovery). Test Description: The command shows all available volume shadow copies, along with their creation time and location.. Command/Steps: vssadmin.exe list shadows"
+from = "now-9m"
+rule_id = "c7014dd0-bc32-4d3f-87b5-b81768840504"
+language = "kql"
+name = "Atomic Test: T1082 - Display volume shadow copies with \"vssadmin\""
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "7161b085-816a-491f-bab4-d68e974b7995", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*vssadmin.exe*\\\" AND process.command_line : \\\"*list*\\\" AND process.command_line : \\\"*shadows*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Display volume shadow copies with \"vssadmin\""
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

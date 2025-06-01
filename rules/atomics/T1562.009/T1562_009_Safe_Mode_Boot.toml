@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Safe Mode Boot' (GUID: 2a78362e-b79a-4482-8e24-be397bce4d85) of technique T1562.009 (Impair Defenses: Safe Boot Mode). Test Description: Allows adversaries to abuse safe mode to disable endpoint defenses that may not start with limited boot. Command/Steps: bcdedit /set safeboot network"
+from = "now-9m"
+rule_id = "f296fc46-4642-4986-992c-3f5dc1de98c3"
+language = "kql"
+name = "Atomic Test: T1562.009 - Safe Mode Boot"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.009/T1562.009.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.009", "2a78362e-b79a-4482-8e24-be397bce4d85", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*bcdedit*\\\" AND process.command_line : \\\"*/set*\\\" AND process.command_line : \\\"*safeboot*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.009"
+name = "Safe Mode Boot"
+reference = "https://attack.mitre.org/techniques/T1562/009"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/009"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/009"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/009"
+
+

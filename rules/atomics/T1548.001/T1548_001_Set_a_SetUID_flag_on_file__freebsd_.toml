@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Set a SetUID flag on file (freebsd)' (GUID: 9be9b827-ff47-4e1b-bef8-217db6fb7283) of technique T1548.001 (Abuse Elevation Control Mechanism: Setuid and Setgid). Test Description: This test sets the SetUID flag on a file in FreeBSD.. Command/Steps: touch #{file_to_setuid}\nchown root #{file_to_setuid}\nchmod u+xs #{file_to_setuid}\n"
+from = "now-9m"
+rule_id = "b7d7cf6a-985a-4199-ae67-6ed93a5a6b59"
+language = "kql"
+name = "Atomic Test: T1548.001 - Set a SetUID flag on file (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.001/T1548.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.001", "9be9b827-ff47-4e1b-bef8-217db6fb7283", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*chown*\\\" AND process.command_line : \\\"*root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.001"
+name = "Set a SetUID flag on file (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+

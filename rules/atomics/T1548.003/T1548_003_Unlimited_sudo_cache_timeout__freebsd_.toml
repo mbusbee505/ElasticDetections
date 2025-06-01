@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Unlimited sudo cache timeout (freebsd)' (GUID: a83ad6e8-6f24-4d7f-8f44-75f8ab742991) of technique T1548.003 (Abuse Elevation Control Mechanism: Sudo and Sudo Caching). Test Description: Sets sudo caching timestamp_timeout to a value for unlimited. This is dangerous to modify without using 'visudo', do not do this on a production system.. Command/Steps: sudo sed -i 's/env_reset.*$/env_reset,timestamp_timeout=-1/' /usr/local/etc/sudoers\nsudo visudo -c -f /usr/local/etc/sudoers\n"
+from = "now-9m"
+rule_id = "c1a4f83e-07f3-4f31-8e0c-7dbfa670d827"
+language = "kql"
+name = "Atomic Test: T1548.003 - Unlimited sudo cache timeout (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.003/T1548.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.003", "a83ad6e8-6f24-4d7f-8f44-75f8ab742991", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/usr/local/etc/sudoers*\\\" AND process.command_line : \\\"*visudo*\\\" AND process.command_line : \\\"*/usr/local/etc/sudoers*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.003"
+name = "Unlimited sudo cache timeout (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+

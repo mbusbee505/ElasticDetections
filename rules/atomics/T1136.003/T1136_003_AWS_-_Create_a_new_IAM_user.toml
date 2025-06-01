@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - Create a new IAM user' (GUID: 8d1c2368-b503-40c9-9057-8e42f21c58ad) of technique T1136.003 (Create Account: Cloud Account). Test Description: Creates a new IAM user in AWS. Upon successful creation, a new user will be created. Adversaries create new IAM users so that their malicious activity do not interupt the normal functions of the compromised users and can remain undetected for a long time. Command/Steps: aws iam create-user --user-name #{username}\n"
+from = "now-9m"
+rule_id = "a018b0c7-7c81-4ea6-866f-4c860ff16de4"
+language = "kql"
+name = "Atomic Test: T1136.003 - AWS - Create a new IAM user"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.003/T1136.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.003", "8d1c2368-b503-40c9-9057-8e42f21c58ad", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*create-user*\\\" AND process.command_line : \\\"*--user-name*\\\" AND process.command_line : \\\"*atomicredteam*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.003"
+name = "AWS - Create a new IAM user"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+

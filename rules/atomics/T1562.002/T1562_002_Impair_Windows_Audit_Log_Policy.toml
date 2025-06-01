@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Impair Windows Audit Log Policy' (GUID: 5102a3a7-e2d7-4129-9e45-f483f2e0eea8) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: Disables the windows audit policy to prevent key host based telemetry being written into the event logs.\n[Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/). Command/Steps: auditpol /set /category:\\\"Account Logon\\\" /success:disable /failure:disable\nauditpol /set /category:\\\"Logon/Logoff\\\" /success:disable /failure:disable\naud..."
+from = "now-9m"
+rule_id = "d7b4adb3-ec88-4e52-b90a-954035953372"
+language = "kql"
+name = "Atomic Test: T1562.002 - Impair Windows Audit Log Policy"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "5102a3a7-e2d7-4129-9e45-f483f2e0eea8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*auditpol*\\\" AND process.command_line : \\\"*/set*\\\" AND process.command_line : \\\"*/category:\\\"Account*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Impair Windows Audit Log Policy"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

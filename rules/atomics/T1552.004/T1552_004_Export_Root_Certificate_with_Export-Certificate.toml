@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Export Root Certificate with Export-Certificate' (GUID: 78b274f8-acb0-428b-b1f7-7b0d0e73330a) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: Creates a Root certificate and exports it with Export-Certificate PowerShell Cmdlet.\nUpon a successful attempt, this will write a pfx to disk and utilize the Cmdlet Export-Certificate.. Command/Steps: $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\\\\LocalMachine\\\\My\nSet-Location Cert:\\\\LocalMachine\\\\My\nExport-Certif..."
+from = "now-9m"
+rule_id = "a720491f-d909-4413-a6f6-6d6cb2f4f56f"
+language = "kql"
+name = "Atomic Test: T1552.004 - Export Root Certificate with Export-Certificate"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "78b274f8-acb0-428b-b1f7-7b0d0e73330a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$cert*\\\" AND powershell.script_block_text : \\\"*New-SelfSignedCertificate*\\\" AND powershell.script_block_text : \\\"*-DnsName*\\\" OR (process.command_line : \\\"*$cert*\\\" AND process.command_line : \\\"*New-SelfSignedCertificate*\\\" AND process.command_line : \\\"*-DnsName*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "Export Root Certificate with Export-Certificate"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

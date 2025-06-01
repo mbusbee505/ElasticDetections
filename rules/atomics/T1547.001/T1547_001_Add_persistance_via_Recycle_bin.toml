@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add persistance via Recycle bin' (GUID: bda6a3d6-7aa7-4e89-908b-306772e9662f) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: Add a persistance via Recycle bin [vxunderground](https://github.com/vxunderground/VXUG-Papers/blob/main/The%20Persistence%20Series/Persistence%20via%20Recycle%20Bin/Persistence_via_Recycle_Bin.pdf)\nUser have to clic on the recycle bin to lauch the payload (here calc). Command/Steps: reg ADD \\\"HKCR\\\\CLSID\\\\{645FF040-5081-101B-9F08-00AA002F954E}\\\\shell\\\\open\\\\command\\\" /ve /d \\\"calc.exe\\\" /f"
+from = "now-9m"
+rule_id = "898f475b-35b8-4382-a6ff-cc0f7f8de9a3"
+language = "kql"
+name = "Atomic Test: T1547.001 - Add persistance via Recycle bin"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "bda6a3d6-7aa7-4e89-908b-306772e9662f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCR\\\\CLSID\\\\{645FF040-5081-101B-9F08-00AA002F954E}\\\\shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*calc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Add persistance via Recycle bin"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

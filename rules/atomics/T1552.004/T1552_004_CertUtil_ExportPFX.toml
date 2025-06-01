@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'CertUtil ExportPFX' (GUID: 336b25bf-4514-4684-8924-474974f28137) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: The following Atomic test simulates adding a generic non-malicious certificate to the Root certificate store. This behavior generates a registry modification that adds the cloned root CA certificate in the keys outlined in the blog. In addition, this Atomic utilizes CertUtil to export the PFX (ExportPFX), similar to what was seen in the Golden SAML attack.\nKeys will look like - \\\\SystemCertificates\\\\CA\\\\Certificates or \\\\SystemCertificates\\\\Root\\\\Certificates\nReference: https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec\nReference: https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html. Command/Steps: IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) \ncertutil.exe -p #{pa..."
+from = "now-9m"
+rule_id = "6db4b847-c55a-4cad-985e-564392a92700"
+language = "kql"
+name = "Atomic Test: T1552.004 - CertUtil ExportPFX"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "336b25bf-4514-4684-8924-474974f28137", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(IWR*\\\" AND powershell.script_block_text : \\\"*-UseBasicParsing)*\\\" AND powershell.script_block_text : \\\"*certutil.exe*\\\" OR (process.command_line : \\\"*(IWR*\\\" AND process.command_line : \\\"*-UseBasicParsing)*\\\" AND process.command_line : \\\"*certutil.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "CertUtil ExportPFX"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

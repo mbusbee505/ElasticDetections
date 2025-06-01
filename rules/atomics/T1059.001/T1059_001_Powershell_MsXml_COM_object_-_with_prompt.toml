@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell MsXml COM object - with prompt' (GUID: 388a7340-dbc1-4c9d-8e59-b75ad8c6d5da) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Powershell MsXml COM object. Not proxy aware, removing cache although does not appear to write to those locations. Upon execution, \\\"Download Cradle test success!\\\" will be displayed.\n\nProvided by https://github.com/mgreen27/mgreen27.github.io. Command/Steps: powershell.exe -exec bypass -noprofile \\\"$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IE..."
+from = "now-9m"
+rule_id = "e633ce7c-8115-4111-8392-2a2839c1a89e"
+language = "kql"
+name = "Atomic Test: T1059.001 - Powershell MsXml COM object - with prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "388a7340-dbc1-4c9d-8e59-b75ad8c6d5da", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*-exec*\\\" AND process.command_line : \\\"*bypass*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Powershell MsXml COM object - with prompt"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

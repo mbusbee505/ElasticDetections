@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'RustDesk Files Detected Test on Windows' (GUID: f1641ba9-919a-4323-b74f-33372333bf0e) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading RustDesk and use this to maintain access to the machine. \nDownload of RustDesk installer will be at the destination location when successfully executed.. Command/Steps: $file = Join-Path $env:USERPROFILE \\\"Desktop\\\\rustdesk-1.2.3-1-x86_64.exe\\\"\nInvoke-WebRequest  -OutFile $file https://github.com/rustdesk/rustdesk/releas..."
+from = "now-9m"
+rule_id = "c78227bf-7a0e-4f5b-954e-a081760c8c86"
+language = "kql"
+name = "Atomic Test: T1219 - RustDesk Files Detected Test on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "f1641ba9-919a-4323-b74f-33372333bf0e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$file*\\\" AND powershell.script_block_text : \\\"*Join-Path*\\\" AND powershell.script_block_text : \\\"*$env:USERPROFILE*\\\" OR (process.command_line : \\\"*$file*\\\" AND process.command_line : \\\"*Join-Path*\\\" AND process.command_line : \\\"*$env:USERPROFILE*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "RustDesk Files Detected Test on Windows"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

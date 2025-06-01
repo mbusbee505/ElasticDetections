@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'SIP (Subject Interface Package) Hijacking via Custom DLL' (GUID: e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675) of technique T1553.003 (Subvert Trust Controls: SIP and Trust Provider Hijacking). Test Description: Registers a DLL that logs signature checks, mimicking SIP hijacking. This test uses a DLL from \nhttps://github.com/gtworek/PSBits/tree/master/SIP and registers it using regsvr32, thereby causing\nthe system to utilize it during signature checks, and logging said checks.. Command/Steps: regsvr32.exe #{dll_payload}\n"
+from = "now-9m"
+rule_id = "a640e160-5c5e-4b37-90d9-1c2e9de33e33"
+language = "kql"
+name = "Atomic Test: T1553.003 - SIP (Subject Interface Package) Hijacking via Custom DLL"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.003/T1553.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.003", "e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*regsvr32.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.003"
+name = "SIP (Subject Interface Package) Hijacking via Custom DLL"
+reference = "https://attack.mitre.org/techniques/T1553/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/003"
+
+

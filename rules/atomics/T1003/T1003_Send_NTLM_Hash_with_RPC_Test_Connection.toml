@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Send NTLM Hash with RPC Test Connection' (GUID: 0b207037-813c-4444-ac3f-b597cf280a67) of technique T1003 (OS Credential Dumping). Test Description: RpcPing command can be used to send an RPC test connection to the target server (-s) and force the NTLM hash to be sent in the process. \nRef: https://twitter.com/vysecurity/status/974806438316072960. Command/Steps: rpcping -s #{server_ip} -e #{custom_port} -a privacy -u NTLM 1>$Null"
+from = "now-9m"
+rule_id = "9f40746f-b7e0-4afe-82bc-5020a265c00e"
+language = "kql"
+name = "Atomic Test: T1003 - Send NTLM Hash with RPC Test Connection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003/T1003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003", "0b207037-813c-4444-ac3f-b597cf280a67", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*rpcping*\\\" AND powershell.script_block_text : \\\"*127.0.0.1*\\\" AND powershell.script_block_text : \\\"*privacy*\\\" OR (process.command_line : \\\"*rpcping*\\\" AND process.command_line : \\\"*127.0.0.1*\\\" AND process.command_line : \\\"*privacy*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003"
+name = "Send NTLM Hash with RPC Test Connection"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+

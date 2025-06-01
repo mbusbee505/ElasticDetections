@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remove Windows Defender Definition Files' (GUID: 3d47daaa-2f56-43e0-94cc-caf5d8d52a68) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Removing definition files would cause ATP to not fire for AntiMalware. Check MpCmdRun.exe man page for info on all arguments.\nOn later viersions of windows (1909+) this command fails even with admin due to inusfficient privelages. On older versions of windows the\ncommand will say completed.\n\nhttps://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/. Command/Steps: \\\"C:\\\\Program Files\\\\Windows Defender\\\\MpCmdRun.exe\\\" -RemoveDefinitions -All\n"
+from = "now-9m"
+rule_id = "f99acf04-3feb-42e8-b3f6-e1208998a5f1"
+language = "kql"
+name = "Atomic Test: T1562.001 - Remove Windows Defender Definition Files"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "3d47daaa-2f56-43e0-94cc-caf5d8d52a68", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Program*\\\" AND process.command_line : \\\"*Files\\\\Windows*\\\" AND process.command_line : \\\"*Defender\\\\MpCmdRun.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Remove Windows Defender Definition Files"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

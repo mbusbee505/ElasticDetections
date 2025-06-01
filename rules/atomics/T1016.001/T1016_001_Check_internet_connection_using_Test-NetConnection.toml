@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Check internet connection using Test-NetConnection in PowerShell (TCP-SMB)' (GUID: d9c32b3b-7916-45ad-aca5-6c902da80319) of technique T1016.001 (System Network Configuration Discovery: Internet Connection Discovery). Test Description: Check internet connection using PowerShell's Test-NetConnection cmdlet and the TCP protocol to check for outbound SMB (Port 445) access. The default target is 8.8.8.8.. Command/Steps: Test-NetConnection -CommonTCPPort SMB -ComputerName #{target}\n"
+from = "now-9m"
+rule_id = "a86ed01b-376f-4fa8-bab7-7e481385bbb3"
+language = "kql"
+name = "Atomic Test: T1016.001 - Check internet connection using Test-NetConnection in PowerShell (TCP-SMB)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016.001/T1016.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016.001", "d9c32b3b-7916-45ad-aca5-6c902da80319", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Test-NetConnection*\\\" AND powershell.script_block_text : \\\"*-CommonTCPPort*\\\" AND powershell.script_block_text : \\\"*-ComputerName*\\\" OR (process.command_line : \\\"*Test-NetConnection*\\\" AND process.command_line : \\\"*-CommonTCPPort*\\\" AND process.command_line : \\\"*-ComputerName*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016.001"
+name = "Check internet connection using Test-NetConnection in PowerShell (TCP-SMB)"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+

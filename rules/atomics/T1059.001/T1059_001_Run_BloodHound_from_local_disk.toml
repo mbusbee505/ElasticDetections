@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Run BloodHound from local disk' (GUID: a21bb23e-e677-4ee7-af90-6931b57b6350) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.\n\nSuccessful execution will produce stdout message stating \\\"SharpHound Enumeration Completed\\\". Upon completion, final output will be a *BloodHound.zip file.. Command/Steps: import-module \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\SharpHound.ps1\\\"\ntry { Invoke-BloodHound -OutputDirectory $env:Temp }\ncatch { $_; exit $_.Except..."
+from = "now-9m"
+rule_id = "9c1f310c-aaed-4a3e-865d-fc40a8a99292"
+language = "kql"
+name = "Atomic Test: T1059.001 - Run BloodHound from local disk"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "a21bb23e-e677-4ee7-af90-6931b57b6350", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*import-module*\\\" AND powershell.script_block_text : \\\"*Invoke-BloodHound*\\\" AND powershell.script_block_text : \\\"*-OutputDirectory*\\\" OR (process.command_line : \\\"*import-module*\\\" AND process.command_line : \\\"*Invoke-BloodHound*\\\" AND process.command_line : \\\"*-OutputDirectory*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Run BloodHound from local disk"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

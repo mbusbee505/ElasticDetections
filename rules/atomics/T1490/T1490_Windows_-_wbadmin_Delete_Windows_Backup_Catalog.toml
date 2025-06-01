@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - wbadmin Delete Windows Backup Catalog' (GUID: 263ba6cb-ea2b-41c9-9d4e-b652dadd002c) of technique T1490 (Inhibit System Recovery). Test Description: Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon execution,\n\\\"The backup catalog has been successfully deleted.\\\" will be displayed in the PowerShell session.. Command/Steps: wbadmin delete catalog -quiet\n"
+from = "now-9m"
+rule_id = "5e919ce5-0a6b-4245-a342-53d07b9cb780"
+language = "kql"
+name = "Atomic Test: T1490 - Windows - wbadmin Delete Windows Backup Catalog"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "263ba6cb-ea2b-41c9-9d4e-b652dadd002c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wbadmin*\\\" AND process.command_line : \\\"*delete*\\\" AND process.command_line : \\\"*catalog*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Windows - wbadmin Delete Windows Backup Catalog"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

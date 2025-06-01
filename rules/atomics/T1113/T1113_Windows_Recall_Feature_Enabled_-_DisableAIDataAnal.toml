@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted' (GUID: 5a496325-0115-4274-8eb9-755b649ad0fb) of technique T1113 (Screen Capture). Test Description: Detects the enabling of the Windows Recall feature via registry manipulation. Windows Recall can be enabled by deleting the existing \\\"DisableAIDataAnalysis\\\" registry value. Adversaries may enable Windows Recall as part of post-exploitation discovery and collection activities. This rule assumes that Recall is already explicitly disabled on the host, and subsequently enabled by the adversary. \n- https://learn.microsoft.com/en-us/windows/client-management/manage-recall\n- https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowsai#disableaidataanalysis. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\WindowsAI\\\" /v DisableAIDataAnalysis /t REG_DWORD /d 0 /f\nreg delete \\\"HKEY_CURRENT_USER\\\\..."
+from = "now-9m"
+rule_id = "2c882e3f-e691-4188-8f29-1d1b4491e03d"
+language = "kql"
+name = "Atomic Test: T1113 - Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1113/T1113.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1113", "5a496325-0115-4274-8eb9-755b649ad0fb", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\WindowsAI*\\\" AND powershell.script_block_text : \\\"*DisableAIDataAnalysis*\\\" AND powershell.script_block_text : \\\"*REG_DWORD*\\\" OR (process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\WindowsAI*\\\" AND process.command_line : \\\"*DisableAIDataAnalysis*\\\" AND process.command_line : \\\"*REG_DWORD*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1113"
+name = "Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1113"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Print Processors' (GUID: f7d38f47-c61b-47cc-a59d-fc0368f47ed0) of technique T1547.012 (Boot or Logon Autostart Execution: Print Processors). Test Description: Establishes persistence by creating a new print processor registry key under HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Print\\\\Environments\\\\Windows x64\\\\Print Processors.\nThe new print processor will point to a DLL which will be loaded by the spooler service after a reboot. The DLL will then create the file AtomicTest.txt in C:\\\\Users\\\\Public\\\\ as validation that the test is successful.\n\nNote: The test assumes a x64 Windows operating system.\n\nThe payload source code is based on a blog post by stmxcsr: [https://stmxcsr.com/persistence/print-processor.html](https://stmxcsr.com/persistence/print-processor.html). Command/Steps: if( $(get-service -Name spooler).StartType -eq \\\"Disabled\\\") {Set-Service -Name \\\"spooler\\\" -StartupType Automatic}\nnet stop spooler\nCopy-Item \\\"$PathToAto..."
+from = "now-9m"
+rule_id = "5665faf1-a258-44e8-927f-09ffdf6a599f"
+language = "kql"
+name = "Atomic Test: T1547.012 - Print Processors"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.012/T1547.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.012", "f7d38f47-c61b-47cc-a59d-fc0368f47ed0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$(get-service*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*spooler).StartType*\\\" OR (process.command_line : \\\"*$(get-service*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*spooler).StartType*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.012"
+name = "Print Processors"
+reference = "https://attack.mitre.org/techniques/T1547/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/012"
+
+

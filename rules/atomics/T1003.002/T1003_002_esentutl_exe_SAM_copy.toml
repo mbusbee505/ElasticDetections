@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'esentutl.exe SAM copy' (GUID: a90c2f4d-6726-444e-99d2-a00cd7c20480) of technique T1003.002 (OS Credential Dumping: Security Account Manager). Test Description: Copy the SAM hive using the esentutl.exe utility\nThis can also be used to copy other files and hives like SYSTEM, NTUSER.dat etc.. Command/Steps: esentutl.exe /y /vss #{file_path} /d #{copy_dest}/#{file_name}\n"
+from = "now-9m"
+rule_id = "6f7872fa-b24a-4d76-be8b-70f7a67eec40"
+language = "kql"
+name = "Atomic Test: T1003.002 - esentutl.exe SAM copy"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.002/T1003.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.002", "a90c2f4d-6726-444e-99d2-a00cd7c20480", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*esentutl.exe*\\\" AND process.command_line : \\\"*/vss*\\\" AND process.command_line : \\\"*%SystemRoot%/system32/config/SAM*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.002"
+name = "esentutl.exe SAM copy"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+

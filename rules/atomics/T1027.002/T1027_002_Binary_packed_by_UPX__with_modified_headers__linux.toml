@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Binary packed by UPX, with modified headers (linux)' (GUID: f06197f8-ff46-48c2-a0c6-afc1b50665e1) of technique T1027.002 (Obfuscated Files or Information: Software Packing). Test Description: Copies and then runs a simple binary (just outputting \\\"the cake is a lie\\\"), that was packed by UPX.\n\nThe UPX magic number (`0x55505821`, \\\"`UPX!`\\\") was changed to (`0x4c4f5452`, \\\"`LOTR`\\\"). This prevents the binary from being detected\nby some methods, and especially UPX is not able to uncompress it any more.. Command/Steps: cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin\n"
+from = "now-9m"
+rule_id = "27ae0497-80b4-491c-9e9d-8f51dbbecea4"
+language = "kql"
+name = "Atomic Test: T1027.002 - Binary packed by UPX, with modified headers (linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.002/T1027.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.002", "f06197f8-ff46-48c2-a0c6-afc1b50665e1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.002"
+name = "Binary packed by UPX, with modified headers (linux)"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/002"
+
+

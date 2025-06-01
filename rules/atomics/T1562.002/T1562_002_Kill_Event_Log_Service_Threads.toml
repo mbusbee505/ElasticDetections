@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Kill Event Log Service Threads' (GUID: 41ac52ba-5d5e-40c0-b267-573ed90489bd) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: Kill Windows Event Log Service Threads using Invoke-Phant0m. WARNING you will need to restart PC to return to normal state with Log Service. https://artofpwn.com/phant0m-killing-windows-event-log.html. Command/Steps: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore\n$url = \\\"https://raw.githubusercontent.com/hlldz/Invoke-Phant0..."
+from = "now-9m"
+rule_id = "c2dc2eec-ce41-4f2f-9e73-f3a2fbc689ca"
+language = "kql"
+name = "Atomic Test: T1562.002 - Kill Event Log Service Threads"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "41ac52ba-5d5e-40c0-b267-573ed90489bd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ExecutionPolicy*\\\" AND powershell.script_block_text : \\\"*-Scope*\\\" AND powershell.script_block_text : \\\"*CurrentUser*\\\" OR (process.command_line : \\\"*Set-ExecutionPolicy*\\\" AND process.command_line : \\\"*-Scope*\\\" AND process.command_line : \\\"*CurrentUser*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Kill Event Log Service Threads"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

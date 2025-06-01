@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Microsoft Office Security Features' (GUID: 6f5fb61b-4e56-4a3d-a8c3-82e13686c6d7) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not\nshow any warning before editing the document.\n\n\nhttps://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/. Command/Steps: New-Item -Path \\\"HKCU:\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Excel\\\"\nNew-Item -Path \\\"HKCU:\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Excel\\\\Security\\\"\nNew-Item -Path \\\"HKCU:..."
+from = "now-9m"
+rule_id = "e3a601c6-5d4e-4cbb-a61a-02062346fbe0"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Microsoft Office Security Features"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "6f5fb61b-4e56-4a3d-a8c3-82e13686c6d7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Excel*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Excel*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Microsoft Office Security Features"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

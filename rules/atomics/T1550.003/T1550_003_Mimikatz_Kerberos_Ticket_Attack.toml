@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mimikatz Kerberos Ticket Attack' (GUID: dbf38128-7ba7-4776-bedf-cc2eed432098) of technique T1550.003 (Use Alternate Authentication Material: Pass the Ticket). Test Description: Similar to PTH, but attacking Kerberos. Command/Steps: \\\"#{mimikatz_exe}\\\" \\\"kerberos::ptt #{ticket}\\\"\n"
+from = "now-9m"
+rule_id = "d70c552d-0f69-4066-bb73-a8240a49bd4b"
+language = "kql"
+name = "Atomic Test: T1550.003 - Mimikatz Kerberos Ticket Attack"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1550.003/T1550.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1550.003", "dbf38128-7ba7-4776-bedf-cc2eed432098", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*kerberos::ptt*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1550.003"
+name = "Mimikatz Kerberos Ticket Attack"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+

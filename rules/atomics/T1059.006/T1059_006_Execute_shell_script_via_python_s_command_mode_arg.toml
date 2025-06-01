@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute shell script via python's command mode arguement' (GUID: 3a95cdb2-c6ea-4761-b24e-02b71889b8bb) of technique T1059.006 (Command and Scripting Interpreter: Python). Test Description: Download and execute shell script and write to file then execute locally using Python -c (command mode). Command/Steps: which_python=$(which python || which python3 || which python3.9 || which python2)\n$which_python -c 'import requests;import os;url = \\\"#{script_url}\\\";ma..."
+from = "now-9m"
+rule_id = "1eb6665e-8f64-42c6-a579-dbbc406ab371"
+language = "kql"
+name = "Atomic Test: T1059.006 - Execute shell script via python's command mode arguement"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.006/T1059.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.006", "3a95cdb2-c6ea-4761-b24e-02b71889b8bb", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*which_python=$(which*\\\" AND process.command_line : \\\"*python*\\\" AND process.command_line : \\\"*which*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.006"
+name = "Execute shell script via python's command mode arguement"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+

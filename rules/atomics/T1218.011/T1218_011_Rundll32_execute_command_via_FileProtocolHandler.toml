@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 execute command via FileProtocolHandler' (GUID: f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Test execution of a command using rundll32.exe and the FileProtocolHandler technique.\nUpon execution, calc.exe will be launched.\nThis technique is documented by Levan Abesadze - https://medium.com/@Wolverineisstillalive/system-binary-proxy-execution-rundll32-bypass-method-790871e1f2b7. Command/Steps: rundll32.exe url.dll,FileProtocolHandler #{command_to_execute}\n"
+from = "now-9m"
+rule_id = "2abac400-7e9b-4b2d-b0ae-5a6c3a49dfa3"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 execute command via FileProtocolHandler"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*url.dll,FileProtocolHandler*\\\" AND process.command_line : \\\"*calc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 execute command via FileProtocolHandler"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

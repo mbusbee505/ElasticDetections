@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Disable Account Lockout Policy via PowerCLI' (GUID: 091a6290-cd29-41cb-81ea-b12f133c66cb) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: An adversary may disable account lockout policy within ESXi to have the ability to prevent defensive actions from being enforced in the future or to prevent future alerting.. Command/Steps: Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -ParticipateInCEIP:$false -Confirm:$false \nConnect-VIServer -Server #{vm_host} -User #{vm_u..."
+from = "now-9m"
+rule_id = "6e005586-848d-4b75-938a-7832be7d7277"
+language = "kql"
+name = "Atomic Test: T1562.001 - ESXi - Disable Account Lockout Policy via PowerCLI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "091a6290-cd29-41cb-81ea-b12f133c66cb", "linux",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-PowerCLIConfiguration*\\\" AND powershell.script_block_text : \\\"*-InvalidCertificateAction*\\\" AND powershell.script_block_text : \\\"*Ignore*\\\" OR (process.command_line : \\\"*Set-PowerCLIConfiguration*\\\" AND process.command_line : \\\"*-InvalidCertificateAction*\\\" AND process.command_line : \\\"*Ignore*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "ESXi - Disable Account Lockout Policy via PowerCLI"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

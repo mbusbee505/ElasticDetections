@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Python pty module and spawn function used to spawn sh or bash' (GUID: 161d694c-b543-4434-85c3-c3a433e33792) of technique T1059.006 (Command and Scripting Interpreter: Python). Test Description: Uses the Python spawn function to spawn a sh shell followed by a bash shell. Per Volexity, this technique was observed in exploitation of Atlassian Confluence [CVE-2022-26134]. Reference: https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence. Command/Steps: which_python=$(which python || which python3 || which python3.9 || which python2)\n$which_python -c \\\"import pty;pty.spawn('/bin/sh')\\\"\nexit\n$which_pytho..."
+from = "now-9m"
+rule_id = "53a89830-8397-4c43-a10e-c790f0ff7d5d"
+language = "kql"
+name = "Atomic Test: T1059.006 - Python pty module and spawn function used to spawn sh or bash"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.006/T1059.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.006", "161d694c-b543-4434-85c3-c3a433e33792", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*which_python=$(which*\\\" AND process.command_line : \\\"*python*\\\" AND process.command_line : \\\"*which*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.006"
+name = "Python pty module and spawn function used to spawn sh or bash"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+

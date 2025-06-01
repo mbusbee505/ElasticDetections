@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute command writing output to local Admin Share' (GUID: d41aaab5-bdfe-431d-a3d5-c29e9136ff46) of technique T1021.002 (Remote Services: SMB/Windows Admin Shares). Test Description: Executes a command, writing the output to a local Admin Share.\nThis technique is used by post-exploitation frameworks.. Command/Steps: cmd.exe /Q /c #{command_to_execute} 1> \\\\\\\\127.0.0.1\\\\ADMIN$\\\\#{output_file} 2>&1\n"
+from = "now-9m"
+rule_id = "4909dc5e-a205-474b-9f0e-adfdc6a1462b"
+language = "kql"
+name = "Atomic Test: T1021.002 - Execute command writing output to local Admin Share"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.002/T1021.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.002", "d41aaab5-bdfe-431d-a3d5-c29e9136ff46", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cmd.exe*\\\" AND process.command_line : \\\"*hostname*\\\" AND process.command_line : \\\"*\\\\\\\\127.0.0.1\\\\ADMIN$\\\\output.txt*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.002"
+name = "Execute command writing output to local Admin Share"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+

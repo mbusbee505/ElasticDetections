@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Deploy 7-Zip Using Chocolatey' (GUID: 2169e8b0-2ee7-44cb-8a6e-d816a5db7d8a) of technique T1072 (Software Deployment Tools). Test Description: An adversary may use Chocolatey to remotely deploy the 7-Zip file archiver utility.. Command/Steps: # Deploy 7-Zip using Chocolatey\nchoco install -y 7zip\n"
+from = "now-9m"
+rule_id = "37722131-b8b0-4ed6-b78c-d10d41b76cef"
+language = "kql"
+name = "Atomic Test: T1072 - Deploy 7-Zip Using Chocolatey"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1072/T1072.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1072", "2169e8b0-2ee7-44cb-8a6e-d816a5db7d8a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Deploy*\\\" AND powershell.script_block_text : \\\"*7-Zip*\\\" AND powershell.script_block_text : \\\"*using*\\\" OR (process.command_line : \\\"*Deploy*\\\" AND process.command_line : \\\"*7-Zip*\\\" AND process.command_line : \\\"*using*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1072"
+name = "Deploy 7-Zip Using Chocolatey"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+

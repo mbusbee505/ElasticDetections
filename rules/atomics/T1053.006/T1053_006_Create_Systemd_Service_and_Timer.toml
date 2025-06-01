@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Systemd Service and Timer' (GUID: f4983098-bb13-44fb-9b2c-46149961807b) of technique T1053.006 (Scheduled Task/Job: Systemd Timers). Test Description: This test creates Systemd service and timer then starts and enables the Systemd timer. Command/Steps: echo \\\"[Unit]\\\" > #{path_to_systemd_service}\necho \\\"Description=Atomic Red Team Systemd Timer Service\\\" >> #{path_to_systemd_service}\necho \\\"[Service]\\\" >> ..."
+from = "now-9m"
+rule_id = "0a2b925e-3e5d-4039-a547-10da477e6e18"
+language = "kql"
+name = "Atomic Test: T1053.006 - Create Systemd Service and Timer"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.006/T1053.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.006", "f4983098-bb13-44fb-9b2c-46149961807b", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*[Unit]*\\\" AND process.command_line : \\\"*/etc/systemd/system/art-timer.service*\\\" AND process.command_line : \\\"*Description=Atomic*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.006"
+name = "Create Systemd Service and Timer"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+

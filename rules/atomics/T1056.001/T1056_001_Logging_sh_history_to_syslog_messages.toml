@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Logging sh history to syslog/messages' (GUID: b04284dc-3bd9-4840-8d21-61b8d31c99f2) of technique T1056.001 (Input Capture: Keylogging). Test Description: There are several variables that can be set to control the appearance of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents of these variables are executed as if they had been typed on the command line. The PROMPT_COMMAND variable \\\"if set\\\" will be executed before the PS1 variable and can be configured to write the latest \\\"bash history\\\" entries to the syslog.\n\nTo gain persistence the command could be added to the users .shrc or .profile. Command/Steps: PS2=`logger -t \\\"$USER\\\" -f ~/.sh_history`\n$PS2\ntail /var/log/messages\n"
+from = "now-9m"
+rule_id = "501384cf-2c96-40bf-ad8b-1126da4b9323"
+language = "kql"
+name = "Atomic Test: T1056.001 - Logging sh history to syslog/messages"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1056.001/T1056.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1056.001", "b04284dc-3bd9-4840-8d21-61b8d31c99f2", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*PS2=`logger*\\\" AND process.command_line : \\\"*$USER*\\\" AND process.command_line : \\\"*~/.sh_history`*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1056.001"
+name = "Logging sh history to syslog/messages"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+

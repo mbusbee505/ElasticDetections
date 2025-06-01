@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe using lolbin rdrleakdiag.exe' (GUID: 47a539d1-61b9-4364-bf49-a68bc2a95ef0) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: The memory of lsass.exe is often dumped for offline credential theft attacks. \nThis can be achieved with lolbin rdrleakdiag.exe. \n\nUpon successful execution, you should see the following files created, $env:TEMP\\\\minidump_<PID>.dmp and  $env:TEMP\\\\results_<PID>.hlk.. Command/Steps: if (Test-Path -Path \\\"$env:SystemRoot\\\\System32\\\\rdrleakdiag.exe\\\") {\n      $binary_path = \\\"$env:SystemRoot\\\\System32\\\\rdrleakdiag.exe\\\"\n  } elseif (Test-Pat..."
+from = "now-9m"
+rule_id = "7213573c-5696-4820-bd2f-4dfc5c4f996b"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe using lolbin rdrleakdiag.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "47a539d1-61b9-4364-bf49-a68bc2a95ef0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(Test-Path*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*$env:SystemRoot\\\\System32\\\\rdrleakdiag.exe\\\")*\\\" OR (process.command_line : \\\"*(Test-Path*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*$env:SystemRoot\\\\System32\\\\rdrleakdiag.exe\\\")*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe using lolbin rdrleakdiag.exe"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

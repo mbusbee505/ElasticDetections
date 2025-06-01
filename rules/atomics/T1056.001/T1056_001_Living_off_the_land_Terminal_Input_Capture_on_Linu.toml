@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Living off the land Terminal Input Capture on Linux with pam.d' (GUID: 9c6bdb34-a89f-4b90-acb1-5970614c711b) of technique T1056.001 (Input Capture: Keylogging). Test Description: Pluggable Access Module, which is present on all modern Linux systems, generally contains a library called pam_tty_audit.so which logs all keystrokes for the selected users and sends it to audit.log.  All terminal activity on any new logins would then be archived and readable by an adversary with elevated privledges.\n\nPasswords hidden by the console can also be logged, with 'log_passwd' as in this example.  If root logging is enabled, then output from any process which is later started by root is also logged, even if this policy is carefully enabled (e.g. 'disable=*' as the initial command).\n\nUse 'aureport --tty' or other audit.d reading tools to read the log output, which is binary.  Mac OS does not currently contain the pam_tty_audit.so library.. Command/Steps: if sudo test -f /etc/pam.d/password-auth; then sudo cp /etc/pam.d/password-auth /tmp/password-auth.bk; fi;\nif sudo test -f /etc/pam.d/system-auth; the..."
+from = "now-9m"
+rule_id = "26978ce9-3074-47fc-8bbf-b84dd4fba986"
+language = "kql"
+name = "Atomic Test: T1056.001 - Living off the land Terminal Input Capture on Linux with pam.d"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1056.001/T1056.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1056.001", "9c6bdb34-a89f-4b90-acb1-5970614c711b", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/etc/pam.d/password-auth*\\\" AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*/etc/pam.d/password-auth*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1056.001"
+name = "Living off the land Terminal Input Capture on Linux with pam.d"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+

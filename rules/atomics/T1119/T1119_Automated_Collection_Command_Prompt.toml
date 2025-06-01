@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Automated Collection Command Prompt' (GUID: cb379146-53f1-43e0-b884-7ce2c635ff5b) of technique T1119 (Automated Collection). Test Description: Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_command_prompt_collection\nto see what was collected.. Command/Steps: mkdir %temp%\\\\T1119_command_prompt_collection >nul 2>&1\ndir c: /b /s .docx | findstr /e .docx\nfor /R c:\\\\ %f in (*.docx) do copy /Y %f %temp%\\\\T1119_comm..."
+from = "now-9m"
+rule_id = "4d9247bc-51a5-4fe9-bf96-853225286b51"
+language = "kql"
+name = "Atomic Test: T1119 - Automated Collection Command Prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1119/T1119.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1119", "cb379146-53f1-43e0-b884-7ce2c635ff5b", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*%temp%\\\\T1119_command_prompt_collection*\\\" AND process.command_line : \\\"*>nul*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1119"
+name = "Automated Collection Command Prompt"
+reference = "https://attack.mitre.org/techniques/T1119"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1119"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1119"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1119"
+
+

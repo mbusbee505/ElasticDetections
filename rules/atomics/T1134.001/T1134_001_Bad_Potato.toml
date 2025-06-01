@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bad Potato' (GUID: 9c6d799b-c111-4749-a42f-ec2f8cb51448) of technique T1134.001 (Access Token Manipulation: Token Impersonation/Theft). Test Description: https://github.com/BeichenDream/BadPotato\nPrivilege escalation using named pipe connections. Command/Steps: cd \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\"\nStart-Process .\\\\BadPotato.exe notepad.exe\nStart-Sleep -Second 20\nStop-Process -Name \\\"notepad\\\" -force -err..."
+from = "now-9m"
+rule_id = "66cc2852-edaf-46ee-9351-94bfe89785da"
+language = "kql"
+name = "Atomic Test: T1134.001 - Bad Potato"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.001/T1134.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.001", "9c6d799b-c111-4749-a42f-ec2f8cb51448", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*.\\\\BadPotato.exe*\\\" AND powershell.script_block_text : \\\"*notepad.exe*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*.\\\\BadPotato.exe*\\\" AND process.command_line : \\\"*notepad.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.001"
+name = "Bad Potato"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+

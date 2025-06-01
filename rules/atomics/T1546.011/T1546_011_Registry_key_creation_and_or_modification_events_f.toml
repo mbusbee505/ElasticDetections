@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Registry key creation and/or modification events for SDB' (GUID: 9b6a06f9-ab5e-4e8d-8289-1df4289db02f) of technique T1546.011 (Event Triggered Execution: Application Shimming). Test Description: Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing\nthe registry keys that were created. These keys can also be viewed using the Registry Editor.\n\nhttps://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html. Command/Steps: New-ItemProperty -Path HKLM:\\\"\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\AppCompatFlags\\\\Custom\\\" -Name \\\"AtomicRedTeamT1546.011\\\" -Value \\\"AtomicRedTeam..."
+from = "now-9m"
+rule_id = "ce362c8d-9d07-46ab-b3cf-ad30ea8c2b9e"
+language = "kql"
+name = "Atomic Test: T1546.011 - Registry key creation and/or modification events for SDB"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.011/T1546.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.011", "9b6a06f9-ab5e-4e8d-8289-1df4289db02f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\"\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\"\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.011"
+name = "Registry key creation and/or modification events for SDB"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Hiding a malicious process with bind mounts' (GUID: ad4b73c2-d6e2-4d8b-9868-4c6f55906e01) of technique T1036.004 (Masquerading: Masquerade Task or Service). Test Description: Creates a malicious process and hides it by bind mounting to the /proc filesystem of a benign process. Command/Steps: eval '(while true; do :; done) &'\necho $! > /tmp/evil_pid.txt\nrandom_kernel_pid=$(ps -ef | grep \\\"\\\\[.*\\\\]\\\" | awk '{print $2}' | shuf -n 1)\nsudo mount -B..."
+from = "now-9m"
+rule_id = "2edec648-2874-4aa0-acd2-2f40c0964d6e"
+language = "kql"
+name = "Atomic Test: T1036.004 - Hiding a malicious process with bind mounts"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.004/T1036.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.004", "ad4b73c2-d6e2-4d8b-9868-4c6f55906e01", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*eval*\\\" AND process.command_line : \\\"*(while*\\\" AND process.command_line : \\\"*done)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.004"
+name = "Hiding a malicious process with bind mounts"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+

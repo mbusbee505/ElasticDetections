@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mirror Blast Emulation' (GUID: 24fd9719-7419-42dd-bce6-ab3463110b3c) of technique T1204.002 (User Execution: Malicious File). Test Description: Emulates the JS -> MSI chain of the MirrorBlast T505 campaign by executing an xlsm file designed. \nRequires the 32 bit version of Office to run. [MirrorBlast Campaign Analysis](https://blog.morphisec.com/explosive-new-mirrorblast-campaign-targets-financial-companies). Command/Steps: Cd \\\"C:\\\\ProgramData\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\"\nNew-ItemProperty -Path Registry::HKEY_CURRENT_USER\\\\SOFTWARE\\\\Microsoft\\\\Office\\\\16.0\\\\Excel\\\\Secu..."
+from = "now-9m"
+rule_id = "f7b5f238-8e16-4a07-8afc-b68ed6bcb5a0"
+language = "kql"
+name = "Atomic Test: T1204.002 - Mirror Blast Emulation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1204.002/T1204.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1204.002", "24fd9719-7419-42dd-bce6-ab3463110b3c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*C:\\\\ProgramData\\\\Microsoft\\\\Windows\\\\Start*\\\" AND powershell.script_block_text : \\\"*Menu\\\\Programs*\\\" AND powershell.script_block_text : \\\"*New-ItemProperty*\\\" OR (process.command_line : \\\"*C:\\\\ProgramData\\\\Microsoft\\\\Windows\\\\Start*\\\" AND process.command_line : \\\"*Menu\\\\Programs*\\\" AND process.command_line : \\\"*New-ItemProperty*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1204.002"
+name = "Mirror Blast Emulation"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1204/002"
+
+

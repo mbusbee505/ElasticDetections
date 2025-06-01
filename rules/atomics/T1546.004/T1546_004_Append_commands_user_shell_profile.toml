@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Append commands user shell profile' (GUID: bbdb06bc-bab6-4f5b-8232-ba3fbed51d77) of technique T1546.004 (Event Triggered Execution: .bash_profile .bashrc and .shrc). Test Description: An adversary may wish to establish persistence by executing malicious commands from the users ~/.profile every time the \\\"user\\\" logs in.. Command/Steps: echo '#{text_to_append}' >> ~/.profile\n"
+from = "now-9m"
+rule_id = "288bed87-df75-41e4-a0f3-959d3a178bf0"
+language = "kql"
+name = "Atomic Test: T1546.004 - Append commands user shell profile"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.004/T1546.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.004", "bbdb06bc-bab6-4f5b-8232-ba3fbed51d77", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*Team*\\\" AND process.command_line : \\\"*here...*\\\" AND process.command_line : \\\"*~/.profile*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.004"
+name = "Append commands user shell profile"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+

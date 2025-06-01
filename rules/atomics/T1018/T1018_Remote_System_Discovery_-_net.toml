@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - net' (GUID: 85321a9c-897f-4a60-9f20-29788e50bccd) of technique T1018 (Remote System Discovery). Test Description: Identify remote systems with net.exe.\n\nUpon successful execution, cmd.exe will execute `net.exe view` and display results of local systems on the network that have file and print sharing enabled.. Command/Steps: net view /domain\nnet view\n"
+from = "now-9m"
+rule_id = "59e63258-371b-4b3d-b6d3-999899c16a90"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - net"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "85321a9c-897f-4a60-9f20-29788e50bccd", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*view*\\\" AND process.command_line : \\\"*/domain*\\\" AND process.command_line : \\\"*view*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - net"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

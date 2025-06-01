@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Shutdown System via `poweroff` - FreeBSD/Linux' (GUID: 73a90cd2-48a2-4ac5-8594-2af35fa909fa) of technique T1529 (System Shutdown/Reboot). Test Description: This test shuts down a FreeBSD/Linux system using `poweroff`.. Command/Steps: poweroff\n"
+from = "now-9m"
+rule_id = "edec34e9-8301-4780-970b-e1f2f8721a12"
+language = "kql"
+name = "Atomic Test: T1529 - Shutdown System via `poweroff` - FreeBSD/Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1529/T1529.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1529", "73a90cd2-48a2-4ac5-8594-2af35fa909fa", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*poweroff*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1529"
+name = "Shutdown System via `poweroff` - FreeBSD/Linux"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+

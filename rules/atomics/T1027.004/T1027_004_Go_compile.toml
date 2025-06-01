@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Go compile' (GUID: 78bd3fa7-773c-449e-a978-dc1f1500bc52) of technique T1027.004 (Obfuscated Files or Information: Compile After Delivery). Test Description: Compile a go file with golang on FreeBSD, Linux or Macos.. Command/Steps: go run #{input_file}\n"
+from = "now-9m"
+rule_id = "cdbd061b-c391-446e-8a03-7d2a53be1a22"
+language = "kql"
+name = "Atomic Test: T1027.004 - Go compile"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.004/T1027.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.004", "78bd3fa7-773c-449e-a978-dc1f1500bc52", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.004"
+name = "Go compile"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+

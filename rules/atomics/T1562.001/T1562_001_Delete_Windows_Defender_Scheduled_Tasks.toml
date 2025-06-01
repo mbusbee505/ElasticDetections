@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete Windows Defender Scheduled Tasks' (GUID: 4b841aa1-0d05-4b32-bbe7-7564346e7c76) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: The following atomic test will delete the Windows Defender scheduled tasks.\n\n[Reference](https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/). Command/Steps: IF EXIST \\\"%temp%\\\\Windows_Defender_Scheduled_Scan.xml\\\" ( schtasks /delete /tn \\\"\\\\Microsoft\\\\Windows\\\\Windows Defender\\\\Windows Defender Scheduled Scan\\\" /f ..."
+from = "now-9m"
+rule_id = "48593f1d-0739-4b99-9345-28c6bdd17575"
+language = "kql"
+name = "Atomic Test: T1562.001 - Delete Windows Defender Scheduled Tasks"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "4b841aa1-0d05-4b32-bbe7-7564346e7c76", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*EXIST*\\\" AND process.command_line : \\\"*%temp%\\\\Windows_Defender_Scheduled_Scan.xml*\\\" AND process.command_line : \\\"*schtasks*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Delete Windows Defender Scheduled Tasks"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

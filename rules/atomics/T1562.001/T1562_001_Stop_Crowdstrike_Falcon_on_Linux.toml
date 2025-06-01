@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Stop Crowdstrike Falcon on Linux' (GUID: 828a1278-81cc-4802-96ab-188bf29ca77d) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Stop and disable Crowdstrike Falcon on Linux. Command/Steps: sudo systemctl stop falcon-sensor.service\nsudo systemctl disable falcon-sensor.service\n"
+from = "now-9m"
+rule_id = "85c6f775-21ed-4ccf-a7b4-4456ba3be26c"
+language = "kql"
+name = "Atomic Test: T1562.001 - Stop Crowdstrike Falcon on Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "828a1278-81cc-4802-96ab-188bf29ca77d", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*systemctl*\\\" AND process.command_line : \\\"*stop*\\\" AND process.command_line : \\\"*falcon-sensor.service*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Stop Crowdstrike Falcon on Linux"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

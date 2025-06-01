@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - vssadmin Resize Shadowstorage Volume' (GUID: da558b07-69ae-41b9-b9d4-4d98154a7049) of technique T1490 (Inhibit System Recovery). Test Description: Adversaries generally try to Resize Shadowstorage Volume using vssadmin.exe to avoid the shadow volumes being made again. This technique is typically found used by adversaries during a ransomware event and a precursor to deleting the shadowstorage.. Command/Steps: vssadmin resize shadowstorage /For=C: /On=C: /MaxSize=20%"
+from = "now-9m"
+rule_id = "87b7c969-6996-4d09-aed8-41cd4648a92a"
+language = "kql"
+name = "Atomic Test: T1490 - Windows - vssadmin Resize Shadowstorage Volume"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "da558b07-69ae-41b9-b9d4-4d98154a7049", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*vssadmin*\\\" AND powershell.script_block_text : \\\"*resize*\\\" AND powershell.script_block_text : \\\"*shadowstorage*\\\" OR (process.command_line : \\\"*vssadmin*\\\" AND process.command_line : \\\"*resize*\\\" AND process.command_line : \\\"*shadowstorage*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Windows - vssadmin Resize Shadowstorage Volume"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

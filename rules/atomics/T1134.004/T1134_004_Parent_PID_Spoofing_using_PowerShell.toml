@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Parent PID Spoofing using PowerShell' (GUID: 069258f4-2162-46e9-9a25-c9c6c56150d2) of technique T1134.004 (Access Token Manipulation: Parent PID Spoofing). Test Description: This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.\nUpon execution, \\\"Process C:\\\\Program Files\\\\Internet Explorer\\\\iexplore.exe is spawned with pid ####\\\" will be displayed and\ncalc.exe will be launched.\n\nCredit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1). Command/Steps: . \\\"$PathToAtomicsFolder\\\\T1134.004\\\\src\\\\PPID-Spoof.ps1\\\"\n$ppid=Get-Process #{parent_process_name} | select -expand id\nPPID-Spoof -ppid $ppid -spawnto \\\"#{..."
+from = "now-9m"
+rule_id = "2a9bf91d-1a17-45b4-9b73-b169b96ee7e5"
+language = "kql"
+name = "Atomic Test: T1134.004 - Parent PID Spoofing using PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.004/T1134.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.004", "069258f4-2162-46e9-9a25-c9c6c56150d2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$ppid=Get-Process*\\\" AND powershell.script_block_text : \\\"*explorer*\\\" AND powershell.script_block_text : \\\"*select*\\\" OR (process.command_line : \\\"*$ppid=Get-Process*\\\" AND process.command_line : \\\"*explorer*\\\" AND process.command_line : \\\"*select*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.004"
+name = "Parent PID Spoofing using PowerShell"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+

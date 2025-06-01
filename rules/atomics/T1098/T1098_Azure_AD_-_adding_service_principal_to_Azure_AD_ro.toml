@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure AD - adding service principal to Azure AD role' (GUID: 92c40b3f-c406-4d1f-8d2b-c039bf5009e4) of technique T1098 (Account Manipulation). Test Description: The adversaries want to add service principal to some Azure AD role. Threat actor \nmay be interested primarily in highly privileged roles, e.g. Global Administrator, Application Administrator, \nPrivileged Authentication Administrator (this role can reset Global Administrator password!).\nBy default, the role Global Reader is assigned to service principal in this test.\n\nThe account you use to run the PowerShell command should have Privileged Role Administrator or Global Administrator role in your Azure AD.\n\nDetection hint - check Activity \\\"Add member to role\\\" in Azure AD Audit Logs. In targer you will also see Service Principal as a type.. Command/Steps: Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force\n$Credential = New-Object -TypeName System.Manage..."
+from = "now-9m"
+rule_id = "bdf631c1-65dd-4ac0-8a72-aaa4df5110b3"
+language = "kql"
+name = "Atomic Test: T1098 - Azure AD - adding service principal to Azure AD role"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098/T1098.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098", "92c40b3f-c406-4d1f-8d2b-c039bf5009e4", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*AzureAD*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*AzureAD*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098"
+name = "Azure AD - adding service principal to Azure AD role"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098"
+
+

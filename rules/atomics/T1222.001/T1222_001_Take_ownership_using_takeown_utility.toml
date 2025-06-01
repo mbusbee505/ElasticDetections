@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Take ownership using takeown utility' (GUID: 98d34bb4-6e75-42ad-9c41-1dae7dc6a001) of technique T1222.001 (File and Directory Permissions Modification: Windows File and Directory Permissions Modification). Test Description: Modifies the filesystem permissions of the specified file or folder to take ownership of the object. Upon execution, \\\"SUCCESS\\\" will\nbe displayed for the folder and each file inside of it.. Command/Steps: takeown.exe /f #{file_folder_to_own} /r\n"
+from = "now-9m"
+rule_id = "64833482-f8b3-4199-a22d-5f7bf123f5ce"
+language = "kql"
+name = "Atomic Test: T1222.001 - Take ownership using takeown utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.001/T1222.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.001", "98d34bb4-6e75-42ad-9c41-1dae7dc6a001", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*takeown.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.001"
+name = "Take ownership using takeown utility"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+

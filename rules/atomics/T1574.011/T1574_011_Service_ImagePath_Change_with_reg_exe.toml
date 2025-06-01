@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Service ImagePath Change with reg.exe' (GUID: f38e9eea-e1d7-4ba6-b716-584791963827) of technique T1574.011 (Hijack Execution Flow: Services Registry Permissions Weakness). Test Description: Change Service registry ImagePath of a bengin service to a malicious file. Command/Steps: reg.exe add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\#{weak_service_name}\\\" /f /v ImagePath /d \\\"#{malicious_service_path}\\\"\n"
+from = "now-9m"
+rule_id = "978fd0f1-6d9b-4918-8ffc-2ada439a40fe"
+language = "kql"
+name = "Atomic Test: T1574.011 - Service ImagePath Change with reg.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.011/T1574.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.011", "f38e9eea-e1d7-4ba6-b716-584791963827", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\calcservice*\\\" AND process.command_line : \\\"*ImagePath*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.011"
+name = "Service ImagePath Change with reg.exe"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+

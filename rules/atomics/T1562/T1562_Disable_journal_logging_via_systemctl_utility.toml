@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable journal logging via systemctl utility' (GUID: c3a377f9-1203-4454-aa35-9d391d34768f) of technique T1562 (Impair Defenses). Test Description: The atomic test disables the journal logging using built-in systemctl utility. Command/Steps: sudo systemctl stop systemd-journald #disables journal logging\n"
+from = "now-9m"
+rule_id = "d6f86b65-33f5-470f-bcc2-2b9fbd74b5df"
+language = "kql"
+name = "Atomic Test: T1562 - Disable journal logging via systemctl utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562/T1562.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562", "c3a377f9-1203-4454-aa35-9d391d34768f", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*systemctl*\\\" AND process.command_line : \\\"*stop*\\\" AND process.command_line : \\\"*systemd-journald*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562"
+name = "Disable journal logging via systemctl utility"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - PowerShell Download' (GUID: 42dc4460-9aa6-45d3-b1a6-3955d34e1fe8) of technique T1105 (Ingress Tool Transfer). Test Description: This test uses PowerShell to download a payload.\nThis technique is used by multiple adversaries and malware families.. Command/Steps: (New-Object System.Net.WebClient).DownloadFile(\\\"#{remote_file}\\\", \\\"#{destination_path}\\\")\n"
+from = "now-9m"
+rule_id = "c1f35af4-dea0-4c48-adbd-d3a71124900a"
+language = "kql"
+name = "Atomic Test: T1105 - Windows - PowerShell Download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "42dc4460-9aa6-45d3-b1a6-3955d34e1fe8", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(New-Object*\\\" OR (process.command_line : \\\"*(New-Object*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Windows - PowerShell Download"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

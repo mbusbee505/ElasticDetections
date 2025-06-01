@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clears Recycle bin via rd' (GUID: f723d13d-48dc-4317-9990-cf43a9ac0bf2) of technique T1070.004 (Indicator Removal on Host: File Deletion). Test Description: An adversary clears the recycle bin in the system partition using rd to remove traces of deleted files.\n[Reference](https://thedfirreport.com/2024/08/12/threat-actors-toolkit-leveraging-sliver-poshc2-batch-scripts/). Command/Steps: rd /s /q %systemdrive%\\\\$RECYCLE.BIN\n"
+from = "now-9m"
+rule_id = "42fc3d8a-3fcf-40eb-9943-6c92b4c8251e"
+language = "kql"
+name = "Atomic Test: T1070.004 - Clears Recycle bin via rd"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.004/T1070.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.004", "f723d13d-48dc-4317-9990-cf43a9ac0bf2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%systemdrive%\\\\$RECYCLE.BIN*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.004"
+name = "Clears Recycle bin via rd"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+

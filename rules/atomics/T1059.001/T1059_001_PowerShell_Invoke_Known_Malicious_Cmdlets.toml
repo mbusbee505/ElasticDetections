@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Invoke Known Malicious Cmdlets' (GUID: 49eb9404-5e0f-4031-a179-b40f7be385e3) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Powershell execution of known Malicious PowerShell Cmdlets. Command/Steps: $malcmdlets = #{Malicious_cmdlets}\nforeach ($cmdlets in $malcmdlets) {\n    \\\"function $cmdlets { Write-Host Pretending to invoke $cmdlets }\\\"}\nforeach (..."
+from = "now-9m"
+rule_id = "8421a2e8-e407-4f05-b20d-8abc2cd1c38b"
+language = "kql"
+name = "Atomic Test: T1059.001 - PowerShell Invoke Known Malicious Cmdlets"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "49eb9404-5e0f-4031-a179-b40f7be385e3", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$malcmdlets*\\\" AND powershell.script_block_text : \\\"*Add-Persistence\\\"*\\\" AND powershell.script_block_text : \\\"*Find-AVSignature\\\"*\\\" OR (process.command_line : \\\"*$malcmdlets*\\\" AND process.command_line : \\\"*Add-Persistence\\\"*\\\" AND process.command_line : \\\"*Find-AVSignature\\\"*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "PowerShell Invoke Known Malicious Cmdlets"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

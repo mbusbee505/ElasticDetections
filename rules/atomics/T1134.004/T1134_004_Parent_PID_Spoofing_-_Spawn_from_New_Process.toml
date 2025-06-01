@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Parent PID Spoofing - Spawn from New Process' (GUID: 2988133e-561c-4e42-a15f-6281e6a9b2db) of technique T1134.004 (Access Token Manipulation: Parent PID Spoofing). Test Description: Creates a notepad.exe process and then spawns a powershell.exe process as a child of it.. Command/Steps: Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine '#{command_line}'"
+from = "now-9m"
+rule_id = "286e5f53-6069-46d6-a030-07538b6fea73"
+language = "kql"
+name = "Atomic Test: T1134.004 - Parent PID Spoofing - Spawn from New Process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.004/T1134.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.004", "2988133e-561c-4e42-a15f-6281e6a9b2db", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*-FilePath*\\\" AND powershell.script_block_text : \\\"*$Env:windir\\\\System32\\\\notepad.exe*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*-FilePath*\\\" AND process.command_line : \\\"*$Env:windir\\\\System32\\\\notepad.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.004"
+name = "Parent PID Spoofing - Spawn from New Process"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/004"
+
+

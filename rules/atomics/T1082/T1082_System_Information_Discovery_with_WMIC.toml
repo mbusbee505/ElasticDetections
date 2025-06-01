@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Information Discovery with WMIC' (GUID: 8851b73a-3624-4bf7-8704-aa312411565c) of technique T1082 (System Information Discovery). Test Description: Identify system information with the WMI command-line (WMIC) utility. Upon execution, various system information will be displayed, including: OS, CPU, GPU, and disk drive names; memory capacity; display resolution; and baseboard, BIOS, and GPU driver products/versions.\nhttps://nwgat.ninja/getting-system-information-with-wmic-on-windows/\nElements of this test were observed in the wild used by Aurora Stealer in late 2022 and early 2023, as highlighted in public reporting:\nhttps://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar\nhttps://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/. Command/Steps: wmic cpu get name\nwmic MEMPHYSICAL get MaxCapacity\nwmic baseboard get product\nwmic baseboard get version\nwmic bios get SMBIOSBIOSVersion\nwmic path win..."
+from = "now-9m"
+rule_id = "962db7b8-eec0-47ed-a2ad-d5eaf9d05d94"
+language = "kql"
+name = "Atomic Test: T1082 - System Information Discovery with WMIC"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "8851b73a-3624-4bf7-8704-aa312411565c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*name*\\\" AND process.command_line : \\\"*wmic*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "System Information Discovery with WMIC"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Network Connections Discovery' (GUID: 0940a971-809a-48f1-9c4d-b1d785e96ee5) of technique T1049 (System Network Connections Discovery). Test Description: Get a listing of network connections.\n\nUpon successful execution, cmd.exe will execute `netstat`, `net use` and `net sessions`. Results will output via stdout.. Command/Steps: netstat\nnet use\nnet sessions\n"
+from = "now-9m"
+rule_id = "543cc97e-5413-4fc5-8b4b-d881a0e9e7c9"
+language = "kql"
+name = "Atomic Test: T1049 - System Network Connections Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1049/T1049.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1049", "0940a971-809a-48f1-9c4d-b1d785e96ee5", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netstat*\\\" AND process.command_line : \\\"*sessions*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1049"
+name = "System Network Connections Discovery"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+

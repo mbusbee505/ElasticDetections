@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete Filesystem - Linux' (GUID: f3aa95fe-4f10-4485-ad26-abf22a764c52) of technique T1070.004 (Indicator Removal on Host: File Deletion). Test Description: This test deletes the entire root filesystem of a Linux system. This technique was used by Amnesia IoT malware to avoid analysis. This test is dangerous and destructive, do NOT use on production equipment.. Command/Steps: [ \\\"$(uname)\\\" = 'Linux' ] && rm -rf / --no-preserve-root > /dev/null 2> /dev/null || chflags -R 0 / && rm -rf / > /dev/null 2> /dev/null\n"
+from = "now-9m"
+rule_id = "7524cc47-af6d-40a8-a6e8-1679247b029e"
+language = "kql"
+name = "Atomic Test: T1070.004 - Delete Filesystem - Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.004/T1070.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.004", "f3aa95fe-4f10-4485-ad26-abf22a764c52", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(uname)*\\\" AND process.command_line : \\\"*Linux*\\\" AND process.command_line : \\\"*--no-preserve-root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.004"
+name = "Delete Filesystem - Linux"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'attrib - Remove read-only attribute' (GUID: bec1e95c-83aa-492e-ab77-60c71bbd21b0) of technique T1222.001 (File and Directory Permissions Modification: Windows File and Directory Permissions Modification). Test Description: Removes the read-only attribute from a file or folder using the attrib.exe command. Upon execution, no output will be displayed.\nOpen the file in File Explorer > Right Click - Prperties and observe that the Read Only checkbox is empty.. Command/Steps: attrib.exe -r #{file_or_folder}\\\\*.* /s\n"
+from = "now-9m"
+rule_id = "c7cc0847-5c24-4d5d-8453-7f16811cd234"
+language = "kql"
+name = "Atomic Test: T1222.001 - attrib - Remove read-only attribute"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.001/T1222.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.001", "bec1e95c-83aa-492e-ab77-60c71bbd21b0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*attrib.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.001"
+name = "attrib - Remove read-only attribute"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/001"
+
+

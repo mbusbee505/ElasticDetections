@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Hollowing using PowerShell' (GUID: 562427b4-39ef-4e8c-af88-463a78e70b9c) of technique T1055.012 (Process Injection: Process Hollowing). Test Description: This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.\nCredit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1). Command/Steps: . \\\"$PathToAtomicsFolder\\\\T1055.012\\\\src\\\\Start-Hollow.ps1\\\"\n$ppid=Get-Process #{parent_process_name} | select -expand id\nStart-Hollow -Sponsor \\\"#{sponsor_..."
+from = "now-9m"
+rule_id = "c523f187-336f-4646-af8c-da8c2018e6b0"
+language = "kql"
+name = "Atomic Test: T1055.012 - Process Hollowing using PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055.012/T1055.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055.012", "562427b4-39ef-4e8c-af88-463a78e70b9c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$ppid=Get-Process*\\\" AND powershell.script_block_text : \\\"*explorer*\\\" AND powershell.script_block_text : \\\"*select*\\\" OR (process.command_line : \\\"*$ppid=Get-Process*\\\" AND process.command_line : \\\"*explorer*\\\" AND process.command_line : \\\"*select*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055.012"
+name = "Process Hollowing using PowerShell"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+

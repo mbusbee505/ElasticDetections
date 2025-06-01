@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Paste and run technique' (GUID: bc177ef9-6a12-4ebc-a2ec-d41e19c2791d) of technique T1566.002 (Phishing: Spearphishing Link). Test Description: Tests the **Paste and Run** technique, where users are tricked into running\nmalicious PowerShell commands by automating the Win+R command to open the\nRun dialog and input `encoded PowerShell to execute calc.exe.`\n\n- [Fake CAPTCHA Campaign](https://medium.com/@ahmed.moh.farou2/fake-captcha-campaign-on-arabic-pirated-movie-sites-delivers-lumma-stealer-4f203f7adabf)\n- [From Clipboard to Compromise](https://www.proofpoint.com/us/blog/threat-insight/clipboard-compromise-powershell-self-pwn). Command/Steps: # Add user32.dll for keybd_event\nAdd-Type @\\\"\n    using System;\n    using System.Runtime.InteropServices;\n    public class K {\n        [DllImport(\\\"user..."
+from = "now-9m"
+rule_id = "ea6e951b-0b9c-4a1a-bef4-2c9454043797"
+language = "kql"
+name = "Atomic Test: T1566.002 - Paste and run technique"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1566.002/T1566.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1566.002", "bc177ef9-6a12-4ebc-a2ec-d41e19c2791d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*user32.dll*\\\" AND powershell.script_block_text : \\\"*keybd_event*\\\" AND powershell.script_block_text : \\\"*Add-Type*\\\" OR (process.command_line : \\\"*user32.dll*\\\" AND process.command_line : \\\"*keybd_event*\\\" AND process.command_line : \\\"*Add-Type*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1566.002"
+name = "Paste and run technique"
+reference = "https://attack.mitre.org/techniques/T1566/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1566/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1566/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1566/002"
+
+

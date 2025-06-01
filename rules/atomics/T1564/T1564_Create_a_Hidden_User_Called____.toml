@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a Hidden User Called \\\"$\\\"' (GUID: 2ec63cc2-4975-41a6-bf09-dffdfb610778) of technique T1564 (Hide Artifacts). Test Description: Creating a user with a username containing \\\"$\\\". Command/Steps: net user $ ATOMIC123! /add /active:yes"
+from = "now-9m"
+rule_id = "1e38d731-4de7-4510-b08e-a95b4cedbb3c"
+language = "kql"
+name = "Atomic Test: T1564 - Create a Hidden User Called \"$\""
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564/T1564.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564", "2ec63cc2-4975-41a6-bf09-dffdfb610778", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*ATOMIC123!*\\\" AND process.command_line : \\\"*/add*\\\" AND process.command_line : \\\"*/active:yes*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564"
+name = "Create a Hidden User Called \"$\""
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+

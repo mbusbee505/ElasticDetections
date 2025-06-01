@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Attaches Command Prompt as a Debugger to a List of Target Processes' (GUID: 3309f53e-b22b-4eb6-8fd2-a6cf58b355a9) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Attaches cmd.exe to a list of processes. Configure your own Input arguments to a different executable or list of executables.\nUpon successful execution, powershell will modify the registry and swap osk.exe with cmd.exe.. Command/Steps: $input_table = \\\"#{parent_list}\\\".split(\\\",\\\")\n$Name = \\\"Debugger\\\"\n$Value = \\\"#{attached_process}\\\"\nForeach ($item in $input_table){\n  $item = $item.trim()\n ..."
+from = "now-9m"
+rule_id = "743bcbc2-ab4c-4415-b835-c6705fdfdc66"
+language = "kql"
+name = "Atomic Test: T1546.008 - Attaches Command Prompt as a Debugger to a List of Target Processes"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "3309f53e-b22b-4eb6-8fd2-a6cf58b355a9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$input_table*\\\" AND powershell.script_block_text : \\\"*osk.exe*\\\" AND powershell.script_block_text : \\\"*sethc.exe*\\\" OR (process.command_line : \\\"*$input_table*\\\" AND process.command_line : \\\"*osk.exe*\\\" AND process.command_line : \\\"*sethc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Attaches Command Prompt as a Debugger to a List of Target Processes"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

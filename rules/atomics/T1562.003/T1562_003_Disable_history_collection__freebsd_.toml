@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable history collection (freebsd)' (GUID: cada55b4-8251-4c60-819e-8ec1b33c9306) of technique T1562.003 (Impair Defenses: Impair Command History Logging). Test Description: Disables history collection in shells. Command/Steps: export HISTSIZE=0\n#{evil_command}\n"
+from = "now-9m"
+rule_id = "c4fff079-3ac9-449d-8a72-4483d2ffcb7d"
+language = "kql"
+name = "Atomic Test: T1562.003 - Disable history collection (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.003/T1562.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.003", "cada55b4-8251-4c60-819e-8ec1b33c9306", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*export*\\\" AND process.command_line : \\\"*HISTSIZE=0*\\\" AND process.command_line : \\\"*whoami*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.003"
+name = "Disable history collection (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+

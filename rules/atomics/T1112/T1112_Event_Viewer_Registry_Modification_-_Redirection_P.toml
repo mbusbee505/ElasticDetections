@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Event Viewer Registry Modification - Redirection Program' (GUID: 81483501-b8a5-4225-8b32-52128e2f69db) of technique T1112 (Modify Registry). Test Description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will execute the program defined in the redirection program registry entry.. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Event Viewer\\\" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /d \\\"#{redirection_program}\\\" /..."
+from = "now-9m"
+rule_id = "eb1b7da6-5478-447e-b8e7-e15fb554ec02"
+language = "kql"
+name = "Atomic Test: T1112 - Event Viewer Registry Modification - Redirection Program"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "81483501-b8a5-4225-8b32-52128e2f69db", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Event*\\\" AND process.command_line : \\\"*Viewer*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Event Viewer Registry Modification - Redirection Program"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

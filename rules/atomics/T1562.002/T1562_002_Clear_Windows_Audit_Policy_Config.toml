@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear Windows Audit Policy Config' (GUID: 913c0e4e-4b37-4b78-ad0b-90e7b25010f6) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: Clear the Windows audit policy using auditpol utility. This action would stop certain audit events from being recorded in the security log.. Command/Steps: auditpol /clear /y\nauditpol /remove /allusers\n"
+from = "now-9m"
+rule_id = "cea31a71-8f88-4402-b587-f3c133362dc2"
+language = "kql"
+name = "Atomic Test: T1562.002 - Clear Windows Audit Policy Config"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "913c0e4e-4b37-4b78-ad0b-90e7b25010f6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*auditpol*\\\" AND process.command_line : \\\"*/clear*\\\" AND process.command_line : \\\"*auditpol*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Clear Windows Audit Policy Config"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

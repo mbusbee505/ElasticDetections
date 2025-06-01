@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Overwrite file with SysInternals SDelete' (GUID: 476419b5-aebf-4366-a131-ae3e8dae5fc2) of technique T1485 (Data Destruction). Test Description: Overwrites and deletes a file using SysInternals SDelete. Upon successful execution, \\\"Files deleted: 1\\\" will be displayed in\nthe powershell session along with other information about the file that was deleted.. Command/Steps: if (-not (Test-Path \\\"#{file_to_delete}\\\")) { New-Item \\\"#{file_to_delete}\\\" -Force }\n& \\\"#{sdelete_exe}\\\" -accepteula \\\"#{file_to_delete}\\\"\n"
+from = "now-9m"
+rule_id = "d056f11c-b1d1-44df-ad5f-33b159ba9fce"
+language = "kql"
+name = "Atomic Test: T1485 - Windows - Overwrite file with SysInternals SDelete"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1485/T1485.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1485", "476419b5-aebf-4366-a131-ae3e8dae5fc2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(-not*\\\" AND powershell.script_block_text : \\\"*(Test-Path*\\\" AND powershell.script_block_text : \\\"*New-Item*\\\" OR (process.command_line : \\\"*(-not*\\\" AND process.command_line : \\\"*(Test-Path*\\\" AND process.command_line : \\\"*New-Item*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1485"
+name = "Windows - Overwrite file with SysInternals SDelete"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+

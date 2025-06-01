@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Simulate Patching termsrv.dll' (GUID: 0b2eadeb-4a64-4449-9d43-3d999f4a317b) of technique T1505.005 (Server Software Component: Terminal Services DLL). Test Description: Simulates patching of termsrv.dll by making a benign change to the file and replacing it with the original afterwards.\nBefore we can make the modifications we need to take ownership of the file and grant ourselves the necessary permissions.. Command/Steps: $termsrvDll = \\\"C:\\\\Windows\\\\System32\\\\termsrv.dll\\\"\n\n$ACL = Get-Acl $termsrvDll\n$permission = \\\"Administrators\\\",\\\"FullControl\\\",\\\"Allow\\\"\n$accessRule = New-Obj..."
+from = "now-9m"
+rule_id = "9daa9cf0-d346-42eb-b094-3ba5322f74a0"
+language = "kql"
+name = "Atomic Test: T1505.005 - Simulate Patching termsrv.dll"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1505.005/T1505.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1505.005", "0b2eadeb-4a64-4449-9d43-3d999f4a317b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$termsrvDll*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\termsrv.dll*\\\" AND powershell.script_block_text : \\\"*$ACL*\\\" OR (process.command_line : \\\"*$termsrvDll*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\termsrv.dll*\\\" AND process.command_line : \\\"*$ACL*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1505.005"
+name = "Simulate Patching termsrv.dll"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+

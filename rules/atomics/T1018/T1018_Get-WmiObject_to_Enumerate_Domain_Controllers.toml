@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get-WmiObject to Enumerate Domain Controllers' (GUID: e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad) of technique T1018 (Remote System Discovery). Test Description: The following Atomic test will utilize get-wmiobject to enumerate Active Directory for Domain Controllers.\nUpon successful execution a listing of Systems from AD will output with their paths.\nReference: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1. Command/Steps: try { get-wmiobject -class ds_computer -namespace root\\\\directory\\\\ldap -ErrorAction Stop }\ncatch { $_; exit $_.Exception.HResult }\n"
+from = "now-9m"
+rule_id = "78710579-8054-43f2-aac5-cc5f8a070e04"
+language = "kql"
+name = "Atomic Test: T1018 - Get-WmiObject to Enumerate Domain Controllers"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*get-wmiobject*\\\" AND powershell.script_block_text : \\\"*-class*\\\" AND powershell.script_block_text : \\\"*ds_computer*\\\" OR (process.command_line : \\\"*get-wmiobject*\\\" AND process.command_line : \\\"*-class*\\\" AND process.command_line : \\\"*ds_computer*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Get-WmiObject to Enumerate Domain Controllers"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

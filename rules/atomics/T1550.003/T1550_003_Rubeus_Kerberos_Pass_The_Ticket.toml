@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rubeus Kerberos Pass The Ticket' (GUID: a2fc4ec5-12c6-4fb4-b661-961f23f359cb) of technique T1550.003 (Use Alternate Authentication Material: Pass the Ticket). Test Description: Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).\nPsExec is used to execute commands on the remote system, and the \\\"C$\\\" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.. Command/Steps: & \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\PsExec.exe\\\" -accepteula \\\\\\\\#{target} -w c:\\\\ -c \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\rubeus.exe\\\" asktgt /..."
+from = "now-9m"
+rule_id = "7d303e77-135e-4847-84f0-0fbc77f3e89f"
+language = "kql"
+name = "Atomic Test: T1550.003 - Rubeus Kerberos Pass The Ticket"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1550.003/T1550.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1550.003", "a2fc4ec5-12c6-4fb4-b661-961f23f359cb", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-accepteula*\\\" AND powershell.script_block_text : \\\"*\\\\\\\\localhost*\\\" AND powershell.script_block_text : \\\"*asktgt*\\\" OR (process.command_line : \\\"*-accepteula*\\\" AND process.command_line : \\\"*\\\\\\\\localhost*\\\" AND process.command_line : \\\"*asktgt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1550.003"
+name = "Rubeus Kerberos Pass The Ticket"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1550/003"
+
+

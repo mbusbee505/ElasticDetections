@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Binary Proxy Execution - Wlrmdr Lolbin' (GUID: 7816c252-b728-4ea6-a683-bd9441ca0b71) of technique T1218 (Signed Binary Proxy Execution). Test Description: Use wlrmdr(Windows Logon Reminder executable) as a proxy binary to evade defensive countermeasures. Command/Steps: wlrmdr.exe -s 3600 -f 0 -t _ -m _ -a 11 -u \\\"#{payload_path}\\\""
+from = "now-9m"
+rule_id = "c79b3b62-e63f-4996-9f33-25e22ac7d3ee"
+language = "kql"
+name = "Atomic Test: T1218 - System Binary Proxy Execution - Wlrmdr Lolbin"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "7816c252-b728-4ea6-a683-bd9441ca0b71", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*wlrmdr.exe*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\" OR (process.command_line : \\\"*wlrmdr.exe*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "System Binary Proxy Execution - Wlrmdr Lolbin"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

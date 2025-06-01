@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Web Server Wordlist Scan' (GUID: 89a83c3e-0b39-4c80-99f5-c2aa084098bd) of technique T1595.003 (Active Scanning: Wordlist Scanning). Test Description: This test will scan a target system with a wordlist of common directories and file paths.. Command/Steps: Import-Module \\\"PathToAtomicsFolder/T1595.003/src/WebServerScan.ps1\\\"\nInvoke-WordlistScan -Target \\\"#{target}\\\" -Wordlist \\\"#{wordlist}\\\" -Timeout \\\"#{reques..."
+from = "now-9m"
+rule_id = "a36dff47-e849-4329-b60b-c447c9f86e33"
+language = "kql"
+name = "Atomic Test: T1595.003 - Web Server Wordlist Scan"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1595.003/T1595.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1595.003", "89a83c3e-0b39-4c80-99f5-c2aa084098bd", "windows", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*Invoke-WordlistScan*\\\" AND powershell.script_block_text : \\\"*-Target*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*Invoke-WordlistScan*\\\" AND process.command_line : \\\"*-Target*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1595.003"
+name = "Web Server Wordlist Scan"
+reference = "https://attack.mitre.org/techniques/T1595/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1595/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1595/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1595/003"
+
+

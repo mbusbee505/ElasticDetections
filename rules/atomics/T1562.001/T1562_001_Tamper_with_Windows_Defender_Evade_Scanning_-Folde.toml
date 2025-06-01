@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tamper with Windows Defender Evade Scanning -Folder' (GUID: 0b19f4ee-de90-4059-88cb-63c800c683ed) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Malware can exclude a specific path from being scanned and evading detection. \nUpon successul execution, the file provided should be on the list of excluded path. \nTo check the exclusion list using poweshell (Get-MpPreference).ExclusionPath. Command/Steps: $excludedpath= \\\"#{excluded_folder}\\\"\nAdd-MpPreference -ExclusionPath $excludedpath"
+from = "now-9m"
+rule_id = "ad0c46ab-1d55-442d-ade7-4d3326a20833"
+language = "kql"
+name = "Atomic Test: T1562.001 - Tamper with Windows Defender Evade Scanning -Folder"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "0b19f4ee-de90-4059-88cb-63c800c683ed", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$excludedpath=*\\\" AND powershell.script_block_text : \\\"*C:\\\\Temp*\\\" AND powershell.script_block_text : \\\"*Add-MpPreference*\\\" OR (process.command_line : \\\"*$excludedpath=*\\\" AND process.command_line : \\\"*C:\\\\Temp*\\\" AND process.command_line : \\\"*Add-MpPreference*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Tamper with Windows Defender Evade Scanning -Folder"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

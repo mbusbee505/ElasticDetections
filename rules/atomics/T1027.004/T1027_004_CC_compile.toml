@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'CC compile' (GUID: da97bb11-d6d0-4fc1-b445-e443d1346efe) of technique T1027.004 (Obfuscated Files or Information: Compile After Delivery). Test Description: Compile a c file with either gcc or clang on FreeBSD, Linux or Macos.. Command/Steps: g++ #{input_file} && ./a.out\nclang++ #{input_file} && ./a.out\n"
+from = "now-9m"
+rule_id = "10b0ee7d-dde6-4ca1-af35-8df1a4150cd2"
+language = "kql"
+name = "Atomic Test: T1027.004 - CC compile"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.004/T1027.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.004", "da97bb11-d6d0-4fc1-b445-e443d1346efe", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*./a.out*\\\" AND process.command_line : \\\"*clang++*\\\" AND process.command_line : \\\"*./a.out*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.004"
+name = "CC compile"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+

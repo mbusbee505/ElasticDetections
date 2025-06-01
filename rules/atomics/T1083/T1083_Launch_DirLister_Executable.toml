@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Launch DirLister Executable' (GUID: c5bec457-43c9-4a18-9a24-fe151d8971b7) of technique T1083 (File and Directory Discovery). Test Description: Launches the DirLister executable for a short period of time and then exits.\n\nRecently seen used by [BlackCat ransomware](https://news.sophos.com/en-us/2022/07/14/blackcat-ransomware-attacks-not-merely-a-byproduct-of-bad-luck/) to create a list of accessible directories and files.. Command/Steps: Start-Process \\\"#{dirlister_path}\\\"\nStart-Sleep -Second 4\nStop-Process -Name \\\"DirLister\\\"\n"
+from = "now-9m"
+rule_id = "6b14374a-4c07-4005-8cdd-8f1cc00e531b"
+language = "kql"
+name = "Atomic Test: T1083 - Launch DirLister Executable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1083/T1083.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1083", "c5bec457-43c9-4a18-9a24-fe151d8971b7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*Start-Sleep*\\\" AND powershell.script_block_text : \\\"*-Second*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*Start-Sleep*\\\" AND process.command_line : \\\"*-Second*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1083"
+name = "Launch DirLister Executable"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+

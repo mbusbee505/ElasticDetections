@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tor Proxy Usage - Debian/Ubuntu/FreeBSD' (GUID: 5ff9d047-6e9c-4357-b39b-5cf89d9b59c7) of technique T1090.003 (Proxy: Multi-hop Proxy). Test Description: This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.\nUpon successful execution, the tor proxy service will be launched.. Command/Steps: [ \\\"$(uname)\\\" = 'FreeBSD' ] && sysrc tor_enable=\\\"YES\\\" && service tor start || sudo systemctl start tor\n"
+from = "now-9m"
+rule_id = "718e5681-ed13-4877-8e0f-7d370e81172d"
+language = "kql"
+name = "Atomic Test: T1090.003 - Tor Proxy Usage - Debian/Ubuntu/FreeBSD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1090.003/T1090.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1090.003", "5ff9d047-6e9c-4357-b39b-5cf89d9b59c7", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(uname)*\\\" AND process.command_line : \\\"*FreeBSD*\\\" AND process.command_line : \\\"*sysrc*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1090.003"
+name = "Tor Proxy Usage - Debian/Ubuntu/FreeBSD"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+

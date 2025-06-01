@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Active Directory Computers with Get-AdComputer' (GUID: 97e89d9e-e3f5-41b5-a90f-1e0825df0fdf) of technique T1018 (Remote System Discovery). Test Description: The following Atomic test will utilize Get-AdComputer to enumerate Computers within Active Directory.\nUpon successful execution a listing of Computers will output with their paths in AD.\nReference: https://github.com/MicrosoftDocs/windows-powershell-docs/blob/main/docset/winserver2022-ps/activedirectory/Get-ADComputer.md. Command/Steps: Get-AdComputer -Filter *\n"
+from = "now-9m"
+rule_id = "696c01e4-b85e-4006-b240-18bec28223e9"
+language = "kql"
+name = "Atomic Test: T1018 - Enumerate Active Directory Computers with Get-AdComputer"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "97e89d9e-e3f5-41b5-a90f-1e0825df0fdf", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-AdComputer*\\\" AND powershell.script_block_text : \\\"*-Filter*\\\" OR (process.command_line : \\\"*Get-AdComputer*\\\" AND process.command_line : \\\"*-Filter*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Enumerate Active Directory Computers with Get-AdComputer"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

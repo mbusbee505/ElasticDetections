@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Provlaunch.exe Executes Arbitrary Command via Registry Key' (GUID: ab76e34f-28bf-441f-a39c-8db4835b89cc) of technique T1218 (Signed Binary Proxy Execution). Test Description: Provlaunch.exe executes a command defined in the Registry. This test will create the necessary registry keys and values, then run provlaunch.exe to execute an arbitrary command.\n- https://twitter.com/0gtweet/status/1674399582162153472\n- https://lolbas-project.github.io/lolbas/Binaries/Provlaunch/\nRegistry keys are deleted after successful execution.. Command/Steps: reg.exe add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Provisioning\\\\Commands\\\\LOLBin\\\\dummy1 /v altitude /t REG_DWORD /d 0\nreg add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Provisioning\\\\Com..."
+from = "now-9m"
+rule_id = "f15ffd75-d7d9-4377-8617-4bc6a9ea9363"
+language = "kql"
+name = "Atomic Test: T1218 - Provlaunch.exe Executes Arbitrary Command via Registry Key"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "ab76e34f-28bf-441f-a39c-8db4835b89cc", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Provisioning\\\\Commands\\\\LOLBin\\\\dummy1*\\\" AND process.command_line : \\\"*altitude*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "Provlaunch.exe Executes Arbitrary Command via Registry Key"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

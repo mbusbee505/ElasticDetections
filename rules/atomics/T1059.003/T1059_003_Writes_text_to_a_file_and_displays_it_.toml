@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Writes text to a file and displays it.' (GUID: 127b4afe-2346-4192-815c-69042bec570e) of technique T1059.003 (Command and Scripting Interpreter: Windows Command Shell). Test Description: Writes text to a file and display the results. This test is intended to emulate the dropping of a malicious file to disk.. Command/Steps: echo \\\"#{message}\\\" > \\\"#{file_contents_path}\\\" & type \\\"#{file_contents_path}\\\"\n"
+from = "now-9m"
+rule_id = "d9bb5ce1-e835-4412-8b6f-b455ead431bd"
+language = "kql"
+name = "Atomic Test: T1059.003 - Writes text to a file and displays it."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.003/T1059.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.003", "127b4afe-2346-4192-815c-69042bec570e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\" AND process.command_line : \\\"*Windows*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.003"
+name = "Writes text to a file and displays it."
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+

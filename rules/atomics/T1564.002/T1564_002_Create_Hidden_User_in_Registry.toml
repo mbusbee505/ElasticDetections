@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Hidden User in Registry' (GUID: 173126b7-afe4-45eb-8680-fa9f6400431c) of technique T1564.002 (Hide Artifacts: Hidden Users). Test Description: Adversaries may similarly hide user accounts in Windows. Adversaries can set the HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\SpecialAccounts\\\\UserList Registry key value to 0 for a specific user to prevent that user from being listed on the logon screen.\nReference https://attack.mitre.org/techniques/T1564/002/ and https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/. Command/Steps: NET USER #{user_name}$ #{user_password} /ADD /expires:never \nREG ADD \\\"HKLM\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\SpecialAccounts\\\\Userl..."
+from = "now-9m"
+rule_id = "509eb21d-0c06-4eb3-b347-04fc36114799"
+language = "kql"
+name = "Atomic Test: T1564.002 - Create Hidden User in Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.002/T1564.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.002", "173126b7-afe4-45eb-8680-fa9f6400431c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*AtomicOperator$*\\\" AND process.command_line : \\\"*At0micRedTeam!*\\\" AND process.command_line : \\\"*/ADD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.002"
+name = "Create Hidden User in Registry"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/002"
+
+

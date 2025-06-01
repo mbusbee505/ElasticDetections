@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remove Network Share' (GUID: 09210ad5-1ef2-4077-9ad3-7351e13e9222) of technique T1070.005 (Indicator Removal on Host: Network Share Connection Removal). Test Description: Removes a Network Share utilizing the command_prompt. Command/Steps: net share #{share_name} /delete\n"
+from = "now-9m"
+rule_id = "ec375b60-90a1-47a3-bfc8-a5e514e80a9a"
+language = "kql"
+name = "Atomic Test: T1070.005 - Remove Network Share"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.005/T1070.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.005", "09210ad5-1ef2-4077-9ad3-7351e13e9222", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*share*\\\" AND process.command_line : \\\"*\\\\\\\\test\\\\share*\\\" AND process.command_line : \\\"*/delete*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.005"
+name = "Remove Network Share"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+

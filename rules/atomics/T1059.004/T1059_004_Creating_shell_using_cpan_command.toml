@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Creating shell using cpan command' (GUID: bcd4c2bc-490b-4f91-bd31-3709fe75bbdf) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: cpan lets you execute perl commands with the ! command. It can be used to break out from restricted environments by spawning an interactive system shell.\nReference - https://gtfobins.github.io/gtfobins/cpan/. Command/Steps: echo '! exec \\\"/bin/sh &\\\"' | PERL_MM_USE_DEFAULT=1  cpan"
+from = "now-9m"
+rule_id = "2eb14786-8dc7-4513-8a25-8e07f84f7ee1"
+language = "kql"
+name = "Atomic Test: T1059.004 - Creating shell using cpan command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "bcd4c2bc-490b-4f91-bd31-3709fe75bbdf", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*exec*\\\" AND process.command_line : \\\"*/bin/sh*\\\" AND process.command_line : \\\"*PERL_MM_USE_DEFAULT=1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Creating shell using cpan command"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

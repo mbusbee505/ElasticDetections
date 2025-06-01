@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Safari Bookmarks on MacOS' (GUID: 5fc528dd-79de-47f5-8188-25572b7fafe0) of technique T1217 (Browser Bookmark Discovery). Test Description: This test searches for Safari's Bookmarks file (on macOS) and lists any found instances to a text file.. Command/Steps: find / -path \\\"*/Safari/Bookmarks.plist\\\" 2>/dev/null >> #{output_file} \ncat #{output_file} \n"
+from = "now-9m"
+rule_id = "2518dac1-3c7d-4893-b8cb-97ada3974799"
+language = "kql"
+name = "Atomic Test: T1217 - List Safari Bookmarks on MacOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1217/T1217.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1217", "5fc528dd-79de-47f5-8188-25572b7fafe0", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*-path*\\\" AND process.command_line : \\\"*2>/dev/null*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1217"
+name = "List Safari Bookmarks on MacOS"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+

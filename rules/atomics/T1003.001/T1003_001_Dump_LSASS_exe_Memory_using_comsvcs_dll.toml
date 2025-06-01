@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe Memory using comsvcs.dll' (GUID: 2536dee2-12fb-459a-8c37-971844fa73be) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with a built-in dll.\n\nUpon successful execution, you should see the following file created $env:TEMP\\\\lsass-comsvcs.dmp.. Command/Steps: C:\\\\Windows\\\\System32\\\\rundll32.exe C:\\\\windows\\\\System32\\\\comsvcs.dll, MiniDump (Get-Process lsass).id $env:TEMP\\\\lsass-comsvcs.dmp full\n"
+from = "now-9m"
+rule_id = "7bc477e2-959d-437f-970d-36f515d125c1"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe Memory using comsvcs.dll"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "2536dee2-12fb-459a-8c37-971844fa73be", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\rundll32.exe*\\\" AND powershell.script_block_text : \\\"*C:\\\\windows\\\\System32\\\\comsvcs.dll*\\\" AND powershell.script_block_text : \\\"*MiniDump*\\\" OR (process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\rundll32.exe*\\\" AND process.command_line : \\\"*C:\\\\windows\\\\System32\\\\comsvcs.dll*\\\" AND process.command_line : \\\"*MiniDump*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe Memory using comsvcs.dll"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

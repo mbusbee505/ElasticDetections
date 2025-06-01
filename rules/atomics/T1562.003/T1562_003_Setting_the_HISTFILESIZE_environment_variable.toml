@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Setting the HISTFILESIZE environment variable' (GUID: 5cafd6c1-2f43-46eb-ac47-a5301ba0a618) of technique T1562.003 (Impair Defenses: Impair Command History Logging). Test Description: An Adversary may set the bash history files size environment variable (HISTFILESIZE) to zero to prevent the logging of commands to the history file after they log out of the system.\n\nNote: we don't wish to log out, so we are just confirming the value of HISTFILESIZE. In this test we 1. echo HISTFILESIZE 2. set it to zero 3. confirm that HISTFILESIZE is set to zero.. Command/Steps: TEST=$(echo $HISTFILESIZE)\necho $HISTFILESIZE\nexport HISTFILESIZE=0\necho \\\"runnning some commands to populate the history\\\"\nwhoami\ngroups\nif [ $(echo $H..."
+from = "now-9m"
+rule_id = "75fd26d2-2709-4eba-9050-167ea7aa0153"
+language = "kql"
+name = "Atomic Test: T1562.003 - Setting the HISTFILESIZE environment variable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.003/T1562.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.003", "5cafd6c1-2f43-46eb-ac47-a5301ba0a618", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*TEST=$(echo*\\\" AND process.command_line : \\\"*$HISTFILESIZE)*\\\" AND process.command_line : \\\"*$HISTFILESIZE*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.003"
+name = "Setting the HISTFILESIZE environment variable"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+

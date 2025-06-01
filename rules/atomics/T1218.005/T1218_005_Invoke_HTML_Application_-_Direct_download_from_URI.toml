@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Invoke HTML Application - Direct download from URI' (GUID: 39ceed55-f653-48ac-bd19-aceceaf525db) of technique T1218.005 (Signed Binary Proxy Execution: Mshta). Test Description: Executes an HTA Application by directly downloading from remote URI.. Command/Steps: Invoke-ATHHTMLApplication -HTAUri #{hta_uri} -MSHTAFilePath #{mshta_file_path}"
+from = "now-9m"
+rule_id = "e4e2bf19-f6e2-49b6-a832-751c9fd85514"
+language = "kql"
+name = "Atomic Test: T1218.005 - Invoke HTML Application - Direct download from URI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.005/T1218.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.005", "39ceed55-f653-48ac-bd19-aceceaf525db", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-ATHHTMLApplication*\\\" AND powershell.script_block_text : \\\"*-HTAUri*\\\" AND powershell.script_block_text : \\\"*-MSHTAFilePath*\\\" OR (process.command_line : \\\"*Invoke-ATHHTMLApplication*\\\" AND process.command_line : \\\"*-HTAUri*\\\" AND process.command_line : \\\"*-MSHTAFilePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.005"
+name = "Invoke HTML Application - Direct download from URI"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install MS Exchange Transport Agent Persistence' (GUID: 43e92449-ff60-46e9-83a3-1a38089df94d) of technique T1505.002 (Server Software Component: Transport Agent). Test Description: Install a Microsoft Exchange Transport Agent for persistence. This requires execution from an Exchange Client Access Server and the creation of a DLL with specific exports. Seen in use by Turla.\nMore details- https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help. Command/Steps: Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}\nEnable-TransportAgent #{tra..."
+from = "now-9m"
+rule_id = "d082ca3d-3a10-4894-9fb7-6983bd0f91b6"
+language = "kql"
+name = "Atomic Test: T1505.002 - Install MS Exchange Transport Agent Persistence"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1505.002/T1505.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1505.002", "43e92449-ff60-46e9-83a3-1a38089df94d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Install-TransportAgent*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*Security*\\\" OR (process.command_line : \\\"*Install-TransportAgent*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*Security*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1505.002"
+name = "Install MS Exchange Transport Agent Persistence"
+reference = "https://attack.mitre.org/techniques/T1505/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1505/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1505/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1505/002"
+
+

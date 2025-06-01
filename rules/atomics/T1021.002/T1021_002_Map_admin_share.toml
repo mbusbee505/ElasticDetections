@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Map admin share' (GUID: 3386975b-367a-4fbb-9d77-4dcf3639ffd3) of technique T1021.002 (Remote Services: SMB/Windows Admin Shares). Test Description: Connecting To Remote Shares. Command/Steps: cmd.exe /c \\\"net use \\\\\\\\#{computer_name}\\\\#{share_name} #{password} /u:#{user_name}\\\"\n"
+from = "now-9m"
+rule_id = "aa02f7d1-80e6-4e4c-89d6-6c4ec508415d"
+language = "kql"
+name = "Atomic Test: T1021.002 - Map admin share"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.002/T1021.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.002", "3386975b-367a-4fbb-9d77-4dcf3639ffd3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cmd.exe*\\\" AND process.command_line : \\\"*\\\\\\\\Target\\\\C$*\\\" AND process.command_line : \\\"*P@ssw0rd1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.002"
+name = "Map admin share"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+

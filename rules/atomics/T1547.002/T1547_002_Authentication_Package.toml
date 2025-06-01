@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Authentication Package' (GUID: be2590e8-4ac3-47ac-b4b5-945820f2fbe9) of technique T1547.002 (Authentication Package). Test Description: Establishes persistence using a custom authentication package for the Local Security Authority (LSA).\nAfter a reboot, Notepad.exe will be executed as child process of lsass.exe.\nPayload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package\n[Related blog](https://pentestlab.blog/2019/10/21/persistence-security-support-provider/). Command/Steps: Copy-Item \\\"$PathToAtomicsFolder\\\\T1547.002\\\\bin\\\\package.dll\\\" C:\\\\Windows\\\\System32\\\\\nreg add \\\"HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Lsa\\\" /v \\\"..."
+from = "now-9m"
+rule_id = "dc0e120e-a431-4d3b-8d32-40762d803bc4"
+language = "kql"
+name = "Atomic Test: T1547.002 - Authentication Package"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.002/T1547.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.002", "be2590e8-4ac3-47ac-b4b5-945820f2fbe9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\*\\\" AND powershell.script_block_text : \\\"*HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Lsa*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\*\\\" AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Lsa*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.002"
+name = "Authentication Package"
+reference = "https://attack.mitre.org/techniques/T1547/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/002"
+
+

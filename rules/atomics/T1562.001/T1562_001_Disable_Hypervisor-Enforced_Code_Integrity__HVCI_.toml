@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Hypervisor-Enforced Code Integrity (HVCI)' (GUID: 70bd71e6-eba4-4e00-92f7-617911dbe020) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: This test disables Hypervisor-Enforced Code Integrity (HVCI) by setting the registry key HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\DeviceGuard\\\\Scenarios\\\\HypervisorEnforcedCodeIntegrity \\\"Enabled\\\" value to \\\"0\\\".\nThe pre-req needs to be ran in order to setup HVCI and have it enabled. \nWe do not recommend running this in production.\n[Black Lotus Campaign](https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/)\n[Microsoft](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity). Command/Steps: reg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\DeviceGuard\\\\Scenarios\\\\HypervisorEnforcedCodeIntegrity\\\" /v \\\"Enabled\\\" /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "7471d1f4-6b4d-4e17-b2da-2677ae02b92e"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Hypervisor-Enforced Code Integrity (HVCI)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "70bd71e6-eba4-4e00-92f7-617911dbe020", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\DeviceGuard\\\\Scenarios\\\\HypervisorEnforcedCodeIntegrity*\\\" AND powershell.script_block_text : \\\"*Enabled*\\\" AND powershell.script_block_text : \\\"*REG_DWORD*\\\" OR (process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\DeviceGuard\\\\Scenarios\\\\HypervisorEnforcedCodeIntegrity*\\\" AND process.command_line : \\\"*Enabled*\\\" AND process.command_line : \\\"*REG_DWORD*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Hypervisor-Enforced Code Integrity (HVCI)"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS with createdump.exe from .Net v5' (GUID: 9d0072c8-7cca-45c4-bd14-f852cfa35cf0) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: Use createdump executable from .NET to create an LSASS dump.\n\n[Reference](https://twitter.com/bopin2020/status/1366400799199272960?s=20). Command/Steps: $exePath =  resolve-path \\\"$env:ProgramFiles\\\\dotnet\\\\shared\\\\Microsoft.NETCore.App\\\\5*\\\\createdump.exe\\\"\n& \\\"$exePath\\\" -u -f $env:Temp\\\\dotnet-lsass.dmp (Get-..."
+from = "now-9m"
+rule_id = "061c4d4b-885e-4505-9716-0ea2a8732306"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS with createdump.exe from .Net v5"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "9d0072c8-7cca-45c4-bd14-f852cfa35cf0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$exePath*\\\" AND powershell.script_block_text : \\\"*resolve-path*\\\" AND powershell.script_block_text : \\\"*$exePath*\\\" OR (process.command_line : \\\"*$exePath*\\\" AND process.command_line : \\\"*resolve-path*\\\" AND process.command_line : \\\"*$exePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS with createdump.exe from .Net v5"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

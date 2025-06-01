@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'GCP - Delete Activity Event Log' (GUID: d56152ec-01d9-42a2-877c-aac1f6ebe8e6) of technique T1562.008 (Impair Defenses: Disable Cloud Logs). Test Description: GCP provides 4 types of Cloud Audit Logs: Admin Activity, Data Access, System Events, and Policy Denied.\nAn adversary may attempt to delete logs in order to hide their activity. However, Admin Activity, System Events, and Policy Deny events logs cannot be deleted. \n\nThis Atomic attempts to delete the Activity Event log. An event is generated under the method name of `google.logging.v2.LoggingServiceV2.DeleteLog` with a Serverity of `ERROR`.. Command/Steps: gcloud config set project #{project-id}\ngcloud logging logs delete projects/#{project-id}/logs/cloudaudit.googleapis.com%2Factivity --quiet\n"
+from = "now-9m"
+rule_id = "d90c80f1-ef21-4cb9-92de-dfeb257af081"
+language = "kql"
+name = "Atomic Test: T1562.008 - GCP - Delete Activity Event Log"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.008/T1562.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.008", "d56152ec-01d9-42a2-877c-aac1f6ebe8e6", "iaas:gcp",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*gcloud*\\\" AND process.command_line : \\\"*config*\\\" AND process.command_line : \\\"*project*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.008"
+name = "GCP - Delete Activity Event Log"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+

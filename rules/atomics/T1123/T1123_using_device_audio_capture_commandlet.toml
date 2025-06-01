@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'using device audio capture commandlet' (GUID: 9c3ad250-b185-4444-b5a9-d69218a10c95) of technique T1123 (Audio Capture). Test Description: [AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet). Command/Steps: powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet\n"
+from = "now-9m"
+rule_id = "eecc199b-7bc9-4486-a756-5398b2ba77b3"
+language = "kql"
+name = "Atomic Test: T1123 - using device audio capture commandlet"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1123/T1123.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1123", "9c3ad250-b185-4444-b5a9-d69218a10c95", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*powershell.exe*\\\" AND powershell.script_block_text : \\\"*-Command*\\\" AND powershell.script_block_text : \\\"*WindowsAudioDevice-Powershell-Cmdlet*\\\" OR (process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*-Command*\\\" AND process.command_line : \\\"*WindowsAudioDevice-Powershell-Cmdlet*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1123"
+name = "using device audio capture commandlet"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1123"
+
+

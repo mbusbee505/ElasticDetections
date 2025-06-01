@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Device Driver Discovery' (GUID: 235b30a2-e5b1-441f-9705-be6231c88ddd) of technique T1652 (Device Driver Discovery). Test Description: Displays a list of installed device drivers on the local computer and their properties. Threat actors use this command to enumerate the existing drivers on the computer. \nParameters: \n/v /fo list - Displays verbose output in a list format - the /v parameter is not valid for signed drivers\n/si /fo list - Provides information about signed drivers and outputs it in a list format. Command/Steps: driverquery /v /fo list\ndriverquery /si /fo list\n"
+from = "now-9m"
+rule_id = "42ea036d-d3f3-427c-a85c-8fbecaf8cde9"
+language = "kql"
+name = "Atomic Test: T1652 - Device Driver Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1652/T1652.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1652", "235b30a2-e5b1-441f-9705-be6231c88ddd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*driverquery*\\\" AND powershell.script_block_text : \\\"*list*\\\" AND powershell.script_block_text : \\\"*driverquery*\\\" OR (process.command_line : \\\"*driverquery*\\\" AND process.command_line : \\\"*list*\\\" AND process.command_line : \\\"*driverquery*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1652"
+name = "Device Driver Discovery"
+reference = "https://attack.mitre.org/techniques/T1652"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1652"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1652"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1652"
+
+

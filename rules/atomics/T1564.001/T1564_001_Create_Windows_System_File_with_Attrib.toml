@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Windows System File with Attrib' (GUID: f70974c8-c094-4574-b542-2c545af95a32) of technique T1564.001 (Hide Artifacts: Hidden Files and Directories). Test Description: Creates a file and marks it as a system file using the attrib.exe utility. Upon execution, open the file in file explorer then open Properties > Details\nand observe that the Attributes are \\\"SA\\\" for System and Archive.. Command/Steps: attrib.exe +s #{file_to_modify}\n"
+from = "now-9m"
+rule_id = "78b10336-c29a-4735-8a16-40c5631f11bf"
+language = "kql"
+name = "Atomic Test: T1564.001 - Create Windows System File with Attrib"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.001/T1564.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.001", "f70974c8-c094-4574-b542-2c545af95a32", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*attrib.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.001"
+name = "Create Windows System File with Attrib"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+

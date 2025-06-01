@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mount host filesystem to escape privileged Docker container' (GUID: 6c499943-b098-4bc6-8d38-0956fc182984) of technique T1611 (Escape to Host). Test Description: This technique abuses privileged Docker containers to mount the host's filesystem and then create a cron job to launch a reverse shell as the host's superuser.\nThe container running the test needs be privileged.  It may take up to a minute for this to run due to how often crond triggers a job.\nDev note: the echo to create cron_filename is broken up to prevent localized execution of hostname and id by Powershell.. Command/Steps: if [ ! -d #{mount_point} ]; then mkdir #{mount_point} ; mount #{mount_device} #{mount_point}; fi\necho -n \\\"* * * * * root /bin/bash -c '/bin/bash -c ec..."
+from = "now-9m"
+rule_id = "ccb159c6-6449-4520-b665-42cec96a1799"
+language = "kql"
+name = "Atomic Test: T1611 - Mount host filesystem to escape privileged Docker container"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1611/T1611.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1611", "6c499943-b098-4bc6-8d38-0956fc182984", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*mount*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1611"
+name = "Mount host filesystem to escape privileged Docker container"
+reference = "https://attack.mitre.org/techniques/T1611"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1611"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1611"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1611"
+
+

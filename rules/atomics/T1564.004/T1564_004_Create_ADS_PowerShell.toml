@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create ADS PowerShell' (GUID: 0045ea16-ed3c-4d4c-a9ee-15e44d1560d1) of technique T1564.004 (Hide Artifacts: NTFS File Attributes). Test Description: Create an Alternate Data Stream with PowerShell. Write access is required. To verify execution, run the command \\\"ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname\\\"\nin the %temp% directory to view all files with hidden data streams. To view the data in the alternate data stream, run \\\"notepad.exe T1564.004_has_ads_powershell.txt:adstest.txt\\\" in the %temp% folder.. Command/Steps: echo \\\"test\\\" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value \\\"test\\\"\nset-content -path #{file_name} -stream #{ads_filename} -..."
+from = "now-9m"
+rule_id = "4502988d-1716-4512-885e-05005ccd8401"
+language = "kql"
+name = "Atomic Test: T1564.004 - Create ADS PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.004/T1564.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.004", "0045ea16-ed3c-4d4c-a9ee-15e44d1560d1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*set-content*\\\" AND powershell.script_block_text : \\\"*-path*\\\" AND powershell.script_block_text : \\\"*test.txt*\\\" OR (process.command_line : \\\"*set-content*\\\" AND process.command_line : \\\"*-path*\\\" AND process.command_line : \\\"*test.txt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.004"
+name = "Create ADS PowerShell"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+

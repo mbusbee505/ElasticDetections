@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number' (GUID: 04d55cef-f283-40ba-ae2a-316bc3b5e78c) of technique T1547.014 (Active Setup). Test Description: This test will decrease the version number of the 'Internet Explorer Core Fonts' (UUID {C9E9A340-D1F1-11D0-821E-444553540600}) registry key for the current user, \nwhich will force the StubPath payload (if set) to execute.. Command/Steps: Set-ItemProperty -Path \\\"HKCU:\\\\SOFTWARE\\\\Microsoft\\\\Active Setup\\\\Installed Components\\\\{C9E9A340-D1F1-11D0-821E-444553540600}\\\" -Name \\\"Version\\\" -Value \\\"0,0..."
+from = "now-9m"
+rule_id = "0053fb82-c027-4c8f-8f37-2e1955bd8caf"
+language = "kql"
+name = "Atomic Test: T1547.014 - HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.014/T1547.014.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.014", "04d55cef-f283-40ba-ae2a-316bc3b5e78c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\SOFTWARE\\\\Microsoft\\\\Active*\\\" OR (process.command_line : \\\"*Set-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKCU:\\\\SOFTWARE\\\\Microsoft\\\\Active*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.014"
+name = "HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+

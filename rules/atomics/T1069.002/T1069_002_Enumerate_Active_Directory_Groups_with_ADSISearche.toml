@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Active Directory Groups with ADSISearcher' (GUID: 9f4e344b-8434-41b3-85b1-d38f29d148d0) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: The following Atomic test will utilize ADSISearcher to enumerate groups within Active Directory.\nUpon successful execution a listing of groups will output with their paths in AD.\nReference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/. Command/Steps: ([adsisearcher]\\\"objectcategory=group\\\").FindAll(); ([adsisearcher]\\\"objectcategory=group\\\").FindOne()\n"
+from = "now-9m"
+rule_id = "b0ea02b1-5e37-425f-aa5f-75c7dbd2f375"
+language = "kql"
+name = "Atomic Test: T1069.002 - Enumerate Active Directory Groups with ADSISearcher"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "9f4e344b-8434-41b3-85b1-d38f29d148d0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*([adsisearcher]\\\"objectcategory=group\\\").FindAll()*\\\" AND powershell.script_block_text : \\\"*([adsisearcher]\\\"objectcategory=group\\\").FindOne()*\\\" OR (process.command_line : \\\"*([adsisearcher]\\\"objectcategory=group\\\").FindAll()*\\\" AND process.command_line : \\\"*([adsisearcher]\\\"objectcategory=group\\\").FindOne()*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Enumerate Active Directory Groups with ADSISearcher"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

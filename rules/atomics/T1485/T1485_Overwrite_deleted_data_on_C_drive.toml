@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Overwrite deleted data on C drive' (GUID: 321fd25e-0007-417f-adec-33232252be19) of technique T1485 (Data Destruction). Test Description: RansomEXX malware removes all deleted files using windows built-in cipher.exe to prevent forensic recover.\nThis process is very slow and test execution may timeout. \nhttps://www.cybereason.com/blog/cybereason-vs.-ransomexx-ransomware\nhttps://support.microsoft.com/en-us/topic/cipher-exe-security-tool-for-the-encrypting-file-system-56c85edd-85cf-ac07-f2f7-ca2d35dab7e4. Command/Steps: cipher.exe /w:C:\n"
+from = "now-9m"
+rule_id = "fb8a6cab-d86f-4ec8-8908-5e06760696eb"
+language = "kql"
+name = "Atomic Test: T1485 - Overwrite deleted data on C drive"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1485/T1485.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1485", "321fd25e-0007-417f-adec-33232252be19", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cipher.exe*\\\" AND process.command_line : \\\"*/w:C:*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1485"
+name = "Overwrite deleted data on C drive"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1485"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable OpenDNS Umbrella' (GUID: 07f43b33-1e15-4e99-be70-bc094157c849) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Disables OpenDNS Umbrella. Command/Steps: sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist\n"
+from = "now-9m"
+rule_id = "40bd5860-90e3-4749-b132-01af5375545b"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable OpenDNS Umbrella"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "07f43b33-1e15-4e99-be70-bc094157c849", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*launchctl*\\\" AND process.command_line : \\\"*unload*\\\" AND process.command_line : \\\"*/Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable OpenDNS Umbrella"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

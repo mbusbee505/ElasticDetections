@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS' (GUID: d58d749c-4450-4975-a9e9-8b1d562755c2) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: Output information from LDAPSearch. LDAP Password is the admin-user password on Active Directory. Command/Steps: ldapsearch -H ldap://#{domain}.#{top_level_domain}:389 -x -D #{user} -w #{password} -b \\\"CN=Users,DC=#{domain},DC=#{top_level_domain}\\\" \\\"(objectClass=gr..."
+from = "now-9m"
+rule_id = "0bbd513f-bc20-458d-90cc-c777c7d82774"
+language = "kql"
+name = "Atomic Test: T1069.002 - Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "d58d749c-4450-4975-a9e9-8b1d562755c2", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ldapsearch*\\\" AND process.command_line : \\\"*ldap://example.com:389*\\\" AND process.command_line : \\\"*user@example.com*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

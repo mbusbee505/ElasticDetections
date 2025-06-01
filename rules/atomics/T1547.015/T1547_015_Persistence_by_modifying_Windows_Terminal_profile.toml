@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persistence by modifying Windows Terminal profile' (GUID: ec5d76ef-82fe-48da-b931-bdb25a62bc65) of technique T1547.015 (Boot or Logon Autostart Execution: Login Items). Test Description: Modify Windows Terminal settings.json file to gain persistence. [Twitter Post](https://twitter.com/nas_bench/status/1550836225652686848). Command/Steps: mv #{settings_json_def} #{settings_json_tmp}\nInvoke-WebRequest \\\"https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1547.015/src/setti..."
+from = "now-9m"
+rule_id = "91a9c470-ca9e-48c5-97a6-e10cf2045f35"
+language = "kql"
+name = "Atomic Test: T1547.015 - Persistence by modifying Windows Terminal profile"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.015/T1547.015.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.015", "ec5d76ef-82fe-48da-b931-bdb25a62bc65", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*~\\\\AppData\\\\Local\\\\Packages\\\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\\\LocalState\\\\settings.json*\\\" AND powershell.script_block_text : \\\"*~\\\\AppData\\\\Local\\\\Temp\\\\settings.json*\\\" AND powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" OR (process.command_line : \\\"*~\\\\AppData\\\\Local\\\\Packages\\\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\\\LocalState\\\\settings.json*\\\" AND process.command_line : \\\"*~\\\\AppData\\\\Local\\\\Temp\\\\settings.json*\\\" AND process.command_line : \\\"*Invoke-WebRequest*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.015"
+name = "Persistence by modifying Windows Terminal profile"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+

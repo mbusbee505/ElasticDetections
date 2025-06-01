@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Regsvr32 local DLL execution' (GUID: 08ffca73-9a3d-471a-aeb0-68b4aa3ab37b) of technique T1218.010 (Signed Binary Proxy Execution: Regsvr32). Test Description: Regsvr32.exe is a command-line program used to register and unregister OLE controls. Upon execution, calc.exe will be launched.. Command/Steps: IF \\\"%PROCESSOR_ARCHITECTURE%\\\"==\\\"AMD64\\\" (C:\\\\Windows\\\\syswow64\\\\regsvr32.exe /s #{dll_name}) ELSE ( #{regsvr32path}\\\\#{regsvr32name} /s #{dll_name} )\n"
+from = "now-9m"
+rule_id = "901ce4db-4c79-47cb-a10c-d68c9cc44745"
+language = "kql"
+name = "Atomic Test: T1218.010 - Regsvr32 local DLL execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.010/T1218.010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.010", "08ffca73-9a3d-471a-aeb0-68b4aa3ab37b", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%PROCESSOR_ARCHITECTURE%\\\"==\\\"AMD64*\\\" AND process.command_line : \\\"*(C:\\\\Windows\\\\syswow64\\\\regsvr32.exe*\\\" AND process.command_line : \\\"*ELSE*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.010"
+name = "Regsvr32 local DLL execution"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+

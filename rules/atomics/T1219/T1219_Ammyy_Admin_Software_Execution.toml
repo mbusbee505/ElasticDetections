@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Ammyy Admin Software Execution' (GUID: 0ae9e327-3251-465a-a53b-485d4e3f58fa) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading Ammyy Admin Remote Desktop Software for use as a C2 channel. \nUpon successful execution, Ammyy Admin will be executed.. Command/Steps: Start-Process \\\"#{Ammyy_Admin_Path}\\\"\n"
+from = "now-9m"
+rule_id = "40ac469d-ae26-455f-a6ea-62fb1b94e8fe"
+language = "kql"
+name = "Atomic Test: T1219 - Ammyy Admin Software Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "0ae9e327-3251-465a-a53b-485d4e3f58fa", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" OR (process.command_line : \\\"*Start-Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "Ammyy Admin Software Execution"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

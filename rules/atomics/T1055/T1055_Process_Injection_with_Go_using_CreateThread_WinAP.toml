@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Injection with Go using CreateThread WinAPI (Natively)' (GUID: 2a3c7035-d14f-467a-af94-933e49fe6786) of technique T1055 (Process Injection). Test Description: This program executes shellcode in the current process using the following steps\n1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write\n2. Use the RtlCopyMemory macro to copy the shellcode to the allocated memory space\n3. Change the memory page permissions to Execute/Read with VirtualProtect\n4. Call CreateThread on shellcode address\n5. Call WaitForSingleObject so the program does not end before the shellcode is executed\n\nThis program loads the DLLs and gets a handle to the used procedures itself instead of using the windows package directly.\n\n- PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createthreadnative). Command/Steps: $PathToAtomicsFolder\\T1055\\bin\\u0064\\\\CreateThreadNative.exe -debug\n"
+from = "now-9m"
+rule_id = "a2896dc1-af2e-4e9d-b307-6eab72d4ec9e"
+language = "kql"
+name = "Atomic Test: T1055 - Process Injection with Go using CreateThread WinAPI (Natively)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "2a3c7035-d14f-467a-af94-933e49fe6786", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-debug*\\\" OR (process.command_line : \\\"*-debug*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "Process Injection with Go using CreateThread WinAPI (Natively)"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

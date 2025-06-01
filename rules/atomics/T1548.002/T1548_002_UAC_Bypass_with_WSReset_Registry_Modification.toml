@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'UAC Bypass with WSReset Registry Modification' (GUID: 3b96673f-9c92-40f1-8a3e-ca060846f8d9) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: The following UAC bypass is focused on a registry key under \\\"HKCU:\\\\Software\\\\Classes\\\\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\\\\Shell\\\\open\\\\command\\\" that will trigger a command once wsreset.exe runs. \nThis bypass is limited to Windows 10 1803/1809 and may not run on Server platforms. The registry mod is where interest will be.\nIf successful, the command to run will spawn off wsreset.exe. \n[UAC Bypass in Windows 10 Store Binary](https://0x1.gitlab.io/exploit/UAC-Bypass-in-Windows-10-Store-Binary/). Command/Steps: New-Item #{commandpath} -Force | Out-Null\nNew-ItemProperty -Path #{commandpath} -Name \\\"DelegateExecute\\\" -Value \\\"\\\" -Force | Out-Null\nSet-ItemProperty -..."
+from = "now-9m"
+rule_id = "e1f28fbb-fedc-4eeb-a0b7-a48241322ba9"
+language = "kql"
+name = "Atomic Test: T1548.002 - UAC Bypass with WSReset Registry Modification"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "3b96673f-9c92-40f1-8a3e-ca060846f8d9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Classes\\\\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\\\\Shell\\\\open\\\\command*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Classes\\\\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\\\\Shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "UAC Bypass with WSReset Registry Modification"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

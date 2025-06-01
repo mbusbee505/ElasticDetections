@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'HKLM - Append Command to Winlogon Userinit KEY Value' (GUID: f7fab6cc-8ece-4ca7-a0f1-30a22fccd374) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: This test will append a command to the  HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\Userinit value to launch calc.exe on boot.\n* Requires reboot. Command/Steps: $oldvalue = $(Get-ItemPropertyValue -Path  \\\"HKLM:\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\" -Name \\\"Userinit\\\");\nSet-ItemProperty -Path \\\"HK..."
+from = "now-9m"
+rule_id = "c3fba24f-cba4-4b90-a68e-528f50b412df"
+language = "kql"
+name = "Atomic Test: T1547.001 - HKLM - Append Command to Winlogon Userinit KEY Value"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "f7fab6cc-8ece-4ca7-a0f1-30a22fccd374", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$oldvalue*\\\" AND powershell.script_block_text : \\\"*$(Get-ItemPropertyValue*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" OR (process.command_line : \\\"*$oldvalue*\\\" AND process.command_line : \\\"*$(Get-ItemPropertyValue*\\\" AND process.command_line : \\\"*-Path*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "HKLM - Append Command to Winlogon Userinit KEY Value"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

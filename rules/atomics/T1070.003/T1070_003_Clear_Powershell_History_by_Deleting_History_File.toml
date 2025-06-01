@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear Powershell History by Deleting History File' (GUID: da75ae8d-26d6-4483-b0fe-700e4df4f037) of technique T1070.003 (Indicator Removal on Host: Clear Command History). Test Description: Clears Powershell history. Command/Steps: Remove-Item (Get-PSReadlineOption).HistorySavePath\n"
+from = "now-9m"
+rule_id = "ae17a5fa-f513-411d-8562-6e53218d7da0"
+language = "kql"
+name = "Atomic Test: T1070.003 - Clear Powershell History by Deleting History File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.003/T1070.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.003", "da75ae8d-26d6-4483-b0fe-700e4df4f037", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Remove-Item*\\\" AND powershell.script_block_text : \\\"*(Get-PSReadlineOption).HistorySavePath*\\\" OR (process.command_line : \\\"*Remove-Item*\\\" AND process.command_line : \\\"*(Get-PSReadlineOption).HistorySavePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.003"
+name = "Clear Powershell History by Deleting History File"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'VSCode tunnels (Linux/macOS)' (GUID: b877943f-0377-44f4-8477-f79db7f07c4d) of technique T1572 (Protocol Tunneling). Test Description: Visual Studio Code Remote Tunnels can be used for exposing local development environment/services/files over the internet.\nThis atomic will generate a dev tunnel binding it to the local service running on the provided port.\nReference:\n- [Microsoft Docs](https://code.visualstudio.com/docs/remote/tunnels)\n- [LOT Tunnels](https://lottunnels.github.io/lottunnels/Binaries/vscode-server/). Command/Steps: nohup code tunnel --accept-server-license-terms #{additional_args} >/dev/null 2>&1 &\n"
+from = "now-9m"
+rule_id = "52809aa9-b114-47b4-888f-a1d55ef39032"
+language = "kql"
+name = "Atomic Test: T1572 - VSCode tunnels (Linux/macOS)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1572/T1572.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1572", "b877943f-0377-44f4-8477-f79db7f07c4d", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*nohup*\\\" AND process.command_line : \\\"*code*\\\" AND process.command_line : \\\"*tunnel*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1572"
+name = "VSCode tunnels (Linux/macOS)"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+

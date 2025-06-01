@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dynamic C# Compile' (GUID: 453614d8-3ba6-4147-acc0-7ec4b3e1faef) of technique T1027.004 (Obfuscated Files or Information: Compile After Delivery). Test Description: When C# is compiled dynamically, a .cmdline file will be created as a part of the process. \nCertain processes are not typically observed compiling C# code, but can do so without touching disk. This can be used to unpack a payload for execution.\nThe exe file that will be executed is named as T1027.004_DynamicCompile.exe is contained in the 'bin' folder of this atomic, and the source code to the file is in the 'src' folder.\nUpon execution, the exe will print 'T1027.004 Dynamic Compile'.. Command/Steps: Invoke-Expression \\\"#{input_file}\\\"\n"
+from = "now-9m"
+rule_id = "3f483c57-14d1-4873-bf7b-9caf05586c54"
+language = "kql"
+name = "Atomic Test: T1027.004 - Dynamic C# Compile"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.004/T1027.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.004", "453614d8-3ba6-4147-acc0-7ec4b3e1faef", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-Expression*\\\" OR (process.command_line : \\\"*Invoke-Expression*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.004"
+name = "Dynamic C# Compile"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+

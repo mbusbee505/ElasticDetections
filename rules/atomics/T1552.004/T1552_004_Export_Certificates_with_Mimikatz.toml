@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Export Certificates with Mimikatz' (GUID: 290df60e-4b5d-4a5e-b0c7-dc5348ea0c86) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: The following Atomic test will utilize Mimikatz to extract the certificates from the local system My store. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.\nA successful attempt will stdout the certificates and write multiple .pfx and .der files to disk.. Command/Steps: \\\"#{mimikatz_exe}\\\" \\\"crypto::certificates /systemstore:local_machine /store:my /export\\\"  exit\n"
+from = "now-9m"
+rule_id = "15d00e0f-5ec2-4112-b804-a2e153c73a79"
+language = "kql"
+name = "Atomic Test: T1552.004 - Export Certificates with Mimikatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "290df60e-4b5d-4a5e-b0c7-dc5348ea0c86", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*crypto::certificates*\\\" AND process.command_line : \\\"*/systemstore:local_machine*\\\" AND process.command_line : \\\"*/store:my*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "Export Certificates with Mimikatz"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

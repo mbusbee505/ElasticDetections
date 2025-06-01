@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Allowing custom application to execute during new RDP logon session' (GUID: b051b3c0-66e7-4a81-916d-e6383bd3a669) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: When a users logs in to a computer via RDP,Windows will search for the key in HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\\Wds\\\\rdpwd registry\nBy default, rdpclip is the value stored. An attacker with administrator privileges can alter the value stored to allow for the custom application to execute during RDP login session.The test will allow running cal rather rdpclip when a user logs in via RDP. Command/Steps: reg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\\Wds\\\\rdpwd\\\" /f /v StartupPrograms /t REG_SZ /d \\\"#{malicious_app}\\\"\n"
+from = "now-9m"
+rule_id = "f618e208-3607-4e5c-8ae4-14d2c72584d8"
+language = "kql"
+name = "Atomic Test: T1547.001 - Allowing custom application to execute during new RDP logon session"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "b051b3c0-66e7-4a81-916d-e6383bd3a669", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server\\\\Wds\\\\rdpwd*\\\" AND process.command_line : \\\"*StartupPrograms*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Allowing custom application to execute during new RDP logon session"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

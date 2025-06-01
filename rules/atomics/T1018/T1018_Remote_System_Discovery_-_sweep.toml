@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - sweep' (GUID: 96db2632-8417-4dbb-b8bb-a8b92ba391de) of technique T1018 (Remote System Discovery). Test Description: Identify remote systems via ping sweep.\n\nUpon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active.. Command/Steps: for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip; [ $? -eq 0 ] && echo \\\"#{subnet}.$ip UP\\\" || : ; done\n"
+from = "now-9m"
+rule_id = "a436d38b-0a7a-4dd7-b80d-a365de0885e7"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - sweep"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "96db2632-8417-4dbb-b8bb-a8b92ba391de", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(seq*\\\" AND process.command_line : \\\"*254)*\\\" AND process.command_line : \\\"*ping*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - sweep"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Allow Executable Through Firewall Located in Non-Standard Location' (GUID: 6f5822d2-d38d-4f48-9bfc-916607ff6b8c) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: This test will attempt to allow an executable through the system firewall located in the Users directory. Command/Steps: Copy-Item \\\"#{exe_file_path}\\\" -Destination \\\"C:\\\\Users\\\\$env:UserName\\\" -Force\nnetsh advfirewall firewall add rule name=\\\"Atomic Test\\\" dir=in action=allow p..."
+from = "now-9m"
+rule_id = "106cff29-6eaa-4bcd-92e9-7df120ac5178"
+language = "kql"
+name = "Atomic Test: T1562.004 - Allow Executable Through Firewall Located in Non-Standard Location"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "6f5822d2-d38d-4f48-9bfc-916607ff6b8c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*-Destination*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*-Destination*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Allow Executable Through Firewall Located in Non-Standard Location"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify file timestamps using reference file' (GUID: 631ea661-d661-44b0-abdb-7a7f3fc08e50) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Modifies the `modify` and `access` timestamps using the timestamps of a specified reference file.\n\nThis technique was used by the threat actor Rocke during the compromise of Linux web servers.. Command/Steps: touch #{target_file_path}\ntouch -acmr #{reference_file_path} #{target_file_path}\n"
+from = "now-9m"
+rule_id = "a441928f-349e-48d3-86f0-40c0b2915209"
+language = "kql"
+name = "Atomic Test: T1070.006 - Modify file timestamps using reference file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "631ea661-d661-44b0-abdb-7a7f3fc08e50", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*-acmr*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "Modify file timestamps using reference file"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

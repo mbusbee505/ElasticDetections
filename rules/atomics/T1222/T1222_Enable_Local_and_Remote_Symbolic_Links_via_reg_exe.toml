@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable Local and Remote Symbolic Links via reg.exe' (GUID: 78bef0d4-57fb-417d-a67a-b75ae02ea3ab) of technique T1222 (File and Directory Permissions Modification). Test Description: Use reg.exe to enable both ‘remote to local’ and ‘remote to remote’ symbolic links. This allows access to files from local shortcuts with local or remote paths.\n[reference](https://symantec-enterprise-blogs.security.com/threat-intelligence/noberus-blackcat-alphv-rust-ransomware/). Command/Steps: reg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\FileSystem\\\" /v SymlinkRemoteToLocalEvaluation /t REG_DWORD /d \\\"1\\\" /f\nreg add \\\"HKLM\\\\SYSTEM\\\\CurrentContro..."
+from = "now-9m"
+rule_id = "610de879-77ae-4e9d-aba4-0a6fb8c17b1a"
+language = "kql"
+name = "Atomic Test: T1222 - Enable Local and Remote Symbolic Links via reg.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222/T1222.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222", "78bef0d4-57fb-417d-a67a-b75ae02ea3ab", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\FileSystem*\\\" AND process.command_line : \\\"*SymlinkRemoteToLocalEvaluation*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222"
+name = "Enable Local and Remote Symbolic Links via reg.exe"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+

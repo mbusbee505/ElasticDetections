@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'FreeBSD List Kernel Modules' (GUID: 4947897f-643a-4b75-b3f5-bed6885749f6) of technique T1082 (System Information Discovery). Test Description: Enumerate kernel modules loaded. Upon successful execution stdout will display kernel modules loaded, followed by list of modules matching 'vmm' if present.. Command/Steps: kldstat\nkldstat | grep vmm\n"
+from = "now-9m"
+rule_id = "b7550d52-27c5-4d54-af5b-b9d0b07ebe0a"
+language = "kql"
+name = "Atomic Test: T1082 - FreeBSD List Kernel Modules"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "4947897f-643a-4b75-b3f5-bed6885749f6", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*kldstat*\\\" AND process.command_line : \\\"*kldstat*\\\" AND process.command_line : \\\"*grep*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "FreeBSD List Kernel Modules"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

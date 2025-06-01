@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe Memory using NanoDump' (GUID: dddd4aca-bbed-46f0-984d-e4c5971c51ea) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: The NanoDump tool uses syscalls and an invalid dump signature to avoid detection.\n\nhttps://github.com/helpsystems/nanodump\n\nUpon successful execution, you should find the nanondump.dmp file in the temp directory. Command/Steps: PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\nanodump.x64.exe -w \\\"%temp%\\\\nanodump.dmp\\\"\n"
+from = "now-9m"
+rule_id = "ef17307c-06ab-4636-bbc8-7ec4b65c6bbf"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe Memory using NanoDump"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "dddd4aca-bbed-46f0-984d-e4c5971c51ea", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%temp%\\\\nanodump.dmp*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe Memory using NanoDump"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

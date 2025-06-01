@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Security Software Discovery - Windows Defender Enumeration' (GUID: d3415a0e-66ef-429b-acf4-a768876954f6) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: Windows Defender Enumeration via different built-in windows native tools.\nwhen sucessfully executed, information about windows defender is displayed.. Command/Steps: Get-Service WinDefend #check the service state of Windows Defender\nGet-MpComputerStatus #provides the current status of security solution elements, in..."
+from = "now-9m"
+rule_id = "83d6b016-e03c-476b-9df5-2ce647267f23"
+language = "kql"
+name = "Atomic Test: T1518.001 - Security Software Discovery - Windows Defender Enumeration"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "d3415a0e-66ef-429b-acf4-a768876954f6", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Service*\\\" AND powershell.script_block_text : \\\"*WinDefend*\\\" AND powershell.script_block_text : \\\"*#check*\\\" OR (process.command_line : \\\"*Get-Service*\\\" AND process.command_line : \\\"*WinDefend*\\\" AND process.command_line : \\\"*#check*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Security Software Discovery - Windows Defender Enumeration"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

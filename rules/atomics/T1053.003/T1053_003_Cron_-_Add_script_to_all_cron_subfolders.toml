@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Cron - Add script to all cron subfolders' (GUID: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0) of technique T1053.003 (Scheduled Task/Job: Cron). Test Description: This test adds a script to /etc/cron.hourly, /etc/cron.daily, /etc/cron.monthly and /etc/cron.weekly folders configured to execute on a schedule. This technique was used by the threat actor Rocke during the exploitation of Linux web servers.. Command/Steps: echo \\\"#{command}\\\" > /etc/cron.daily/#{cron_script_name}\necho \\\"#{command}\\\" > /etc/cron.hourly/#{cron_script_name}\necho \\\"#{command}\\\" > /etc/cron.monthly..."
+from = "now-9m"
+rule_id = "aad43b14-46b1-43ee-9d70-42d54d3f0356"
+language = "kql"
+name = "Atomic Test: T1053.003 - Cron - Add script to all cron subfolders"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.003/T1053.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.003", "b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\" AND process.command_line : \\\"*Team*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.003"
+name = "Cron - Add script to all cron subfolders"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+

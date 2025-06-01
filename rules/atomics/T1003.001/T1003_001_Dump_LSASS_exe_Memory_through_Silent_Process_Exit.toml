@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe Memory through Silent Process Exit' (GUID: eb5adf16-b601-4926-bca7-dad22adffb37) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: WerFault.exe (Windows Error Reporting process that handles process crashes) can be abused to create a \nmemory dump of lsass.exe, in a directory of your choice. This method relies on a mechanism \nintroduced in Windows 7 called Silent Process Exit, which provides the ability to trigger\nspecific actions for a monitored process in one of two scenarios; either the process terminates\nitself by calling ExitProcess(), or another process terminates it via the TerminateProcess() API. \nThe major advantage of this technique is that it does not cause lsass.exe to crash, and since \nWerFault.exe is used to create file dumps all the time (not just lsass.exe), this method provides \nthe added advantage of going undetected. WerFault.exe is a process known for dumping every crashing process, \nfrom an attacker standpoint this is appealing as their illicit credential extraction will \nappear benign because from a defender’s viewpoint it’s within the realm of normal activity.\n\nUpon successful execution, you should find the dump file in directory of your choice or \\\"%temp%\\\\SilentProcessExit\\\" by default.. Command/Steps: PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\nanodump.x64.exe --silent-process-exit \\\"#{output_folder}\\\"\n"
+from = "now-9m"
+rule_id = "7baca8d3-c905-45c9-84da-94ab0cb528a5"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe Memory through Silent Process Exit"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "eb5adf16-b601-4926-bca7-dad22adffb37", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*--silent-process-exit*\\\" AND process.command_line : \\\"*%temp%\\\\SilentProcessExit*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe Memory through Silent Process Exit"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Auditing Configuration Changes on FreeBSD Host' (GUID: cedaf7e7-28ee-42ab-ba13-456abd35d1bd) of technique T1562.006 (Impair Defenses: Indicator Blocking). Test Description: Emulates modification of auditd configuration files. Command/Steps: echo '#art_test_1562_006_1' >> /etc/security/#{auditd_config_file_name}\n"
+from = "now-9m"
+rule_id = "680552f4-8a84-4e3b-b7c1-28cceeee60b9"
+language = "kql"
+name = "Atomic Test: T1562.006 - Auditing Configuration Changes on FreeBSD Host"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.006/T1562.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.006", "cedaf7e7-28ee-42ab-ba13-456abd35d1bd", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*#art_test_1562_006_1*\\\" AND process.command_line : \\\"*/etc/security/audit_event*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.006"
+name = "Auditing Configuration Changes on FreeBSD Host"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+

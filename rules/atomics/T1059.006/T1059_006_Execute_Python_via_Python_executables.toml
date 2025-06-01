@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute Python via Python executables' (GUID: 0b44d79b-570a-4b27-a31f-3bf2156e5eaa) of technique T1059.006 (Command and Scripting Interpreter: Python). Test Description: Create Python file (.py) then compile to binary (.pyc) that downloads an external malicious script then executes locally using the supplied executor and arguments. Command/Steps: which_python=$(which python || which python3 || which python3.9 || which python2)\necho 'import requests' > #{python_script_name}\necho 'import os' >> #..."
+from = "now-9m"
+rule_id = "9df9c1bc-cf46-4ff9-a048-c68a4fc19a4a"
+language = "kql"
+name = "Atomic Test: T1059.006 - Execute Python via Python executables"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.006/T1059.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.006", "0b44d79b-570a-4b27-a31f-3bf2156e5eaa", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*which_python=$(which*\\\" AND process.command_line : \\\"*python*\\\" AND process.command_line : \\\"*which*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.006"
+name = "Execute Python via Python executables"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/006"
+
+

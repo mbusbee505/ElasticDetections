@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Discovery - Get-Process' (GUID: 3b3809b6-a54b-4f5b-8aff-cb51f2e97b34) of technique T1057 (Process Discovery). Test Description: Utilize Get-Process PowerShell cmdlet to identify processes.\n\nUpon successful execution, powershell.exe will execute Get-Process to list processes. Output will be via stdout.. Command/Steps: Get-Process\n"
+from = "now-9m"
+rule_id = "362328e5-3dbb-4fd6-94e9-77a789e46bba"
+language = "kql"
+name = "Atomic Test: T1057 - Process Discovery - Get-Process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "3b3809b6-a54b-4f5b-8aff-cb51f2e97b34", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Process*\\\" OR (process.command_line : \\\"*Get-Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Process Discovery - Get-Process"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

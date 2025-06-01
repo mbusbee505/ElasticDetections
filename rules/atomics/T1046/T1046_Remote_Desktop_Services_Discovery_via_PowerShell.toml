@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote Desktop Services Discovery via PowerShell' (GUID: 9e55750e-4cbf-4013-9627-e9a045b541bf) of technique T1046 (Network Service Discovery). Test Description: Availability of remote desktop services can be checked using get- cmdlet of PowerShell. Command/Steps: Get-Service -Name \\\"Remote Desktop Services\\\", \\\"Remote Desktop Configuration\\\"\n"
+from = "now-9m"
+rule_id = "2b8eca1f-c8ae-4080-a337-7a84e3eec1d6"
+language = "kql"
+name = "Atomic Test: T1046 - Remote Desktop Services Discovery via PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1046/T1046.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1046", "9e55750e-4cbf-4013-9627-e9a045b541bf", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Service*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*Remote*\\\" OR (process.command_line : \\\"*Get-Service*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*Remote*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1046"
+name = "Remote Desktop Services Discovery via PowerShell"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+

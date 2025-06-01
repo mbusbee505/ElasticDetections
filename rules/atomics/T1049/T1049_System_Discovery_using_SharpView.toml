@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Discovery using SharpView' (GUID: 96f974bb-a0da-4d87-a744-ff33e73367e9) of technique T1049 (System Network Connections Discovery). Test Description: Get a listing of network connections, domains, domain users, and etc.  \nsharpview.exe located in the bin folder, an opensource red-team tool.\nUpon successful execution, cmd.exe will execute sharpview.exe <method>. Results will output via stdout.. Command/Steps: $syntaxList = #{syntax}\nforeach ($syntax in $syntaxList) {\n#{SharpView} $syntax -}\n"
+from = "now-9m"
+rule_id = "66d25292-98cc-4b5a-a52f-03ae4761c7a2"
+language = "kql"
+name = "Atomic Test: T1049 - System Discovery using SharpView"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1049/T1049.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1049", "96f974bb-a0da-4d87-a744-ff33e73367e9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$syntaxList*\\\" AND powershell.script_block_text : \\\"*Invoke-ACLScanner\\\"*\\\" AND powershell.script_block_text : \\\"*Invoke-Kerberoast\\\"*\\\" OR (process.command_line : \\\"*$syntaxList*\\\" AND process.command_line : \\\"*Invoke-ACLScanner\\\"*\\\" AND process.command_line : \\\"*Invoke-Kerberoast\\\"*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1049"
+name = "System Discovery using SharpView"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1049"
+
+

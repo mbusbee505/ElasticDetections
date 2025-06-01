@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Discovery - SocGholish whoami' (GUID: 3d257a03-eb80-41c5-b744-bb37ac7f65c7) of technique T1033 (System Owner/User Discovery). Test Description: SocGholish performs whoami discovery commands and outputs the results to a tmp file. \nThe test will generate a filename similar to the random one generated during execution and write the file to AppData\\\\Temp.\n\nReference: https://redcanary.com/threat-detection-report/threats/socgholish/. Command/Steps: $TokenSet = @{\n  U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\n  N = [Char[]]'0123456789'\n}\n$Upper = Get-Random -Count 5 -InputObject $TokenSet.U\n$Number =..."
+from = "now-9m"
+rule_id = "8853a160-08ac-41ef-b27f-458882086e55"
+language = "kql"
+name = "Atomic Test: T1033 - System Discovery - SocGholish whoami"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1033/T1033.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1033", "3d257a03-eb80-41c5-b744-bb37ac7f65c7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$TokenSet*\\\" AND powershell.script_block_text : \\\"*[Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ*\\\" AND powershell.script_block_text : \\\"*[Char[]]'0123456789*\\\" OR (process.command_line : \\\"*$TokenSet*\\\" AND process.command_line : \\\"*[Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ*\\\" AND process.command_line : \\\"*[Char[]]'0123456789*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1033"
+name = "System Discovery - SocGholish whoami"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+

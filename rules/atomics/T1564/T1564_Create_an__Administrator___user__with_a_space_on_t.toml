@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create an \\\"Administrator \\\" user (with a space on the end)' (GUID: 5bb20389-39a5-4e99-9264-aeb92a55a85c) of technique T1564 (Hide Artifacts). Test Description: Creating a user with a username containing with a space on the end. Command/Steps: New-LocalUser -Name \\\"Administrator \\\" -NoPassword"
+from = "now-9m"
+rule_id = "3049de97-81a5-4a57-8d2e-cff27fdd0b11"
+language = "kql"
+name = "Atomic Test: T1564 - Create an \"Administrator \" user (with a space on the end)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564/T1564.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564", "5bb20389-39a5-4e99-9264-aeb92a55a85c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-LocalUser*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*Administrator*\\\" OR (process.command_line : \\\"*New-LocalUser*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*Administrator*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564"
+name = "Create an \"Administrator \" user (with a space on the end)"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564"
+
+

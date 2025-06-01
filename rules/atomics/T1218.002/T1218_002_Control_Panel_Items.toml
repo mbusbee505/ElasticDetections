@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Control Panel Items' (GUID: 037e9d8a-9e46-4255-8b33-2ae3b545ca6f) of technique T1218.002 (Signed Binary Proxy Execution: Control Panel). Test Description: This test simulates an adversary leveraging control.exe\nUpon execution calc.exe will be launched. Command/Steps: control.exe \\\"#{cpl_file_path}\\\"\n"
+from = "now-9m"
+rule_id = "82e4edfc-55bf-435e-92ab-a369f061b1ce"
+language = "kql"
+name = "Atomic Test: T1218.002 - Control Panel Items"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.002/T1218.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.002", "037e9d8a-9e46-4255-8b33-2ae3b545ca6f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*control.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.002"
+name = "Control Panel Items"
+reference = "https://attack.mitre.org/techniques/T1218/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/002"
+
+

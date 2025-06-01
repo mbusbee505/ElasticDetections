@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Memory Swap' (GUID: e74e4c63-6fde-4ad2-9ee8-21c3a1733114) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: disable swapping of device paging that impaire the compromised host to swap data if the RAM is full. Awfulshred wiper used this technique as an additional \npayload to the compromised host and to make sure that there will be no recoverable data due to swap feature of FreeBSD/linux.. Command/Steps: swapon -a \nsleep 2\nswapoff -a\nsync\n"
+from = "now-9m"
+rule_id = "61c44f3f-fa24-4f69-ab43-4e6d3084ff7e"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Memory Swap"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "e74e4c63-6fde-4ad2-9ee8-21c3a1733114", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*swapon*\\\" AND process.command_line : \\\"*sleep*\\\" AND process.command_line : \\\"*swapoff*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Memory Swap"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

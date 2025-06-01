@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Security Software Discovery - AV Discovery via WMI' (GUID: 1553252f-14ea-4d3b-8a08-d7a4211aa945) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: Discovery of installed antivirus products via a WMI query.\n\nwhen sucessfully executed, the test is going to display installed AV software.. Command/Steps: wmic.exe /Namespace:\\\\\\\\root\\\\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List"
+from = "now-9m"
+rule_id = "e98b2d05-ada9-490b-9662-41c84923fe92"
+language = "kql"
+name = "Atomic Test: T1518.001 - Security Software Discovery - AV Discovery via WMI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "1553252f-14ea-4d3b-8a08-d7a4211aa945", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic.exe*\\\" AND process.command_line : \\\"*/Namespace:\\\\\\\\root\\\\SecurityCenter2*\\\" AND process.command_line : \\\"*Path*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Security Software Discovery - AV Discovery via WMI"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

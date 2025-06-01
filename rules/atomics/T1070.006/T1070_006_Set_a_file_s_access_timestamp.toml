@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Set a file's access timestamp' (GUID: 5f9113d5-ed75-47ed-ba23-ea3573d05810) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Stomps on the access timestamp of a file. Command/Steps: touch -a -t 197001010000.00 #{target_filename}\n"
+from = "now-9m"
+rule_id = "67051244-7de6-47d6-bbc5-8a721659c0e6"
+language = "kql"
+name = "Atomic Test: T1070.006 - Set a file's access timestamp"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "5f9113d5-ed75-47ed-ba23-ea3573d05810", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*197001010000.00*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "Set a file's access timestamp"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

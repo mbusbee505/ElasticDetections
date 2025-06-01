@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Visual Basic script execution to gather local computer information' (GUID: 1620de42-160a-4fe5-bbaf-d3fef0181ce9) of technique T1059.005 (Command and Scripting Interpreter: Visual Basic). Test Description: Visual Basic execution test, execute vbscript via PowerShell.\n\nWhen successful, system information will be written to $env:TEMP\\\\T1059.005.out.txt.. Command/Steps: cscript \\\"#{vbscript}\\\" > $env:TEMP\\\\T1059.005.out.txt\n"
+from = "now-9m"
+rule_id = "055d278f-0819-4698-bbcb-5dbabdc419cd"
+language = "kql"
+name = "Atomic Test: T1059.005 - Visual Basic script execution to gather local computer information"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.005/T1059.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.005", "1620de42-160a-4fe5-bbaf-d3fef0181ce9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*cscript*\\\" OR (process.command_line : \\\"*cscript*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.005"
+name = "Visual Basic script execution to gather local computer information"
+reference = "https://attack.mitre.org/techniques/T1059/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/005"
+
+

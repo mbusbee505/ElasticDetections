@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tamper with Windows Defender Command Prompt' (GUID: aa875ed4-8935-47e2-b2c5-6ec00ab220d2) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.\nHowever, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on. Upon execution, \\\"Access Denied\\\"\nwill be displayed twice and the WinDefend service status will be displayed.. Command/Steps: sc stop WinDefend\nsc config WinDefend start=disabled\nsc query WinDefend\n"
+from = "now-9m"
+rule_id = "ddb3b279-c171-485a-8b93-83dd8178b213"
+language = "kql"
+name = "Atomic Test: T1562.001 - Tamper with Windows Defender Command Prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "aa875ed4-8935-47e2-b2c5-6ec00ab220d2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*stop*\\\" AND process.command_line : \\\"*WinDefend*\\\" AND process.command_line : \\\"*config*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Tamper with Windows Defender Command Prompt"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

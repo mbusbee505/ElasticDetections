@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Active Directory Create User Account (Non-elevated)' (GUID: 8c992cb3-a46e-4fd5-b005-b1bab185af31) of technique T1136.002 (Create Account: Domain Account). Test Description: Use Admin Credentials to Create A Normal Account (as means of entry). Command/Steps: echo \\\"dn: cn=Atomic User, cn=Users,dc=#{domain},dc=#{top_level_domain}\\\\nobjectClass: person\\\\ncn: Atomic User\\\\nsn: User\\\" > tempadmin.ldif\necho ldapadd ..."
+from = "now-9m"
+rule_id = "b14d8d69-a6d3-4449-983d-7fa943c7e162"
+language = "kql"
+name = "Atomic Test: T1136.002 - Active Directory Create User Account (Non-elevated)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.002/T1136.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.002", "8c992cb3-a46e-4fd5-b005-b1bab185af31", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*cn=Atomic*\\\" AND process.command_line : \\\"*cn=Users,dc=example,dc=test\\\\nobjectClass:*\\\" AND process.command_line : \\\"*person\\\\ncn:*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.002"
+name = "Active Directory Create User Account (Non-elevated)"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Query Registry' (GUID: 8f7578c4-9863-4d83-875c-a565573bbdf0) of technique T1012 (Query Registry). Test Description: Query Windows Registry.\nUpon successful execution, cmd.exe will perform multiple reg queries. Some will succeed and others will fail (dependent upon OS).\nReferences:\nhttps://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order\nhttps://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services\nhttp://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf\nhttps://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf. Command/Steps: reg query \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Windows\\\"\nreg query HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunServicesOnce\nreg que..."
+from = "now-9m"
+rule_id = "6ae0e69a-4c6e-4bad-9e4b-7b66808d1a3b"
+language = "kql"
+name = "Atomic Test: T1012 - Query Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1012/T1012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1012", "8f7578c4-9863-4d83-875c-a565573bbdf0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Windows*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1012"
+name = "Query Registry"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+

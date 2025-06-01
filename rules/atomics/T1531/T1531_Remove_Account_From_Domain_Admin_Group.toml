@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remove Account From Domain Admin Group' (GUID: 43f71395-6c37-498e-ab17-897d814a0947) of technique T1531 (Account Access Removal). Test Description: This test will remove an account from the domain admins group. Command/Steps: $PWord = ConvertTo-SecureString -String #{super_pass} -AsPlainText -Force\n$Credential = New-Object -TypeName System.Management.Automation.PSCredential..."
+from = "now-9m"
+rule_id = "3a47d3ab-fad3-460e-80c6-1cdade25e0bb"
+language = "kql"
+name = "Atomic Test: T1531 - Remove Account From Domain Admin Group"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1531/T1531.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1531", "43f71395-6c37-498e-ab17-897d814a0947", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$PWord*\\\" AND powershell.script_block_text : \\\"*ConvertTo-SecureString*\\\" AND powershell.script_block_text : \\\"*-String*\\\" OR (process.command_line : \\\"*$PWord*\\\" AND process.command_line : \\\"*ConvertTo-SecureString*\\\" AND process.command_line : \\\"*-String*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1531"
+name = "Remove Account From Domain Admin Group"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+

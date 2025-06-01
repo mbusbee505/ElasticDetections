@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Injection SID-History with mimikatz' (GUID: 6bef32e5-9456-4072-8f14-35566fb85401) of technique T1134.005 (Access Token Manipulation: SID-History Injection). Test Description: Adversaries may use SID-History Injection to escalate privileges and bypass access controls. Must be run on domain controller. Command/Steps: #{mimikatz_path} \\\"privilege::debug\\\" \\\"sid::patch\\\" \\\"sid::add /sid:#{sid_to_inject} /sam:#{sam_account_name}\\\" \\\"exit\\\"\n"
+from = "now-9m"
+rule_id = "67f3752e-a73b-434d-94c7-e8901c01f065"
+language = "kql"
+name = "Atomic Test: T1134.005 - Injection SID-History with mimikatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.005/T1134.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.005", "6bef32e5-9456-4072-8f14-35566fb85401", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*privilege::debug*\\\" AND process.command_line : \\\"*sid::patch*\\\" AND process.command_line : \\\"*sid::add*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.005"
+name = "Injection SID-History with mimikatz"
+reference = "https://attack.mitre.org/techniques/T1134/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/005"
+
+

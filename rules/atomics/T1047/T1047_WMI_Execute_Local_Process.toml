@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMI Execute Local Process' (GUID: b3bdfc91-b33e-4c6d-a5c8-d64bee0276b3) of technique T1047 (Windows Management Instrumentation). Test Description: This test uses wmic.exe to execute a process on the local host.\nWhen the test completes , a new process will be started locally .A notepad application will be started when input is left on default.. Command/Steps: wmic process call create #{process_to_execute}\n"
+from = "now-9m"
+rule_id = "e97d5008-7128-48fe-bea9-c125754d5671"
+language = "kql"
+name = "Atomic Test: T1047 - WMI Execute Local Process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1047/T1047.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1047", "b3bdfc91-b33e-4c6d-a5c8-d64bee0276b3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*process*\\\" AND process.command_line : \\\"*call*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1047"
+name = "WMI Execute Local Process"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+

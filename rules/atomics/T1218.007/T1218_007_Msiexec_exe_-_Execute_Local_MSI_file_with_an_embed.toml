@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Msiexec.exe - Execute Local MSI file with an embedded EXE' (GUID: ed3fa08a-ca18-4009-973e-03d13014d0e8) of technique T1218.007 (Signed Binary Proxy Execution: Msiexec). Test Description: Executes an MSI containing an embedded EXE using msiexec.exe. Command/Steps: #{msi_exe} /q /#{action} \\\"#{msi_payload}\\\"\n"
+from = "now-9m"
+rule_id = "0a3075c4-519a-474e-8214-4a2f68159dbd"
+language = "kql"
+name = "Atomic Test: T1218.007 - Msiexec.exe - Execute Local MSI file with an embedded EXE"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.007/T1218.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.007", "ed3fa08a-ca18-4009-973e-03d13014d0e8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*c:\\\\windows\\\\system32\\\\msiexec.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.007"
+name = "Msiexec.exe - Execute Local MSI file with an embedded EXE"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/007"
+
+

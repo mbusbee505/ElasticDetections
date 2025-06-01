@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DLL Search Order Hijacking - amsi.dll' (GUID: 8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3) of technique T1574.001 (Hijack Execution Flow: DLL). Test Description: Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)\nhttps://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/\n\nUpon successful execution, powershell.exe will be copied and renamed to updater.exe and load amsi.dll from a non-standard path.. Command/Steps: copy %windir%\\\\System32\\\\windowspowershell\\\\v1.0\\\\powershell.exe %APPDATA%\\\\updater.exe\ncopy %windir%\\\\System32\\\\amsi.dll %APPDATA%\\\\amsi.dll\n%APPDATA%\\\\update..."
+from = "now-9m"
+rule_id = "03809977-b01e-4c48-b626-ba22f2d2d5c7"
+language = "kql"
+name = "Atomic Test: T1574.001 - DLL Search Order Hijacking - amsi.dll"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.001/T1574.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.001", "8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\windowspowershell\\\\v1.0\\\\powershell.exe*\\\" AND process.command_line : \\\"*%APPDATA%\\\\updater.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.001"
+name = "DLL Search Order Hijacking - amsi.dll"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+

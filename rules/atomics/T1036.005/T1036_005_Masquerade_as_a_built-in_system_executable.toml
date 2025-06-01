@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Masquerade as a built-in system executable' (GUID: 35eb8d16-9820-4423-a2a1-90c4f5edd9ca) of technique T1036.005 (Masquerading: Match Legitimate Name or Location). Test Description: Launch an executable that attempts to masquerade as a legitimate executable.. Command/Steps: Add-Type -TypeDefinition @'\npublic class Test {\n    public static void Main(string[] args) {\n        System.Console.WriteLine(\\\"tweet, tweet\\\");\n    }\n}..."
+from = "now-9m"
+rule_id = "5228a002-c68a-4076-bb3d-b2900a97c897"
+language = "kql"
+name = "Atomic Test: T1036.005 - Masquerade as a built-in system executable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.005/T1036.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.005", "35eb8d16-9820-4423-a2a1-90c4f5edd9ca", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Add-Type*\\\" AND powershell.script_block_text : \\\"*-TypeDefinition*\\\" AND powershell.script_block_text : \\\"*public*\\\" OR (process.command_line : \\\"*Add-Type*\\\" AND process.command_line : \\\"*-TypeDefinition*\\\" AND process.command_line : \\\"*public*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.005"
+name = "Masquerade as a built-in system executable"
+reference = "https://attack.mitre.org/techniques/T1036/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/005"
+
+

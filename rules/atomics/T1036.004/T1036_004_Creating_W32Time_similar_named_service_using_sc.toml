@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Creating W32Time similar named service using sc' (GUID: b721c6ef-472c-4263-a0d9-37f1f4ecff66) of technique T1036.004 (Masquerading: Masquerade Task or Service). Test Description: Creating W32Time similar named service (win32times) using sc just like threat actor dubbed \\\"Operation Wocao\\\". Command/Steps: sc create win32times binPath= \\\"cmd /c start c:\\\\T1036.004_NonExistingScript.ps1\\\"\nsc qc win32times\n"
+from = "now-9m"
+rule_id = "278b9aa6-9382-4749-8fb7-7fbd847a2f23"
+language = "kql"
+name = "Atomic Test: T1036.004 - Creating W32Time similar named service using sc"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.004/T1036.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.004", "b721c6ef-472c-4263-a0d9-37f1f4ecff66", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*create*\\\" AND process.command_line : \\\"*win32times*\\\" AND process.command_line : \\\"*binPath=*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.004"
+name = "Creating W32Time similar named service using sc"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+

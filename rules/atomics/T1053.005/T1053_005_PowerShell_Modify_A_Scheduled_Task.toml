@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Modify A Scheduled Task' (GUID: dda6fc7b-c9a6-4c18-b98d-95ec6542af6d) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Create a scheduled task with an action and modify the action to do something else. The initial idea is to showcase Microsoft Windows TaskScheduler Operational log modification of an action on a Task already registered. \nIt will first be created to spawn cmd.exe, but modified to run notepad.exe.\n\nUpon successful execution, powershell.exe will create a scheduled task and modify the action.. Command/Steps: $Action = New-ScheduledTaskAction -Execute \\\"cmd.exe\\\"\n$Trigger = New-ScheduledTaskTrigger -AtLogon\n$User = New-ScheduledTaskPrincipal -GroupId \\\"BUILTIN..."
+from = "now-9m"
+rule_id = "79b768e0-1f64-4bba-af0e-fec9e881bc91"
+language = "kql"
+name = "Atomic Test: T1053.005 - PowerShell Modify A Scheduled Task"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "dda6fc7b-c9a6-4c18-b98d-95ec6542af6d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Action*\\\" AND powershell.script_block_text : \\\"*New-ScheduledTaskAction*\\\" AND powershell.script_block_text : \\\"*-Execute*\\\" OR (process.command_line : \\\"*$Action*\\\" AND process.command_line : \\\"*New-ScheduledTaskAction*\\\" AND process.command_line : \\\"*-Execute*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "PowerShell Modify A Scheduled Task"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

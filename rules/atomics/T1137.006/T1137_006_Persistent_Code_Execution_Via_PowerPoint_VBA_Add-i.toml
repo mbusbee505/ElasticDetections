@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM)' (GUID: f89e58f9-2b49-423b-ac95-1f3e7cfd8277) of technique T1137.006 (Office Application Startup: Add-ins). Test Description: Creates a PowerPoint VBA Add-in file (PPAM) which runs automatically when PowerPoint is started\nThe sample PPA provided launches the notepad as a proof-of-concept for persistent execution from Office.. Command/Steps: Copy \\\"PathToAtomicsFolder\\\\T1137.006\\\\bin\\\\Addins\\\\PptVBAaddin.ppam\\\" \\\"$env:APPDATA\\\\Microsoft\\\\Addins\\\\notepad.ppam\\\"\n$ver = (New-Object -COMObject \\\"PowerPoin..."
+from = "now-9m"
+rule_id = "af80c1cc-d768-41a6-b699-d48467434ff0"
+language = "kql"
+name = "Atomic Test: T1137.006 - Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1137.006/T1137.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1137.006", "f89e58f9-2b49-423b-ac95-1f3e7cfd8277", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy*\\\" AND powershell.script_block_text : \\\"*$env:APPDATA\\\\Microsoft\\\\Addins\\\\notepad.ppam*\\\" AND powershell.script_block_text : \\\"*$ver*\\\" OR (process.command_line : \\\"*Copy*\\\" AND process.command_line : \\\"*$env:APPDATA\\\\Microsoft\\\\Addins\\\\notepad.ppam*\\\" AND process.command_line : \\\"*$ver*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1137.006"
+name = "Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM)"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+

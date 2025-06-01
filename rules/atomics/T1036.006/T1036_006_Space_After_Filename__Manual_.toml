@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Space After Filename (Manual)' (GUID: 89a7dd26-e510-4c9f-9b15-f3bae333360f) of technique T1036.006 (Masquerading: Space after Filename). Test Description: Space After Filename. Command/Steps: 1. echo '#!/bin/bash\\\\necho \\\"print \\\\\\\"hello, world!\\\\\\\"\\\" | /usr/bin/python\\\\nexit' > execute.txt && chmod +x execute.txt\n\n2. mv execute.txt \\\"execute.txt \\\"\n..."
+from = "now-9m"
+rule_id = "c69ba4b9-dce4-4308-9439-ddb02a030aef"
+language = "kql"
+name = "Atomic Test: T1036.006 - Space After Filename (Manual)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.006/T1036.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.006", "89a7dd26-e510-4c9f-9b15-f3bae333360f", "macos",]
+type = "query"
+query = "process.command_line : \\\"*#!/bin/bash\\\\necho*\\\" AND process.command_line : \\\"*print*\\\" AND process.command_line : \\\"*\\\\\\\"hello*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.006"
+name = "Space After Filename (Manual)"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/006"
+
+

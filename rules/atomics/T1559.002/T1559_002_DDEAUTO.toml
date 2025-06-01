@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DDEAUTO' (GUID: cf91174c-4e74-414e-bec0-8d60a104d181) of technique T1559.002 (Inter-Process Communication: Dynamic Data Exchange). Test Description: TrustedSec - Unicorn - https://github.com/trustedsec/unicorn\n\nSensePost DDEAUTO - https://sensepost.com/blog/2017/macro-less-code-exec-in-msword/\n\nWord VBA Macro\n\n[Dragon's Tail](https://github.com/redcanaryco/atomic-red-team/tree/master/ARTifacts/Adversary/Dragons_Tail). Command/Steps: 1. Open Word\n\n2. Insert tab -> Quick Parts -> Field\n\n3. Choose = (Formula) and click ok.\n\n4. Once the field is inserted, you should now see \\\"!Unexpect..."
+from = "now-9m"
+rule_id = "fd6eb78a-2db7-4ffa-914b-2bf50f00abd1"
+language = "kql"
+name = "Atomic Test: T1559.002 - DDEAUTO"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1559.002/T1559.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1559.002", "cf91174c-4e74-414e-bec0-8d60a104d181", "windows",]
+type = "query"
+query = "process.command_line : \\\"*Open*\\\" AND process.command_line : \\\"*Word*\\\" AND process.command_line : \\\"*Insert*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1559.002"
+name = "DDEAUTO"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+

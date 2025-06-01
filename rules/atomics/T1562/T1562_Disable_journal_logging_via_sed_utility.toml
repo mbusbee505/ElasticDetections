@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable journal logging via sed utility' (GUID: 12e5551c-8d5c-408e-b3e4-63f53b03379f) of technique T1562 (Impair Defenses). Test Description: The atomic test disables the journal logging by searching and replacing the \\\"Storage\\\" parameter to \\\"none\\\" within the journald.conf file, thus any new journal entries will only be temporarily available in memory and not written to disk. Command/Steps: sudo sed -i 's/Storage=auto/Storage=none/' /etc/systemd/journald.conf\n"
+from = "now-9m"
+rule_id = "88bd1cfa-2e92-406a-beb1-af13a604b265"
+language = "kql"
+name = "Atomic Test: T1562 - Disable journal logging via sed utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562/T1562.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562", "12e5551c-8d5c-408e-b3e4-63f53b03379f", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*s/Storage=auto/Storage=none/*\\\" AND process.command_line : \\\"*/etc/systemd/journald.conf*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562"
+name = "Disable journal logging via sed utility"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562"
+
+

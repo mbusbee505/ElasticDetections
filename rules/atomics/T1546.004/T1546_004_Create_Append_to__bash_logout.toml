@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create/Append to .bash_logout' (GUID: 37ad2f24-7c53-4a50-92da-427a4ad13f58) of technique T1546.004 (Event Triggered Execution: .bash_profile .bashrc and .shrc). Test Description: The Bash shell runs ~/.bash_logout \\\"if it exists\\\" to run commands on user logout. An adversary may create or append to a .bash_logout to clear history, start processes etc. Note the ~/.bash_logout is only run if you explicitly exit or log out of an \\\"interactive login shell session\\\" i.e. via the console, SSH, /bin/bash -l or su -l <username>. \n\nThis test creates the art user, logs in, creates a .bash_logout which will echo some text into the art.txt file on logout and logs out and the /home/art/art.txt is created.. Command/Steps: useradd --create-home --shell /bin/bash art\nsu -l art -c \\\"echo 'echo \\\\\\\"Atomic Red Team was here... T1546.004\\\\\\\" >> /home/art/art.txt' >> /home/art/.bas..."
+from = "now-9m"
+rule_id = "8cd003ba-07ca-4a7f-ada8-e406a55b0584"
+language = "kql"
+name = "Atomic Test: T1546.004 - Create/Append to .bash_logout"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.004/T1546.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.004", "37ad2f24-7c53-4a50-92da-427a4ad13f58", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*useradd*\\\" AND process.command_line : \\\"*--create-home*\\\" AND process.command_line : \\\"*--shell*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.004"
+name = "Create/Append to .bash_logout"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/004"
+
+

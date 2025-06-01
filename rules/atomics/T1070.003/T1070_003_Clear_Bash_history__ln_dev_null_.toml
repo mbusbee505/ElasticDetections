@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear Bash history (ln dev/null)' (GUID: 23d348f3-cc5c-4ba9-bd0a-ae09069f0914) of technique T1070.003 (Indicator Removal on Host: Clear Command History). Test Description: Clears bash history via a symlink to /dev/null. Command/Steps: ln -sf /dev/null #{history_path}\n"
+from = "now-9m"
+rule_id = "bbb8067c-928f-49a1-9593-65a1ab60b41c"
+language = "kql"
+name = "Atomic Test: T1070.003 - Clear Bash history (ln dev/null)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.003/T1070.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.003", "23d348f3-cc5c-4ba9-bd0a-ae09069f0914", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/dev/null*\\\" AND process.command_line : \\\"*~/.bash_history*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.003"
+name = "Clear Bash history (ln dev/null)"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+

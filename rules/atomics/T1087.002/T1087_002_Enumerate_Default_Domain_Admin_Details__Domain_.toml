@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Default Domain Admin Details (Domain)' (GUID: c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef) of technique T1087.002 (Account Discovery: Domain Account). Test Description: This test will enumerate the details of the built-in domain admin account. Command/Steps: net user administrator /domain\n"
+from = "now-9m"
+rule_id = "4cb38680-7dc2-4ce2-8576-328f55f0b562"
+language = "kql"
+name = "Atomic Test: T1087.002 - Enumerate Default Domain Admin Details (Domain)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*administrator*\\\" AND process.command_line : \\\"*/domain*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Enumerate Default Domain Admin Details (Domain)"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

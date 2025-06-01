@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Podman Container and Resource Discovery' (GUID: fc631702-3f03-4f2b-8d8a-6b3d055580a1) of technique T1613 (Container and Resource Discovery). Test Description: Adversaries may attempt to discover containers and other resources that are available within a containers environment.. Command/Steps: podman build -t t1613 $PathtoAtomicsFolder/T1613/src/\npodman run --name t1613_container --rm -d -t t1613\npodman ps\npodman stats --no-stream\npodman ins..."
+from = "now-9m"
+rule_id = "f0d8a961-2929-4cd2-8423-861386dbdc2a"
+language = "kql"
+name = "Atomic Test: T1613 - Podman Container and Resource Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1613/T1613.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1613", "fc631702-3f03-4f2b-8d8a-6b3d055580a1", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*podman*\\\" AND process.command_line : \\\"*build*\\\" AND process.command_line : \\\"*t1613*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1613"
+name = "Podman Container and Resource Discovery"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+

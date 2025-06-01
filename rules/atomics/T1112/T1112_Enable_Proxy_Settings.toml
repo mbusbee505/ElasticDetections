@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable Proxy Settings' (GUID: eb0ba433-63e5-4a8c-a9f0-27c4192e1336) of technique T1112 (Modify Registry). Test Description: A modification registry to enable proxy settings. This technique was seen in DarkGate malware as part of its installation.. Command/Steps: reg add \\\"HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\\\" /v ProxyEnable /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "3269b79e-e6b2-48a4-8e9d-7eb0cb68599e"
+language = "kql"
+name = "Atomic Test: T1112 - Enable Proxy Settings"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "eb0ba433-63e5-4a8c-a9f0-27c4192e1336", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet*\\\" AND process.command_line : \\\"*Settings*\\\" AND process.command_line : \\\"*ProxyEnable*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Enable Proxy Settings"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'powerShell Persistence via hijacking default modules - Get-Variable.exe' (GUID: 1561de08-0b4b-498e-8261-e922f3494aae) of technique T1574.008 (Hijack Execution Flow: Path Interception by Search Order Hijacking). Test Description: Colibri leverages PowerShell in a unique way to maintain persistence after a reboot. Depending on the Windows version, Colibri drops its copy in %APPDATA%\\\\Local\\\\Microsoft\\\\WindowsApps and \nnames it Get-Variable.exe for Windows 10 and above.\nhttps://blog.malwarebytes.com/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique/. Command/Steps: C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\csc.exe /out:\\\"$env:localappdata\\\\Microsoft\\\\WindowsApps\\\\Get-Variable.exe\\\" \\\"PathToAtomicsFolder\\\\T1574.008..."
+from = "now-9m"
+rule_id = "f7b4e2dc-6e03-4d56-8151-67e3e99bab98"
+language = "kql"
+name = "Atomic Test: T1574.008 - powerShell Persistence via hijacking default modules - Get-Variable.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.008/T1574.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.008", "1561de08-0b4b-498e-8261-e922f3494aae", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\csc.exe*\\\" AND powershell.script_block_text : \\\"*/out:\\\"$env:localappdata\\\\Microsoft\\\\WindowsApps\\\\Get-Variable.exe*\\\" AND powershell.script_block_text : \\\"*-noprofile*\\\" OR (process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\csc.exe*\\\" AND process.command_line : \\\"*/out:\\\"$env:localappdata\\\\Microsoft\\\\WindowsApps\\\\Get-Variable.exe*\\\" AND process.command_line : \\\"*-noprofile*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.008"
+name = "powerShell Persistence via hijacking default modules - Get-Variable.exe"
+reference = "https://attack.mitre.org/techniques/T1574/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/008"
+
+

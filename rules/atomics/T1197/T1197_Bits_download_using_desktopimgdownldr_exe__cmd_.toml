@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bits download using desktopimgdownldr.exe (cmd)' (GUID: afb5e09e-e385-4dee-9a94-6ee60979d114) of technique T1197 (BITS Jobs). Test Description: This test simulates using desktopimgdownldr.exe to download a malicious file\ninstead of a desktop or lockscreen background img. The process that actually makes \nthe TCP connection and creates the file on the disk is a svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe. See https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/. Command/Steps: set \\\"#{download_path}\\\" && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file} /eventName:desktopimgdownldr\n"
+from = "now-9m"
+rule_id = "1cf2071c-3fca-49e7-8c4c-2db3d1394ceb"
+language = "kql"
+name = "Atomic Test: T1197 - Bits download using desktopimgdownldr.exe (cmd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1197/T1197.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1197", "afb5e09e-e385-4dee-9a94-6ee60979d114", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*SYSTEMROOT=C:\\\\Windows\\\\Temp*\\\" AND process.command_line : \\\"*desktopimgdownldr.exe*\\\" AND process.command_line : \\\"*/eventName:desktopimgdownldr*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1197"
+name = "Bits download using desktopimgdownldr.exe (cmd)"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+

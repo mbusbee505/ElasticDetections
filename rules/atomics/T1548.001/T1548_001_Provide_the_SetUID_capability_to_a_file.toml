@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Provide the SetUID capability to a file' (GUID: 1ac3272f-9bcf-443a-9888-4b1d3de785c1) of technique T1548.001 (Abuse Elevation Control Mechanism: Setuid and Setgid). Test Description: This test gives a file the capability to set UID without using flags.. Command/Steps: touch #{file_to_setcap}\nsudo setcap cap_setuid=ep #{file_to_setcap}\n"
+from = "now-9m"
+rule_id = "2cfd9a37-743f-4140-9a84-55e1a95087df"
+language = "kql"
+name = "Atomic Test: T1548.001 - Provide the SetUID capability to a file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.001/T1548.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.001", "1ac3272f-9bcf-443a-9888-4b1d3de785c1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*setcap*\\\" AND process.command_line : \\\"*cap_setuid=ep*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.001"
+name = "Provide the SetUID capability to a file"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMI Reconnaissance Processes' (GUID: 5750aa16-0e59-4410-8b9a-8a47ca2788e2) of technique T1047 (Windows Management Instrumentation). Test Description: An adversary might use WMI to list Processes running on the compromised host.\nWhen the test completes , there should be running processes listed on the command line.. Command/Steps: wmic process get caption,executablepath,commandline /format:csv\n"
+from = "now-9m"
+rule_id = "a40bec5e-0db7-41dd-8e20-1fc860866541"
+language = "kql"
+name = "Atomic Test: T1047 - WMI Reconnaissance Processes"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1047/T1047.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1047", "5750aa16-0e59-4410-8b9a-8a47ca2788e2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*process*\\\" AND process.command_line : \\\"*caption,executablepath,commandline*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1047"
+name = "WMI Reconnaissance Processes"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+

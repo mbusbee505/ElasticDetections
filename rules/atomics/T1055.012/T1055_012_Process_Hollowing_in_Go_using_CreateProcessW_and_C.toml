@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Hollowing in Go using CreateProcessW and CreatePipe WinAPIs (T1055.012)' (GUID: 94903cc5-d462-498a-b919-b1e5ab155fee) of technique T1055.012 (Process Injection: Process Hollowing). Test Description: Create a process in a suspended state, execute shellcode to spawn calc.exe in a child process, and then resume the original process.\nThis test uses the CreatePipe function to create an anonymous pipe that parent and child processes can communicate over. This anonymous pipe\nallows for the retrieval of output generated from executed shellcode.\n- PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createprocesswithpipe). Command/Steps: $PathToAtomicsFolder\\T1055.012\\bin\\u0064\\\\CreateProcessWithPipe.exe -program \\\"#{hollow_binary_path}\\\" -debug\n"
+from = "now-9m"
+rule_id = "575d4c27-68dc-4744-860e-963295020004"
+language = "kql"
+name = "Atomic Test: T1055.012 - Process Hollowing in Go using CreateProcessW and CreatePipe WinAPIs (T1055.012)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055.012/T1055.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055.012", "94903cc5-d462-498a-b919-b1e5ab155fee", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-program*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\werfault.exe*\\\" AND powershell.script_block_text : \\\"*-debug*\\\" OR (process.command_line : \\\"*-program*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\werfault.exe*\\\" AND process.command_line : \\\"*-debug*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055.012"
+name = "Process Hollowing in Go using CreateProcessW and CreatePipe WinAPIs (T1055.012)"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055/012"
+
+

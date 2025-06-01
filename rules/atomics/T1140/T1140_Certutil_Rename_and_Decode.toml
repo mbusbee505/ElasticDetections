@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Certutil Rename and Decode' (GUID: 71abc534-3c05-4d0c-80f7-cbe93cb2aa94) of technique T1140 (Deobfuscate/Decode Files or Information). Test Description: Rename certutil and decode a file. This is in reference to latest research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html). Command/Steps: copy %windir%\\\\system32\\\\certutil.exe %temp%\\\\tcm.tmp\n%temp%\\\\tcm.tmp -encode #{executable} %temp%\\\\T1140_calc2.txt\n%temp%\\\\tcm.tmp -decode %temp%\\\\T1140_cal..."
+from = "now-9m"
+rule_id = "278cf8ee-b422-45ac-adf6-2a40ea6f8b5a"
+language = "kql"
+name = "Atomic Test: T1140 - Certutil Rename and Decode"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1140/T1140.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1140", "71abc534-3c05-4d0c-80f7-cbe93cb2aa94", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%windir%\\\\system32\\\\certutil.exe*\\\" AND process.command_line : \\\"*%temp%\\\\tcm.tmp*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1140"
+name = "Certutil Rename and Decode"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+

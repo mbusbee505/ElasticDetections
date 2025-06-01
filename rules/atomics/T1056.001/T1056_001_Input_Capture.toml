@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Input Capture' (GUID: d9b633ca-8efb-45e6-b838-70f595c6ae26) of technique T1056.001 (Input Capture: Keylogging). Test Description: Utilize PowerShell and external resource to capture keystrokes\n[Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056.001/src/Get-Keystrokes.ps1)\nProvided by [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-Keystrokes.ps1)\n\nUpon successful execution, Powershell will execute `Get-Keystrokes.ps1` and output to key.log.. Command/Steps: &\\\"$PathToAtomicsFolder\\\\T1056.001\\\\src\\\\Get-Keystrokes.ps1\\\" -LogPath #{filepath}\n"
+from = "now-9m"
+rule_id = "18dbe527-2feb-4ebe-a121-049d90a76a61"
+language = "kql"
+name = "Atomic Test: T1056.001 - Input Capture"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1056.001/T1056.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1056.001", "d9b633ca-8efb-45e6-b838-70f595c6ae26", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-LogPath*\\\" AND powershell.script_block_text : \\\"*\\\\key.log*\\\" OR (process.command_line : \\\"*-LogPath*\\\" AND process.command_line : \\\"*\\\\key.log*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1056.001"
+name = "Input Capture"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1056/001"
+
+

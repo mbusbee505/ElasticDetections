@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Indirect Command Execution - RunMRU Dialog' (GUID: de323a93-2f18-4bd5-ba60-d6fca6aeff76) of technique T1202 (Indirect Command Execution). Test Description: Simulates execution of commands via the Windows Run dialog (Win+R) by programmatically opening the Run dialog, \ncopying a command to clipboard, and automating the paste and execution. This generates artifacts in the RunMRU registry key,\nwhich is commonly abused by threat actors to execute malicious commands disguised as CAPTCHA verification steps.\nUpon execution, a test PowerShell command will be executed through the Run dialog.. Command/Steps: # Copy command to clipboard\nSet-Clipboard -Value '#{command}'\n\n# Open Run dialog\nStart-Process -FilePath \\\"powershell\\\" -ArgumentList \\\"-c (New-Object -C..."
+from = "now-9m"
+rule_id = "b65598bb-31a1-4472-8aa8-a7db66789841"
+language = "kql"
+name = "Atomic Test: T1202 - Indirect Command Execution - RunMRU Dialog"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1202/T1202.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1202", "de323a93-2f18-4bd5-ba60-d6fca6aeff76", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy*\\\" AND powershell.script_block_text : \\\"*command*\\\" AND powershell.script_block_text : \\\"*clipboard*\\\" OR (process.command_line : \\\"*Copy*\\\" AND process.command_line : \\\"*command*\\\" AND process.command_line : \\\"*clipboard*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1202"
+name = "Indirect Command Execution - RunMRU Dialog"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+

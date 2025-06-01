@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 setupapi.dll Execution' (GUID: 71d771cd-d6b3-4f34-bc76-a63d47a10b19) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Test execution of a command using rundll32.exe with setupapi.dll. Upon execution, a windows saying \\\"installation failed\\\" will be opened\n\nReference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml. Command/Steps: rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 \\\"#{inf_to_execute}\\\"\n"
+from = "now-9m"
+rule_id = "6578bd89-06dc-4b0b-929d-d420a2158aea"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 setupapi.dll Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "71d771cd-d6b3-4f34-bc76-a63d47a10b19", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*setupapi.dll,InstallHinfSection*\\\" AND process.command_line : \\\"*DefaultInstall*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 setupapi.dll Execution"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

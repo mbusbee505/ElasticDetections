@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Discovery - get-wmiObject' (GUID: b51239b4-0129-474f-a2b4-70f855b9f2c2) of technique T1057 (Process Discovery). Test Description: Utilize get-wmiObject PowerShell cmdlet to identify processes.\n\nUpon successful execution, powershell.exe will execute get-wmiObject to list processes. Output will be via stdout.. Command/Steps: get-wmiObject -class Win32_Process\n"
+from = "now-9m"
+rule_id = "f99d4069-2366-4945-863d-9b6f3a630739"
+language = "kql"
+name = "Atomic Test: T1057 - Process Discovery - get-wmiObject"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "b51239b4-0129-474f-a2b4-70f855b9f2c2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*get-wmiObject*\\\" AND powershell.script_block_text : \\\"*-class*\\\" AND powershell.script_block_text : \\\"*Win32_Process*\\\" OR (process.command_line : \\\"*get-wmiObject*\\\" AND process.command_line : \\\"*-class*\\\" AND process.command_line : \\\"*Win32_Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Process Discovery - get-wmiObject"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

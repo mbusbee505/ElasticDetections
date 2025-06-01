@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Crafting Active Directory golden tickets with Rubeus' (GUID: e42d33cd-205c-4acf-ab59-a9f38f6bad9c) of technique T1558.001 (Steal or Forge Kerberos Tickets: Golden Ticket). Test Description: Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the Active Directory domain.\nThis test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).\nThe generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.. Command/Steps: Remove-Item $env:TEMP\\\\golden.bat -ErrorAction Ignore\nRemove-Item $env:TEMP\\\\golden.txt -ErrorAction Ignore\n\ncmd.exe /c \\\"#{local_folder}\\\\#{local_executa..."
+from = "now-9m"
+rule_id = "f4ab6afe-002e-4f86-a1d1-d2b0c4074907"
+language = "kql"
+name = "Atomic Test: T1558.001 - Crafting Active Directory golden tickets with Rubeus"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.001/T1558.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.001", "e42d33cd-205c-4acf-ab59-a9f38f6bad9c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Remove-Item*\\\" AND powershell.script_block_text : \\\"*\\\\golden.bat*\\\" AND powershell.script_block_text : \\\"*-ErrorAction*\\\" OR (process.command_line : \\\"*Remove-Item*\\\" AND process.command_line : \\\"*\\\\golden.bat*\\\" AND process.command_line : \\\"*-ErrorAction*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.001"
+name = "Crafting Active Directory golden tickets with Rubeus"
+reference = "https://attack.mitre.org/techniques/T1558/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/001"
+
+

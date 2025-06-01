@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Dump All Azure Key Vaults with Microburst' (GUID: 1b83cddb-eaa7-45aa-98a5-85fb0a8807ea) of technique T1528 (Steal Application Access Token). Test Description: Upon successful execution of this test, the names, locations, and contents of key vaults within an Azure account will be output to a file.\nSee - https://www.netspi.com/blog/technical/cloud-penetration-testing/a-beginners-guide-to-gathering-azure-passwords/. Command/Steps: import-module \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\Get-AzurePasswords.ps1\\\"\n$Password = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -..."
+from = "now-9m"
+rule_id = "a23c8115-4500-400e-a73a-4a9939b0e426"
+language = "kql"
+name = "Atomic Test: T1528 - Azure - Dump All Azure Key Vaults with Microburst"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1528/T1528.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1528", "1b83cddb-eaa7-45aa-98a5-85fb0a8807ea", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*import-module*\\\" AND powershell.script_block_text : \\\"*$Password*\\\" AND powershell.script_block_text : \\\"*ConvertTo-SecureString*\\\" OR (process.command_line : \\\"*import-module*\\\" AND process.command_line : \\\"*$Password*\\\" AND process.command_line : \\\"*ConvertTo-SecureString*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1528"
+name = "Azure - Dump All Azure Key Vaults with Microburst"
+reference = "https://attack.mitre.org/techniques/T1528"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1528"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1528"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1528"
+
+

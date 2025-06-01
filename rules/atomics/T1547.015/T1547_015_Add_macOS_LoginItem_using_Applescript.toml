@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add macOS LoginItem using Applescript' (GUID: 716e756a-607b-41f3-8204-b214baf37c1d) of technique T1547.015 (Boot or Logon Autostart Execution: Login Items). Test Description: Runs osascript on a file to create new LoginItem for current user.\nNOTE: Will popup dialog prompting user to Allow or Deny Terminal.app to control \\\"System Events\\\"\nTherefore, it can't be automated until the TCC is granted.\nThe login item launches Safari.app when user logs in, but there is a cleanup script to remove it as well.\nIn addition to the `osascript` Process Events, file modification events to\n`/Users/*/Library/Application Support/com.apple.backgroundtaskmanagementagent/backgrounditems.btm` should be seen.. Command/Steps: osascript #{scriptfile}\n"
+from = "now-9m"
+rule_id = "d1e3eb39-94fe-4609-9b3e-b57c7eb06e0d"
+language = "kql"
+name = "Atomic Test: T1547.015 - Add macOS LoginItem using Applescript"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.015/T1547.015.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.015", "716e756a-607b-41f3-8204-b214baf37c1d", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*osascript*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.015"
+name = "Add macOS LoginItem using Applescript"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/015"
+
+

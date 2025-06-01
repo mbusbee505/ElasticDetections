@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Version 2 Downgrade' (GUID: 47c96489-2f55-4774-a6df-39faff428f6f) of technique T1562.010 (Impair Defenses: Downgrade Attack). Test Description: Executes outdated PowerShell Version 2 which does not support security features like AMSI. By default the atomic will attempt to execute the cmdlet Invoke-Mimikatz whether it exists or not, as this cmdlet will be blocked by AMSI when active.. Command/Steps: PowerShell -version 2 -command '#{v2_command}'"
+from = "now-9m"
+rule_id = "b29546dc-52b3-448c-bf9a-493035d3fabd"
+language = "kql"
+name = "Atomic Test: T1562.010 - PowerShell Version 2 Downgrade"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.010/T1562.010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.010", "47c96489-2f55-4774-a6df-39faff428f6f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-version*\\\" AND powershell.script_block_text : \\\"*-command*\\\" AND powershell.script_block_text : \\\"*Invoke-Mimikatz*\\\" OR (process.command_line : \\\"*-version*\\\" AND process.command_line : \\\"*-command*\\\" AND process.command_line : \\\"*Invoke-Mimikatz*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.010"
+name = "PowerShell Version 2 Downgrade"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/010"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MacOS - Timestomp Date Modified' (GUID: 87fffff4-d371-4057-a539-e3b24c37e564) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Stomps on the modification timestamp of a file using MacOS's SetFile utility. Command/Steps: SetFile -m #{target_date} #{target_filename}\n"
+from = "now-9m"
+rule_id = "ac7aa4f8-9c64-48d3-b7cf-3fa6b3c88c6f"
+language = "kql"
+name = "Atomic Test: T1070.006 - MacOS - Timestomp Date Modified"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "87fffff4-d371-4057-a539-e3b24c37e564", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*SetFile*\\\" AND process.command_line : \\\"*01/01/1970*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "MacOS - Timestomp Date Modified"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'C2 Data Exfiltration' (GUID: d1253f6e-c29b-49dc-b466-2147a6191932) of technique T1041 (Exfiltration Over C2 Channel). Test Description: Exfiltrates a file present on the victim machine to the C2 server.. Command/Steps: if(-not (Test-Path #{filepath})){ \n  1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value \\\"This is line $_.\\\" }\n}\n[System.Net.ServicePointMan..."
+from = "now-9m"
+rule_id = "30416182-3be9-4238-bc98-b9cb3995799f"
+language = "kql"
+name = "Atomic Test: T1041 - C2 Data Exfiltration"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1041/T1041.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1041", "d1253f6e-c29b-49dc-b466-2147a6191932", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*if(-not*\\\" AND powershell.script_block_text : \\\"*(Test-Path*\\\" AND powershell.script_block_text : \\\"*\\\\LineNumbers.txt)){*\\\" OR (process.command_line : \\\"*if(-not*\\\" AND process.command_line : \\\"*(Test-Path*\\\" AND process.command_line : \\\"*\\\\LineNumbers.txt)){*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1041"
+name = "C2 Data Exfiltration"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+

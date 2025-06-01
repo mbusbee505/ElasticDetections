@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rubeus asreproast' (GUID: 615bd568-2859-41b5-9aed-61f6a88e48dd) of technique T1558.004 (Steal or Forge Kerberos Tickets: AS-REP Roasting). Test Description: Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast\nThis build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus. Command/Steps: cmd.exe /c \\\"#{local_folder}\\\\#{local_executable}\\\" asreproast /outfile:\\\"#{local_folder}\\\\#{out_file}\\\"\n"
+from = "now-9m"
+rule_id = "5c9e6c0b-a8f0-41aa-b283-3b78b831a250"
+language = "kql"
+name = "Atomic Test: T1558.004 - Rubeus asreproast"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1558.004/T1558.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1558.004", "615bd568-2859-41b5-9aed-61f6a88e48dd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*cmd.exe*\\\" AND powershell.script_block_text : \\\"*asreproast*\\\" OR (process.command_line : \\\"*cmd.exe*\\\" AND process.command_line : \\\"*asreproast*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1558.004"
+name = "Rubeus asreproast"
+reference = "https://attack.mitre.org/techniques/T1558/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1558/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1558/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1558/004"
+
+

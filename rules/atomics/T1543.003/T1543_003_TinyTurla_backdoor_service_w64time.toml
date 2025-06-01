@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'TinyTurla backdoor service w64time' (GUID: ef0581fd-528e-4662-87bc-4c2affb86940) of technique T1543.003 (Create or Modify System Process: Windows Service). Test Description: It's running Dll as service to emulate the TinyTurla backdoor\n\n[Related Talos Blog](https://blog.talosintelligence.com/2021/09/tinyturla.html). Command/Steps: copy \\\"#{dllfilename}\\\" %systemroot%\\\\system32\\\\\nsc create W64Time binPath= \\\"c:\\\\Windows\\\\System32\\\\svchost.exe -k TimeService\\\" type= share start=auto\nsc con..."
+from = "now-9m"
+rule_id = "2b31c70a-faea-43ff-ac4e-a6d018a6e51e"
+language = "kql"
+name = "Atomic Test: T1543.003 - TinyTurla backdoor service w64time"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.003/T1543.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.003", "ef0581fd-528e-4662-87bc-4c2affb86940", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%systemroot%\\\\system32\\\\*\\\" AND process.command_line : \\\"*create*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.003"
+name = "TinyTurla backdoor service w64time"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+

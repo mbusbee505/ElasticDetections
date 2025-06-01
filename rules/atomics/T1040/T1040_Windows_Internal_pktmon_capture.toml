@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Internal pktmon capture' (GUID: c67ba807-f48b-446e-b955-e4928cd1bf91) of technique T1040 (Network Sniffing). Test Description: Will start a packet capture and store log file as t1040.etl.\nhttps://lolbas-project.github.io/lolbas/Binaries/Pktmon/. Command/Steps: pktmon.exe start --etw  -f %TEMP%\\\\t1040.etl\nTIMEOUT /T 5 >nul 2>&1\npktmon.exe stop\n"
+from = "now-9m"
+rule_id = "3c36ed58-617c-4e50-b5e6-07bb057d5df3"
+language = "kql"
+name = "Atomic Test: T1040 - Windows Internal pktmon capture"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "c67ba807-f48b-446e-b955-e4928cd1bf91", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*pktmon.exe*\\\" AND process.command_line : \\\"*start*\\\" AND process.command_line : \\\"*--etw*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Windows Internal pktmon capture"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

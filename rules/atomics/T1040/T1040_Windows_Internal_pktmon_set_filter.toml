@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Internal pktmon set filter' (GUID: 855fb8b4-b8ab-4785-ae77-09f5df7bff55) of technique T1040 (Network Sniffing). Test Description: Select Desired ports for packet capture \nhttps://lolbas-project.github.io/lolbas/Binaries/Pktmon/. Command/Steps: pktmon.exe filter add -p 445\n"
+from = "now-9m"
+rule_id = "76b22d6e-a320-40e0-8f4a-29f5731467af"
+language = "kql"
+name = "Atomic Test: T1040 - Windows Internal pktmon set filter"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "855fb8b4-b8ab-4785-ae77-09f5df7bff55", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*pktmon.exe*\\\" AND process.command_line : \\\"*filter*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Windows Internal pktmon set filter"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

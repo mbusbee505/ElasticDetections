@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Access Token Manipulation' (GUID: dbf4f5a9-b8e0-46a3-9841-9ad71247239e) of technique T1134.002 (Create Process with Token). Test Description: This Action demonstrates how an access token for a specific program can spawn another program under a different owner. \nAdversaries can leverage access tokens to run programs under a different user not only to achieve privilege escalation but also to evade detection by blending in with normal user activity. \nThis Action will query all processes and list the process name and owner.It will then make a copy of an existing token to create a new instance of cmd.exe. Command/Steps: Set-ExecutionPolicy -Scope Process Bypass -Force\n$owners = @{}\ngwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}\nGet-Process | Select Pr..."
+from = "now-9m"
+rule_id = "cd169cb8-0f1b-4111-939d-78ce78f1e5a6"
+language = "kql"
+name = "Atomic Test: T1134.002 - Access Token Manipulation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.002/T1134.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.002", "dbf4f5a9-b8e0-46a3-9841-9ad71247239e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ExecutionPolicy*\\\" AND powershell.script_block_text : \\\"*-Scope*\\\" AND powershell.script_block_text : \\\"*Process*\\\" OR (process.command_line : \\\"*Set-ExecutionPolicy*\\\" AND process.command_line : \\\"*-Scope*\\\" AND process.command_line : \\\"*Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.002"
+name = "Access Token Manipulation"
+reference = "https://attack.mitre.org/techniques/T1134/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/002"
+
+

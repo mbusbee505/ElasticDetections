@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enabling Remote Desktop Protocol via Remote Registry' (GUID: e3ad8e83-3089-49ff-817f-e52f8c948090) of technique T1112 (Modify Registry). Test Description: Enabling RDP through remote registry.. Command/Steps: reg add \\\"hklm\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\\Winstations\\\\RDP-Tcp\\\" /v SecurityLayer /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "a8da31e2-1e5f-4d5f-aff4-60a188ff2b84"
+language = "kql"
+name = "Atomic Test: T1112 - Enabling Remote Desktop Protocol via Remote Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "e3ad8e83-3089-49ff-817f-e52f8c948090", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*hklm\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server\\\\Winstations\\\\RDP-Tcp*\\\" AND process.command_line : \\\"*SecurityLayer*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Enabling Remote Desktop Protocol via Remote Registry"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

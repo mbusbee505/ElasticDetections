@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Akira Ransomware drop Files with .akira Extension and Ransomnote' (GUID: ab3f793f-2dcc-4da5-9c71-34988307263f) of technique T1486 (Data Encrypted for Impact). Test Description: Dropping 100 files with random content and .akira File Extension and the Akira Ransomnote to c:\\\\. Command/Steps: 1..100 | ForEach-Object { $out = new-object byte[] 1073741; (new-object Random).NextBytes($out); [IO.File]::WriteAllBytes(\\\"c:\\\\test.$_.akira\\\", $out) }\n..."
+from = "now-9m"
+rule_id = "b7d60f91-fb4b-4bb6-a107-ff9b689435de"
+language = "kql"
+name = "Atomic Test: T1486 - Akira Ransomware drop Files with .akira Extension and Ransomnote"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "ab3f793f-2dcc-4da5-9c71-34988307263f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*1..100*\\\" AND powershell.script_block_text : \\\"*ForEach-Object*\\\" AND powershell.script_block_text : \\\"*$out*\\\" OR (process.command_line : \\\"*1..100*\\\" AND process.command_line : \\\"*ForEach-Object*\\\" AND process.command_line : \\\"*$out*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "Akira Ransomware drop Files with .akira Extension and Ransomnote"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

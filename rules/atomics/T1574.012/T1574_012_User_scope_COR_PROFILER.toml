@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'User scope COR_PROFILER' (GUID: 9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a) of technique T1574.012 (Hijack Execution Flow: COR_PROFILER). Test Description: Creates user scope environment variables and CLSID COM object to enable a .NET profiler (COR_PROFILER).\nThe unmanaged profiler DLL (`T1574.012x64.dll`) executes when the CLR is loaded by the Event Viewer process.\nAdditionally, the profiling DLL will inherit the integrity level of Event Viewer bypassing UAC and executing `notepad.exe` with high integrity.\nIf the account used is not a local administrator the profiler DLL will still execute each time the CLR is loaded by a process, however,\nthe notepad process will not execute with high integrity.\n\nReference: https://redcanary.com/blog/cor_profiler-for-persistence/. Command/Steps: Write-Host \\\"Creating registry keys in HKCU:Software\\\\Classes\\\\CLSID\\\\#{clsid_guid}\\\" -ForegroundColor Cyan\nNew-Item -Path \\\"HKCU:\\\\Software\\\\Classes\\\\CLSID\\\\#{..."
+from = "now-9m"
+rule_id = "309c99f7-84db-49b9-aea4-3e8f22eb388e"
+language = "kql"
+name = "Atomic Test: T1574.012 - User scope COR_PROFILER"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.012/T1574.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.012", "9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Write-Host*\\\" AND powershell.script_block_text : \\\"*Creating*\\\" AND powershell.script_block_text : \\\"*registry*\\\" OR (process.command_line : \\\"*Write-Host*\\\" AND process.command_line : \\\"*Creating*\\\" AND process.command_line : \\\"*registry*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.012"
+name = "User scope COR_PROFILER"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/012"
+
+

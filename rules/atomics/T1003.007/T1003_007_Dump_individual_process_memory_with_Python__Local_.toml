@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump individual process memory with Python (Local)' (GUID: 437b2003-a20d-4ed8-834c-4964f24eec63) of technique T1003.007 (OS Credential Dumping: Proc Filesystem). Test Description: Using `/proc/$PID/mem`, where $PID is the target process ID, use a Python script to\ncopy a process's heap memory to an external file so it can be searched or exfiltrated later.\nOn FreeBSD procfs must be mounted.. Command/Steps: sh #{script_path}\nPID=$(pgrep -n -f \\\"#{pid_term}\\\")\nPYTHON=$(which python || which python3 || which python2)\n$PYTHON #{python_script} $PID #{output_fil..."
+from = "now-9m"
+rule_id = "b74df70a-a74f-43ca-bf4b-ed7482ef7c98"
+language = "kql"
+name = "Atomic Test: T1003.007 - Dump individual process memory with Python (Local)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.007/T1003.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.007", "437b2003-a20d-4ed8-834c-4964f24eec63", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*PID=$(pgrep*\\\" AND process.command_line : \\\"*PYTHON=$(which*\\\" AND process.command_line : \\\"*python*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.007"
+name = "Dump individual process memory with Python (Local)"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/007"
+
+

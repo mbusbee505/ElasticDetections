@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Open a local port through Windows Firewall to any profile' (GUID: 9636dd6e-7599-40d2-8eee-ac16434f35ed) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: This test will attempt to open a local port defined by input arguments to any profile. Command/Steps: netsh advfirewall firewall add rule name=\\\"Open Port to Any\\\" dir=in protocol=tcp localport=#{local_port} action=allow profile=any"
+from = "now-9m"
+rule_id = "13f06c0b-475f-4815-b862-01c60593ccae"
+language = "kql"
+name = "Atomic Test: T1562.004 - Open a local port through Windows Firewall to any profile"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "9636dd6e-7599-40d2-8eee-ac16434f35ed", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*netsh*\\\" AND powershell.script_block_text : \\\"*advfirewall*\\\" AND powershell.script_block_text : \\\"*firewall*\\\" OR (process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*advfirewall*\\\" AND process.command_line : \\\"*firewall*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Open a local port through Windows Firewall to any profile"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

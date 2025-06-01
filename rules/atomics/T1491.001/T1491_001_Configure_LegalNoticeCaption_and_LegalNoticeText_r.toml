@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message' (GUID: ffcbfaab-c9ff-470b-928c-f086b326089b) of technique T1491.001 (Defacement: Internal Defacement). Test Description: Display ransom message to users at system start-up by configuring registry keys HKLM\\\\SOFTWARE\\\\Micosoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\LegalNoticeCaption and HKLM\\\\SOFTWARE\\\\Micosoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\LegalNoticeText.\n\n[SynAck Ransomware](https://www.trendmicro.com/vinfo/es/security/news/cybercrime-and-digital-threats/synack-ransomware-leverages-process-doppelg-nging-for-evasion-and-infection), \n[Grief Ransomware](https://redcanary.com/blog/grief-ransomware/), \n[Maze Ransomware](https://cyware.com/research-and-analysis/maze-ransomware-a-deadly-combination-of-data-theft-and-encryption-to-target-us-organizations-8f27),\n[Pysa Ransomware](https://www.cybereason.com/blog/research/threat-analysis-report-inside-the-destructive-pysa-ransomware),\n[Spook Ransomware](https://community.fortinet.com/t5/FortiEDR/Threat-Coverage-How-FortiEDR-protects-against-Spook-Ransomware/ta-p/204226),\n[DopplePaymer Ransomware](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Ransom:Win32/Dopplepaymer&threatId=-2147221958),\n[Reedemer Ransomware](https://blog.cyble.com/2022/07/20/redeemer-ransomware-back-action/),\n[Kangaroo Ransomware](https://www.bleepingcomputer.com/news/security/the-kangaroo-ransomware-not-only-encrypts-your-data-but-tries-to-lock-you-out-of-windows/). Command/Steps: $orgLegalNoticeCaption = (Get-ItemProperty HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System -Name LegalNoticeCaption).LegalNoticeCaptio..."
+from = "now-9m"
+rule_id = "819cc314-9ac4-4965-9c4d-97dfdc211e57"
+language = "kql"
+name = "Atomic Test: T1491.001 - Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1491.001/T1491.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1491.001", "ffcbfaab-c9ff-470b-928c-f086b326089b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$orgLegalNoticeCaption*\\\" AND powershell.script_block_text : \\\"*(Get-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\" OR (process.command_line : \\\"*$orgLegalNoticeCaption*\\\" AND process.command_line : \\\"*(Get-ItemProperty*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1491.001"
+name = "Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1491/001"
+
+

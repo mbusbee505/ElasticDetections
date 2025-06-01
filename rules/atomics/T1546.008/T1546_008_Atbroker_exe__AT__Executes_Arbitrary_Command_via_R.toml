@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Atbroker.exe (AT) Executes Arbitrary Command via Registry Key' (GUID: 444ff124-4c83-4e28-8df6-6efd3ece6bd4) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Executes code specified in the registry for a new AT (Assistive Technologies).. Command/Steps: reg add \\\"HKLM\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Accessibility\\\\ATs\\\\malware_test\\\" /f\nreg add \\\"HKLM\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersi..."
+from = "now-9m"
+rule_id = "0f05477e-2a6d-46dc-ab56-a9afc7a5d179"
+language = "kql"
+name = "Atomic Test: T1546.008 - Atbroker.exe (AT) Executes Arbitrary Command via Registry Key"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "444ff124-4c83-4e28-8df6-6efd3ece6bd4", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\Software\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Accessibility\\\\ATs\\\\malware_test*\\\" AND process.command_line : \\\"*HKLM\\\\Software\\\\Microsoft\\\\Windows*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Atbroker.exe (AT) Executes Arbitrary Command via Registry Key"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

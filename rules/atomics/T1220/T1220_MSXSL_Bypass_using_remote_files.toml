@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MSXSL Bypass using remote files' (GUID: a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985) of technique T1220 (XSL Script Processing). Test Description: Executes the code specified within a XSL script tag during XSL transformation using a remote payload.\nRequires download of MSXSL.exe. No longer available from Microsoft.\n(Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714 )\nOpen Calculator.exe when test successfully executed, while AV turned off.. Command/Steps: \\\"#{msxsl_exe}\\\" \\\"#{xmlfile}\\\" \\\"#{xslfile}\\\"\n"
+from = "now-9m"
+rule_id = "39b8b4f8-333c-4cd0-8c64-20bbe08fd4f1"
+language = "kql"
+name = "Atomic Test: T1220 - MSXSL Bypass using remote files"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1220/T1220.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1220", "a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1220"
+name = "MSXSL Bypass using remote files"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+

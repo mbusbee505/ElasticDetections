@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add and delete Packet Filter rules' (GUID: 8b23cae1-66c1-41c5-b79d-e095b6098b5b) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Add and delete a rule on the Packet Filter (PF) if installed and enabled.. Command/Steps: echo \\\"block in proto tcp from 1.2.3.4 to any\\\" | pfctl -a pf-rules -f -\npfctl -a pf-rules -s rules\n"
+from = "now-9m"
+rule_id = "496b57ff-5785-4a90-9bf2-69846b6d11c3"
+language = "kql"
+name = "Atomic Test: T1562.004 - Add and delete Packet Filter rules"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "8b23cae1-66c1-41c5-b79d-e095b6098b5b", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*block*\\\" AND process.command_line : \\\"*proto*\\\" AND process.command_line : \\\"*from*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Add and delete Packet Filter rules"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

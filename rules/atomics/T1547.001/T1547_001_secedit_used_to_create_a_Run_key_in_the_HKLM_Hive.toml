@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'secedit used to create a Run key in the HKLM Hive' (GUID: 14fdc3f1-6fc3-4556-8d36-aa89d9d42d02) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: secedit allows to manipulate the HKLM hive of the Windows registry. This test creates a Run key with the keyname calc having calc.exe as the value in the HKLM hive.\n[Reference](https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d). Command/Steps: secedit /import /db #{secedit_db} /cfg \\\"#{ini_file}\\\"\nsecedit /configure /db #{secedit_db}\n"
+from = "now-9m"
+rule_id = "1e1380aa-6764-46c4-bd6d-380337f14722"
+language = "kql"
+name = "Atomic Test: T1547.001 - secedit used to create a Run key in the HKLM Hive"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "14fdc3f1-6fc3-4556-8d36-aa89d9d42d02", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*secedit*\\\" AND process.command_line : \\\"*/import*\\\" AND process.command_line : \\\"*mytemplate.db*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "secedit used to create a Run key in the HKLM Hive"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

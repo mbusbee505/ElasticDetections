@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy and Delete Mailbox Data on Linux' (GUID: 25e2be0e-96f7-4417-bd16-a4a2500e3802) of technique T1070.008 (Email Collection: Mailbox Manipulation). Test Description: Copies and deletes mail data on Linux. Command/Steps: mkdir -p /var/spool/mail/copy && for file in /var/spool/mail/*; do if [ \\\"$(basename \\\"$file\\\")\\\" != \\\"copy\\\" ]; then cp -R \\\"$file\\\" /var/spool/mail/copy/; f..."
+from = "now-9m"
+rule_id = "3471fa1b-1cae-4f9b-8f34-18a8d61a18c4"
+language = "kql"
+name = "Atomic Test: T1070.008 - Copy and Delete Mailbox Data on Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.008/T1070.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.008", "25e2be0e-96f7-4417-bd16-a4a2500e3802", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*/var/spool/mail/copy*\\\" AND process.command_line : \\\"*file*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.008"
+name = "Copy and Delete Mailbox Data on Linux"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/008"
+
+

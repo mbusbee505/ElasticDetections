@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Access unattend.xml' (GUID: 367d4004-5fc0-446d-823f-960c74ae52c3) of technique T1552.001 (Unsecured Credentials: Credentials In Files). Test Description: Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.\nIf these files exist, their contents will be displayed. They are used to store credentials/answers during the unattended windows install process.. Command/Steps: type C:\\\\Windows\\\\Panther\\\\unattend.xml\ntype C:\\\\Windows\\\\Panther\\\\Unattend\\\\unattend.xml\n"
+from = "now-9m"
+rule_id = "63786c80-4644-4b11-98cd-06a69b84f642"
+language = "kql"
+name = "Atomic Test: T1552.001 - Access unattend.xml"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.001/T1552.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.001", "367d4004-5fc0-446d-823f-960c74ae52c3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\Panther\\\\unattend.xml*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\Panther\\\\Unattend\\\\unattend.xml*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.001"
+name = "Access unattend.xml"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/001"
+
+

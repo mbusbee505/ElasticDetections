@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install root CA on CentOS/RHEL' (GUID: 9c096ec4-fd42-419d-a762-d64cc950627e) of technique T1553.004 (Subvert Trust Controls: Install Root Certificate). Test Description: Creates a root CA with openssl. Command/Steps: openssl genrsa -out #{key_filename} 4096\nopenssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj \\\"/C=US/ST=Denial/L=Springfield/O=D..."
+from = "now-9m"
+rule_id = "ad7f48c3-bf17-4dd0-8ba1-868a4329b57e"
+language = "kql"
+name = "Atomic Test: T1553.004 - Install root CA on CentOS/RHEL"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.004/T1553.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.004", "9c096ec4-fd42-419d-a762-d64cc950627e", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*openssl*\\\" AND process.command_line : \\\"*genrsa*\\\" AND process.command_line : \\\"*-out*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.004"
+name = "Install root CA on CentOS/RHEL"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+

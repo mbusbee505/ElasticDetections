@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Linux VM Check via Hardware' (GUID: 31dad7ad-2286-4c02-ae92-274418c85fec) of technique T1082 (System Information Discovery). Test Description: Identify virtual machine hardware. This technique is used by the Pupy RAT and other malware.. Command/Steps: if [ -f /sys/class/dmi/id/bios_version ]; then cat /sys/class/dmi/id/bios_version | grep -i amazon; fi\nif [ -f /sys/class/dmi/id/product_name ]; then ..."
+from = "now-9m"
+rule_id = "1d722288-847c-4c10-84f1-b809751c68b7"
+language = "kql"
+name = "Atomic Test: T1082 - Linux VM Check via Hardware"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "31dad7ad-2286-4c02-ae92-274418c85fec", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/sys/class/dmi/id/bios_version*\\\" AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*/sys/class/dmi/id/bios_version*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Linux VM Check via Hardware"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Abuse Nslookup with DNS Records' (GUID: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Red teamer's avoid IEX and Invoke-WebRequest in your PowerShell commands. Instead, host a text record with a payload to compromise hosts.\n[reference](https://twitter.com/jstrosch/status/1237382986557001729). Command/Steps: # creating a custom nslookup function that will indeed call nslookup but forces the result to be \\\"whoami\\\"\n# this would not be part of a real attack bu..."
+from = "now-9m"
+rule_id = "6227317c-2fe8-4000-9c09-237845d75790"
+language = "kql"
+name = "Atomic Test: T1059.001 - Abuse Nslookup with DNS Records"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "999bff6d-dc15-44c9-9f5c-e1051bfc86e1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*creating*\\\" AND powershell.script_block_text : \\\"*custom*\\\" AND powershell.script_block_text : \\\"*nslookup*\\\" OR (process.command_line : \\\"*creating*\\\" AND process.command_line : \\\"*custom*\\\" AND process.command_line : \\\"*nslookup*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Abuse Nslookup with DNS Records"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

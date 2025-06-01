@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete an entire folder - FreeBSD/Linux/macOS' (GUID: a415f17e-ce8d-4ce2-a8b4-83b674e7017e) of technique T1070.004 (Indicator Removal on Host: File Deletion). Test Description: Recursively delete the temporary directory and all files contained within it. Command/Steps: rm -rf #{folder_to_delete}\n"
+from = "now-9m"
+rule_id = "6ea8dfef-1ba8-4f49-b287-4056e4420949"
+language = "kql"
+name = "Atomic Test: T1070.004 - Delete an entire folder - FreeBSD/Linux/macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.004/T1070.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.004", "a415f17e-ce8d-4ce2-a8b4-83b674e7017e", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.004"
+name = "Delete an entire folder - FreeBSD/Linux/macOS"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+

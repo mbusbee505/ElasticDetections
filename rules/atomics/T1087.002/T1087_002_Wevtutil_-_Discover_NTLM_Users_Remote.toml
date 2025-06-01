@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Wevtutil - Discover NTLM Users Remote' (GUID: b8a563d4-a836-4993-a74e-0a19b8481bfe) of technique T1087.002 (Account Discovery: Domain Account). Test Description: This test discovers users who have authenticated against a Domain Controller via NTLM. \nThis is done remotely via wmic and captures the event code 4776 from the domain controller and stores the ouput in C:\\\\temp. [Reference](https://www.reliaquest.com/blog/socgholish-fakeupdates/). Command/Steps: $target = $env:LOGONSERVER\n$target = $target.Trim(\\\"\\\\\\\\\\\")\n$IpAddress = [System.Net.Dns]::GetHostAddresses($target) | select IPAddressToString -ExpandPro..."
+from = "now-9m"
+rule_id = "43176713-817e-41b1-9478-25fd379d26b1"
+language = "kql"
+name = "Atomic Test: T1087.002 - Wevtutil - Discover NTLM Users Remote"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "b8a563d4-a836-4993-a74e-0a19b8481bfe", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$target*\\\" AND powershell.script_block_text : \\\"*$env:LOGONSERVER*\\\" AND powershell.script_block_text : \\\"*$target*\\\" OR (process.command_line : \\\"*$target*\\\" AND process.command_line : \\\"*$env:LOGONSERVER*\\\" AND process.command_line : \\\"*$target*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Wevtutil - Discover NTLM Users Remote"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

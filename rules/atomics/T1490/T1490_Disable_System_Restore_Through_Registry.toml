@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable System Restore Through Registry' (GUID: 66e647d1-8741-4e43-b7c1-334760c2047f) of technique T1490 (Inhibit System Recovery). Test Description: Modify the registry of the currently logged in user using reg.exe via cmd console to disable system restore on the computer. \nSee how remcos RAT abuses this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows NT\\\\SystemRestore\\\" /v \\\"DisableConfig\\\" /t \\\"REG_DWORD\\\" /d \\\"1\\\" /f\nreg add \\\"HKLM\\\\SOFTWARE\\\\Policies\\\\Micros..."
+from = "now-9m"
+rule_id = "cbcf25e7-88ec-433c-9a60-11528f137565"
+language = "kql"
+name = "Atomic Test: T1490 - Disable System Restore Through Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "66e647d1-8741-4e43-b7c1-334760c2047f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\SystemRestore*\\\" AND process.command_line : \\\"*DisableConfig*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Disable System Restore Through Registry"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Renamed Microsoft.Workflow.Compiler.exe Payload Executions' (GUID: 4cc40fd7-87b8-4b16-b2d7-57534b86b911) of technique T1218 (Signed Binary Proxy Execution). Test Description: Emulates attack with a renamed Microsoft.Workflow.Compiler.exe running a .Net assembly that launches calc.exe. Command/Steps: &\\\"#{renamed_binary}\\\" \\\"#{xml_payload}\\\" output.txt\n"
+from = "now-9m"
+rule_id = "33f2d4a2-4089-466e-a08f-e204dfdac191"
+language = "kql"
+name = "Atomic Test: T1218 - Renamed Microsoft.Workflow.Compiler.exe Payload Executions"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "4cc40fd7-87b8-4b16-b2d7-57534b86b911", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*output.txt*\\\" OR (process.command_line : \\\"*output.txt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "Renamed Microsoft.Workflow.Compiler.exe Payload Executions"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

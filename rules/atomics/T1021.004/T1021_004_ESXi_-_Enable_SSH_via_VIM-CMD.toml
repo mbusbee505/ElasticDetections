@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Enable SSH via VIM-CMD' (GUID: 280812c8-4dae-43e9-a74e-1d08ab997c0e) of technique T1021.004 (Remote Services: SSH). Test Description: An adversary enables SSH on an ESXi host to maintain persistence and creeate another command execution interface.\n[Reference](https://lolesxi-project.github.io/LOLESXi/lolesxi/Binaries/vim-cmd/#enable%20service). Command/Steps: echo \\\"\\\" | \\\"#{plink_file}\\\" -batch \\\"#{vm_host}\\\" -ssh -l #{vm_user} -pw \\\"#{vm_pass}\\\" \\\"vim-cmd hostsvc/enable_ssh\\\"\n"
+from = "now-9m"
+rule_id = "3cd4fa9b-a8d0-4638-b591-80a4ac5093ae"
+language = "kql"
+name = "Atomic Test: T1021.004 - ESXi - Enable SSH via VIM-CMD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.004/T1021.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.004", "280812c8-4dae-43e9-a74e-1d08ab997c0e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*-batch*\\\" AND process.command_line : \\\"*atomic.local*\\\" AND process.command_line : \\\"*-ssh*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.004"
+name = "ESXi - Enable SSH via VIM-CMD"
+reference = "https://attack.mitre.org/techniques/T1021/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/004"
+
+

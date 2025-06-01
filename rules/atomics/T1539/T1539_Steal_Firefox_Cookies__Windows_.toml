@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Steal Firefox Cookies (Windows)' (GUID: 4b437357-f4e9-4c84-9fa6-9bcee6f826aa) of technique T1539 (Steal Web Session Cookie). Test Description: This test queries Firefox's cookies.sqlite database to steal the cookie data contained within it, similar to Zloader/Zbot's cookie theft function. \nNote: If Firefox is running, the process will be killed to ensure that the DB file isn't locked. \nSee https://www.malwarebytes.com/resources/files/2020/05/the-silent-night-zloader-zbot_final.pdf.. Command/Steps: stop-process -name \\\"firefox\\\" -force -erroraction silentlycontinue\n$CookieDBLocation = get-childitem -path \\\"$env:appdata\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*\\\\coo..."
+from = "now-9m"
+rule_id = "504a6adb-eace-4c3b-b389-fa25c68560ed"
+language = "kql"
+name = "Atomic Test: T1539 - Steal Firefox Cookies (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1539/T1539.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1539", "4b437357-f4e9-4c84-9fa6-9bcee6f826aa", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*stop-process*\\\" AND powershell.script_block_text : \\\"*-name*\\\" AND powershell.script_block_text : \\\"*firefox*\\\" OR (process.command_line : \\\"*stop-process*\\\" AND process.command_line : \\\"*-name*\\\" AND process.command_line : \\\"*firefox*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1539"
+name = "Steal Firefox Cookies (Windows)"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+

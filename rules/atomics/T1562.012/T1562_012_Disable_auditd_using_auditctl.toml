@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable auditd using auditctl' (GUID: 7906f0a6-b527-46ee-9026-6e81a9184e08) of technique T1562.012 (Impair Defenses: Disable or Modify Linux Audit System). Test Description: The command `auditctl -e 0` disables the audit system. By setting the parameter to `0`, auditing is deactivated, halting the monitoring and recording of security-related events. This action stops the generation of audit logs, ceasing the collection of data regarding system activities. Disabling auditing may be done for various reasons, such as troubleshooting, performance optimization, or temporarily suspending auditing requirements, but it reduces visibility into system events and can impact security monitoring and compliance efforts.. Command/Steps: auditctl -e 0\n"
+from = "now-9m"
+rule_id = "361953a7-51df-44ec-849a-47080383352f"
+language = "kql"
+name = "Atomic Test: T1562.012 - Disable auditd using auditctl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.012/T1562.012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.012", "7906f0a6-b527-46ee-9026-6e81a9184e08", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*auditctl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.012"
+name = "Disable auditd using auditctl"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/012"
+
+

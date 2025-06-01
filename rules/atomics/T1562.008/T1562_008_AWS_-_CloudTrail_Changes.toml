@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - CloudTrail Changes' (GUID: 9c10dc6b-20bd-403a-8e67-50ef7d07ed4e) of technique T1562.008 (Impair Defenses: Disable Cloud Logs). Test Description: Creates a new cloudTrail in AWS, Upon successful creation it will Update,Stop and Delete the cloudTrail. Command/Steps: aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}\naws cloudtrail st..."
+from = "now-9m"
+rule_id = "2bb70dcc-93b7-4370-8f1d-c927444f038c"
+language = "kql"
+name = "Atomic Test: T1562.008 - AWS - CloudTrail Changes"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.008/T1562.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.008", "9c10dc6b-20bd-403a-8e67-50ef7d07ed4e", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*cloudtrail*\\\" AND process.command_line : \\\"*update-trail*\\\" AND process.command_line : \\\"*--name*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.008"
+name = "AWS - CloudTrail Changes"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+

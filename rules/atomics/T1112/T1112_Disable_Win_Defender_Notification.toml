@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Win Defender Notification' (GUID: 12e03af7-79f9-4f95-af48-d3f12f28a260) of technique T1112 (Modify Registry). Test Description: Disable Win Defender Notification. Redline is using this to disable this win defender feature.. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows Defender Security Center\\\\Notifications\\\" /v \\\"DisableNotifications\\\" /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "2d511683-3929-426c-a6d9-6c0ecdc4a339"
+language = "kql"
+name = "Atomic Test: T1112 - Disable Win Defender Notification"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "12e03af7-79f9-4f95-af48-d3f12f28a260", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*Defender*\\\" AND process.command_line : \\\"*Security*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Disable Win Defender Notification"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

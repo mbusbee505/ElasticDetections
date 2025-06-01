@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy the users GnuPG directory with rsync' (GUID: 2a5a0601-f5fb-4e2e-aa09-73282ae6afca) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: Copy the users GnuPG (.gnupg) directory on a Mac or Linux system to a staging folder using the `rsync` command.. Command/Steps: mkdir #{output_folder}\nfind #{search_path} -type d -name '.gnupg' 2>/dev/null -exec rsync -Rr {} #{output_folder} \\\\;\nexit 0\n"
+from = "now-9m"
+rule_id = "debb9221-5a11-44a2-a4fa-9eafca10613d"
+language = "kql"
+name = "Atomic Test: T1552.004 - Copy the users GnuPG directory with rsync"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "2a5a0601-f5fb-4e2e-aa09-73282ae6afca", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*-type*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "Copy the users GnuPG directory with rsync"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete an entire folder - Windows PowerShell' (GUID: edd779e4-a509-4cba-8dfa-a112543dbfb1) of technique T1070.004 (Indicator Removal on Host: File Deletion). Test Description: Recursively delete a folder in the temporary directory using Powershell. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.. Command/Steps: Remove-Item -Path #{folder_to_delete} -Recurse\n"
+from = "now-9m"
+rule_id = "3f5bb478-e444-43ee-8b1a-27736a2ac8d3"
+language = "kql"
+name = "Atomic Test: T1070.004 - Delete an entire folder - Windows PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.004/T1070.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.004", "edd779e4-a509-4cba-8dfa-a112543dbfb1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Remove-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*-Recurse*\\\" OR (process.command_line : \\\"*Remove-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*-Recurse*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.004"
+name = "Delete an entire folder - Windows PowerShell"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Microsoft Defender Firewall' (GUID: 88d05800-a5e4-407e-9b53-ece4174f197f) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Disables the Microsoft Defender Firewall for the current profile.\nCaution if you access remotely the host where the test runs! Especially with the cleanup command which will re-enable firewall for the current profile.... Command/Steps: netsh advfirewall set currentprofile state off\n"
+from = "now-9m"
+rule_id = "ac44be2c-62c4-4b32-bb6a-35dd9f6a4f39"
+language = "kql"
+name = "Atomic Test: T1562.004 - Disable Microsoft Defender Firewall"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "88d05800-a5e4-407e-9b53-ece4174f197f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*advfirewall*\\\" AND process.command_line : \\\"*currentprofile*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Disable Microsoft Defender Firewall"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

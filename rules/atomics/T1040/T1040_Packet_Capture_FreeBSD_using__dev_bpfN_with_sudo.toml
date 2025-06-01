@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Packet Capture FreeBSD using /dev/bpfN with sudo' (GUID: e2028771-1bfb-48f5-b5e6-e50ee0942a14) of technique T1040 (Network Sniffing). Test Description: Opens a /dev/bpf file (O_RDONLY) and captures packets for a few seconds.. Command/Steps: sudo #{program_path} -i #{ifname} -t 3\n"
+from = "now-9m"
+rule_id = "279625c4-2619-4c6b-b382-a7d795175521"
+language = "kql"
+name = "Atomic Test: T1040 - Packet Capture FreeBSD using /dev/bpfN with sudo"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "e2028771-1bfb-48f5-b5e6-e50ee0942a14", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Packet Capture FreeBSD using /dev/bpfN with sudo"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

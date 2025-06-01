@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Available Drives via gdr' (GUID: c187c9bc-4511-40b3-aa10-487b2c70b6a5) of technique T1082 (System Information Discovery). Test Description: This test simulates an attacker attempting to list the available drives on the system to gather data about file storage locations.. Command/Steps: powershell.exe -c \\\"gdr -PSProvider 'FileSystem'\\\"\n"
+from = "now-9m"
+rule_id = "bd3ce8e4-7586-466f-9157-479766880a8f"
+language = "kql"
+name = "Atomic Test: T1082 - Enumerate Available Drives via gdr"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "c187c9bc-4511-40b3-aa10-487b2c70b6a5", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*-PSProvider*\\\" AND process.command_line : \\\"*FileSystem*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Enumerate Available Drives via gdr"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

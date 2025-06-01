@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Delete Volume Shadow Copies via WMI with PowerShell' (GUID: 39a295ca-7059-4a88-86f6-09556c1211e7) of technique T1490 (Inhibit System Recovery). Test Description: Deletes Windows Volume Shadow Copies with PowerShell code and Get-WMIObject.\nThis technique is used by numerous ransomware families such as Sodinokibi/REvil.\nExecutes Get-WMIObject. Shadow copies can only be created on Windows server or Windows 8, so upon execution\nthere may be no output displayed.. Command/Steps: Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}\n"
+from = "now-9m"
+rule_id = "47909433-3804-4e74-84cc-7a18063edf63"
+language = "kql"
+name = "Atomic Test: T1490 - Windows - Delete Volume Shadow Copies via WMI with PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "39a295ca-7059-4a88-86f6-09556c1211e7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-WmiObject*\\\" AND powershell.script_block_text : \\\"*Win32_Shadowcopy*\\\" AND powershell.script_block_text : \\\"*ForEach-Object*\\\" OR (process.command_line : \\\"*Get-WmiObject*\\\" AND process.command_line : \\\"*Win32_Shadowcopy*\\\" AND process.command_line : \\\"*ForEach-Object*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Windows - Delete Volume Shadow Copies via WMI with PowerShell"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

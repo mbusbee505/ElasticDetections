@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Application Shim Installation' (GUID: 9ab27e22-ee62-4211-962b-d36d9a0e6a18) of technique T1546.011 (Event Triggered Execution: Application Shimming). Test Description: Install a shim database. This technique is used for privilege escalation and bypassing user access control.\nUpon execution, \\\"Installation of AtomicShim complete.\\\" will be displayed. To verify the shim behavior, run \nthe AtomicTest.exe from the <PathToAtomicsFolder>\\\\\\\\T1546.011\\\\\\\\bin directory. You should see a message box appear\nwith \\\"Atomic Shim DLL Test!\\\" as defined in the AtomicTest.dll. To better understand what is happening, review\nthe source code files is the <PathToAtomicsFolder>\\\\\\\\T1546.011\\\\\\\\src directory.. Command/Steps: sdbinst.exe \\\"#{file_path}\\\"\n"
+from = "now-9m"
+rule_id = "8622730d-0678-40c3-8d16-4d92fde4738f"
+language = "kql"
+name = "Atomic Test: T1546.011 - Application Shim Installation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.011/T1546.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.011", "9ab27e22-ee62-4211-962b-d36d9a0e6a18", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*sdbinst.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.011"
+name = "Application Shim Installation"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/011"
+
+

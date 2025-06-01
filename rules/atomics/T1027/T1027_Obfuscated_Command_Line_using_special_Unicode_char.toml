@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Obfuscated Command Line using special Unicode characters' (GUID: e68b945c-52d0-4dd9-a5e8-d173d70c448f) of technique T1027 (Obfuscated Files or Information). Test Description: This is an obfuscated certutil command that when executed downloads a file from the web. Adapted from T1105. Obfuscation includes special options chars (unicode hyphens), character substitution (e.g. ᶠ) and character insertion (including the usage of the right-to-left 0x202E and left-to-right 0x202D override characters).\nReference:\nhttps://wietze.github.io/blog/windows-command-line-obfuscation. Command/Steps: 1. Copy the following command into the command prompt after replacing #{remote_file} and #{local_path} with your desired URL and filename.\n\n\n  certuti..."
+from = "now-9m"
+rule_id = "f9b7b714-c15a-466d-b782-2c90482baff4"
+language = "kql"
+name = "Atomic Test: T1027 - Obfuscated Command Line using special Unicode characters"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027/T1027.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027", "e68b945c-52d0-4dd9-a5e8-d173d70c448f", "windows",]
+type = "query"
+query = "process.command_line : \\\"*Copy*\\\" AND process.command_line : \\\"*following*\\\" AND process.command_line : \\\"*command*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027"
+name = "Obfuscated Command Line using special Unicode characters"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+

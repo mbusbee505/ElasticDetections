@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Network Configuration Discovery (TrickBot Style)' (GUID: dafaf052-5508-402d-bf77-51e0700c02e2) of technique T1016 (System Network Configuration Discovery). Test Description: Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/\n\nUpon successful execution, cmd.exe will spawn `ipconfig /all`, `net config workstation`, `net view /all /domain`, `nltest /domain_trusts`. Output will be via stdout.. Command/Steps: ipconfig /all\nnet config workstation\nnet view /all /domain\nnltest /domain_trusts\n"
+from = "now-9m"
+rule_id = "4587d321-10ef-4731-8a1e-ccd2ef860e96"
+language = "kql"
+name = "Atomic Test: T1016 - System Network Configuration Discovery (TrickBot Style)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016/T1016.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016", "dafaf052-5508-402d-bf77-51e0700c02e2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*ipconfig*\\\" AND process.command_line : \\\"*/all*\\\" AND process.command_line : \\\"*config*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016"
+name = "System Network Configuration Discovery (TrickBot Style)"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+

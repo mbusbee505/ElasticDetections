@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Remove Syslog remote IP' (GUID: 36c62584-d360-41d6-886f-d194654be7c2) of technique T1560.001 (Archive Collected Data: Archive via Utility). Test Description: An adversary may edit the syslog config to remove the loghost in order to prevent or redirect logs being received by SIEM.. Command/Steps: # Extract line with IP address from the syslog configuration output\n#{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m PathToAtomicsFolde..."
+from = "now-9m"
+rule_id = "928dee84-9278-4aaf-b089-772fe0d1790f"
+language = "kql"
+name = "Atomic Test: T1560.001 - ESXi - Remove Syslog remote IP"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1560.001/T1560.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1560.001", "36c62584-d360-41d6-886f-d194654be7c2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Extract*\\\" AND powershell.script_block_text : \\\"*line*\\\" AND powershell.script_block_text : \\\"*address*\\\" OR (process.command_line : \\\"*Extract*\\\" AND process.command_line : \\\"*line*\\\" AND process.command_line : \\\"*address*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1560.001"
+name = "ESXi - Remove Syslog remote IP"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+

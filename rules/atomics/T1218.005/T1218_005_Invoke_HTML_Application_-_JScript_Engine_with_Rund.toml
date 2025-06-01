@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler' (GUID: e7e3a525-7612-4d68-a5d3-c4649181b8af) of technique T1218.005 (Signed Binary Proxy Execution: Mshta). Test Description: Executes an HTA Application with JScript Engine, Rundll32 and Inline Protocol Handler.. Command/Steps: Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler #{protocol_handler} -UseRundll32 -Rundll32FilePath #{rundll32_file_pat..."
+from = "now-9m"
+rule_id = "3ca7f0ae-0047-4ded-b67c-fc187af62c1b"
+language = "kql"
+name = "Atomic Test: T1218.005 - Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.005/T1218.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.005", "e7e3a525-7612-4d68-a5d3-c4649181b8af", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-ATHHTMLApplication*\\\" AND powershell.script_block_text : \\\"*-ScriptEngine*\\\" AND powershell.script_block_text : \\\"*JScript*\\\" OR (process.command_line : \\\"*Invoke-ATHHTMLApplication*\\\" AND process.command_line : \\\"*-ScriptEngine*\\\" AND process.command_line : \\\"*JScript*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.005"
+name = "Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/005"
+
+

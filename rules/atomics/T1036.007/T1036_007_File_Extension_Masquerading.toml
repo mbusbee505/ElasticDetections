@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'File Extension Masquerading' (GUID: c7fa0c3b-b57f-4cba-9118-863bf4e653fc) of technique T1036.007 (Masquerading: Double File Extension). Test Description: download and execute a file masquerading as images or Office files. Upon execution 3 calc instances and 3 vbs windows will be launched.\n\ne.g SOME_LEGIT_NAME.[doc,docx,xls,xlsx,pdf,rtf,png,jpg,etc.].[exe,vbs,js,ps1,etc] (Quartelyreport.docx.exe). Command/Steps: copy \\\"#{exe_path}\\\" %temp%\\\\T1036.007_masquerading.docx.exe /Y\ncopy \\\"#{exe_path}\\\" %temp%\\\\T1036.007_masquerading.pdf.exe /Y\ncopy \\\"#{exe_path}\\\" %temp%\\\\T10..."
+from = "now-9m"
+rule_id = "d7130a68-7d01-448b-b449-37c97622cb05"
+language = "kql"
+name = "Atomic Test: T1036.007 - File Extension Masquerading"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.007/T1036.007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.007", "c7fa0c3b-b57f-4cba-9118-863bf4e653fc", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\calc.exe*\\\" AND process.command_line : \\\"*copy*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.007"
+name = "File Extension Masquerading"
+reference = "https://attack.mitre.org/techniques/T1036/007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/007"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Packet Capture Windows Command Prompt' (GUID: a5b2f6a0-24b4-493e-9590-c699f75723ca) of technique T1040 (Network Sniffing). Test Description: Perform a packet capture using the windows command prompt. This will require a host that has Wireshark/Tshark\ninstalled.\n\nUpon successful execution, tshark will execute and capture 5 packets on interface \\\"Ethernet\\\".. Command/Steps: \\\"c:\\\\Program Files\\\\Wireshark\\\\tshark.exe\\\" -i #{interface} -c 5\n"
+from = "now-9m"
+rule_id = "7c35b707-c3a2-4817-93ef-4c5270f9cc35"
+language = "kql"
+name = "Atomic Test: T1040 - Packet Capture Windows Command Prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "a5b2f6a0-24b4-493e-9590-c699f75723ca", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*c:\\\\Program*\\\" AND process.command_line : \\\"*Files\\\\Wireshark\\\\tshark.exe*\\\" AND process.command_line : \\\"*Ethernet*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Packet Capture Windows Command Prompt"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

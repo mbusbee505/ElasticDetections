@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WINWORD Remote Template Injection' (GUID: 1489e08a-82c7-44ee-b769-51b72d03521d) of technique T1221 (Template Injection). Test Description: Open a .docx file that loads a remote .dotm macro enabled template from https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm \nExecutes the code specified within the .dotm template.\nRequires download of WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  \nDefault docs file opens Calculator.exe when test sucessfully executed, while AV turned off.. Command/Steps: start \\\"#{docx_file}\\\"\n"
+from = "now-9m"
+rule_id = "c697f223-e994-4d87-9c80-f8764c31a903"
+language = "kql"
+name = "Atomic Test: T1221 - WINWORD Remote Template Injection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1221/T1221.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1221", "1489e08a-82c7-44ee-b769-51b72d03521d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*start*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1221"
+name = "WINWORD Remote Template Injection"
+reference = "https://attack.mitre.org/techniques/T1221"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1221"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1221"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1221"
+
+

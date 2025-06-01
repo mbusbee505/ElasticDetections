@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remove Administrative Shares' (GUID: 4299eff5-90f1-4446-b2f3-7f4f5cfd5d62) of technique T1070.005 (Indicator Removal on Host: Network Share Connection Removal). Test Description: Administrative shares are hidden network shares created by Microsoft’s Windows NT operating systems that grant system administrators \nremote access to every disk volume on a network-connected system. As Microsoft puts it, “Missing administrative shares typically \nindicate that the computer in question has been compromised by malicious software.\nhttps://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/. Command/Steps: for %i in (C$ IPC$ ADMIN$) do net share %i /delete"
+from = "now-9m"
+rule_id = "f03eac17-b6ef-4774-a2f3-3c1aca9427af"
+language = "kql"
+name = "Atomic Test: T1070.005 - Remove Administrative Shares"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.005/T1070.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.005", "4299eff5-90f1-4446-b2f3-7f4f5cfd5d62", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*IPC$*\\\" AND process.command_line : \\\"*ADMIN$)*\\\" AND process.command_line : \\\"*share*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.005"
+name = "Remove Administrative Shares"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+

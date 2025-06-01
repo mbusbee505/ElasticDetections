@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Timestomp a File' (GUID: d7512c33-3a75-4806-9893-69abc3ccdd43) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Timestomp kxwn.lock.\n\nSuccessful execution will include the placement of kxwn.lock in #{file_path} and execution of timestomp.ps1 to modify the time of the .lock file. \n\n[Mitre ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/master/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/defensive-evasion/4a2ad84e-a93a-4b2e-b1f0-c354d6a41278.yml). Command/Steps: import-module \\\"#{file_path}\\\\timestomp.ps1\\\"\ntimestomp -dest \\\"#{file_path}\\\\kxwn.lock\\\"\n"
+from = "now-9m"
+rule_id = "c6c1d459-8456-4b5a-bf64-50f8577f24cd"
+language = "kql"
+name = "Atomic Test: T1070.006 - Windows - Timestomp a File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "d7512c33-3a75-4806-9893-69abc3ccdd43", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*import-module*\\\" AND powershell.script_block_text : \\\"*timestomp*\\\" AND powershell.script_block_text : \\\"*-dest*\\\" OR (process.command_line : \\\"*import-module*\\\" AND process.command_line : \\\"*timestomp*\\\" AND process.command_line : \\\"*-dest*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "Windows - Timestomp a File"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell' (GUID: d8c57eaa-497a-4a08-961e-bd5efd7c9374) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: LockBit Black - Disable Privacy Settings Experience Using Registry. Command/Steps: New-ItemProperty \\\"HKCU:\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\OOBE\\\" -Name DisablePrivacyExperience -PropertyType DWord -Value 1 -Force\n"
+from = "now-9m"
+rule_id = "ed453ff9-d541-4a82-bdf7-0e75cf3929b4"
+language = "kql"
+name = "Atomic Test: T1562.001 - LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "d8c57eaa-497a-4a08-961e-bd5efd7c9374", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\OOBE*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\OOBE*\\\" AND process.command_line : \\\"*-Name*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

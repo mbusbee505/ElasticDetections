@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install root CA on FreeBSD' (GUID: f4568003-1438-44ab-a234-b3252ea7e7a3) of technique T1553.004 (Subvert Trust Controls: Install Root Certificate). Test Description: Creates a root CA with openssl. Command/Steps: openssl genrsa -out #{key_filename} 4096\nopenssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj \\\"/C=US/ST=Denial/L=Springfield/O=D..."
+from = "now-9m"
+rule_id = "1c058bdf-16d9-4aab-867c-3b5c5a08e144"
+language = "kql"
+name = "Atomic Test: T1553.004 - Install root CA on FreeBSD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.004/T1553.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.004", "f4568003-1438-44ab-a234-b3252ea7e7a3", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*openssl*\\\" AND process.command_line : \\\"*genrsa*\\\" AND process.command_line : \\\"*-out*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.004"
+name = "Install root CA on FreeBSD"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+

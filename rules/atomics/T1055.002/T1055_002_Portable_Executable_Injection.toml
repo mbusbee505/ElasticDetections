@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Portable Executable Injection' (GUID: 578025d5-faa9-4f6d-8390-aae739d503e1) of technique T1055.002 (Process Injection: Portable Executable Injection). Test Description: This test injects a portable executable into a remote Notepad process memory using Portable Executable Injection and base-address relocation techniques. When successful, a message box will appear with the title \\\"Warning\\\" and the content \\\"Atomic Red Team\\\" after a few seconds.. Command/Steps: Start-Process \\\"#{exe_binary}\\\"\nStart-Sleep -Seconds 7\nGet-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force"
+from = "now-9m"
+rule_id = "14fc5cf1-6126-4f79-bc3c-f9496b8ec35c"
+language = "kql"
+name = "Atomic Test: T1055.002 - Portable Executable Injection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055.002/T1055.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055.002", "578025d5-faa9-4f6d-8390-aae739d503e1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*Start-Sleep*\\\" AND powershell.script_block_text : \\\"*-Seconds*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*Start-Sleep*\\\" AND process.command_line : \\\"*-Seconds*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055.002"
+name = "Portable Executable Injection"
+reference = "https://attack.mitre.org/techniques/T1055/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055/002"
+
+

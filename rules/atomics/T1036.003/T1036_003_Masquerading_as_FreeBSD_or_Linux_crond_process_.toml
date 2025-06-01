@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Masquerading as FreeBSD or Linux crond process.' (GUID: a315bfff-7a98-403b-b442-2ea1b255e556) of technique T1036.003 (Masquerading: Rename System Utilities). Test Description: Copies sh process, renames it as crond, and executes it to masquerade as the cron daemon.\n\nUpon successful execution, sh is renamed to `crond` and executed.. Command/Steps: cp /bin/sh /tmp/crond;\necho 'sleep 5' | /tmp/crond\n"
+from = "now-9m"
+rule_id = "704b3ef6-7444-45a5-a03b-b15f59e44cb1"
+language = "kql"
+name = "Atomic Test: T1036.003 - Masquerading as FreeBSD or Linux crond process."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.003/T1036.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.003", "a315bfff-7a98-403b-b442-2ea1b255e556", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/bin/sh*\\\" AND process.command_line : \\\"*sleep*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.003"
+name = "Masquerading as FreeBSD or Linux crond process."
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+

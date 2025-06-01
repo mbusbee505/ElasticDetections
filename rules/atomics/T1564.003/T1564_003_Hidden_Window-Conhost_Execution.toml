@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Hidden Window-Conhost Execution' (GUID: 5510d22f-2595-4911-8456-4d630c978616) of technique T1564.003 (Hide Artifacts: Hidden Window). Test Description: Launch conhost.exe in \\\"headless\\\" mode, it means that no visible window will pop up on the victim's machine. \nThis could be a sign of \\\"conhost\\\" usage as a LOLBIN or potential process injection activity.\nconhost.exe can be used as proxy the execution of arbitrary commands. Command/Steps: conhost.exe --headless calc.exe\n"
+from = "now-9m"
+rule_id = "00e1a520-4593-4852-92e8-1a4789d1f48a"
+language = "kql"
+name = "Atomic Test: T1564.003 - Hidden Window-Conhost Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.003/T1564.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.003", "5510d22f-2595-4911-8456-4d630c978616", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*conhost.exe*\\\" AND powershell.script_block_text : \\\"*--headless*\\\" AND powershell.script_block_text : \\\"*calc.exe*\\\" OR (process.command_line : \\\"*conhost.exe*\\\" AND process.command_line : \\\"*--headless*\\\" AND process.command_line : \\\"*calc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.003"
+name = "Hidden Window-Conhost Execution"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Zip a Folder with PowerShell for Staging in Temp' (GUID: a57fbe4b-3440-452a-88a7-943531ac872a) of technique T1074.001 (Data Staged: Local Data Staging). Test Description: Use living off the land tools to zip a file and stage it in the Windows temporary folder for later exfiltration. Upon execution, Verify that a zipped folder named Folder_to_zip.zip\nwas placed in the temp directory.. Command/Steps: Compress-Archive -Path \\\"#{input_file}\\\" -DestinationPath #{output_file} -Force\n"
+from = "now-9m"
+rule_id = "aecd6197-f56e-406a-b87a-c554d70846dd"
+language = "kql"
+name = "Atomic Test: T1074.001 - Zip a Folder with PowerShell for Staging in Temp"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1074.001/T1074.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1074.001", "a57fbe4b-3440-452a-88a7-943531ac872a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Compress-Archive*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*-DestinationPath*\\\" OR (process.command_line : \\\"*Compress-Archive*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*-DestinationPath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1074.001"
+name = "Zip a Folder with PowerShell for Staging in Temp"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1074/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Simulating access to Opera Login Data' (GUID: 28498c17-57e4-495a-b0be-cc1e36de408b) of technique T1555.003 (Credentials from Password Stores: Credentials from Web Browsers). Test Description: Simulates an adversary accessing encrypted credentials from Opera web browser's login database.. Command/Steps: Copy-Item \\\"$env:APPDATA\\\\Opera Software\\\\Opera Stable\\\\Login Data\\\" -Destination \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\"\n"
+from = "now-9m"
+rule_id = "aff6f85c-d075-4679-ba7d-ac2c4cfe7d1e"
+language = "kql"
+name = "Atomic Test: T1555.003 - Simulating access to Opera Login Data"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1555.003/T1555.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1555.003", "28498c17-57e4-495a-b0be-cc1e36de408b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*$env:APPDATA\\\\Opera*\\\" AND powershell.script_block_text : \\\"*Software\\\\Opera*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*$env:APPDATA\\\\Opera*\\\" AND process.command_line : \\\"*Software\\\\Opera*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1555.003"
+name = "Simulating access to Opera Login Data"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+

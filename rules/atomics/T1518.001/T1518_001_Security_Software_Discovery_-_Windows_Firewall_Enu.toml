@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Security Software Discovery - Windows Firewall Enumeration' (GUID: 9dca5a1d-f78c-4a8d-accb-d6de67cfed6b) of technique T1518.001 (Software Discovery: Security Software Discovery). Test Description: Enumerates windows firewall to retrieves firewall rules from the target computer.\n\nwhen sucessfully executed, details of windows firewall is displayed.. Command/Steps: Get-NetFirewallProfile | Format-Table Name, Enabled\nGet-NetFirewallSetting\nGet-NetFirewallRule | select DisplayName, Enabled, Description\n"
+from = "now-9m"
+rule_id = "4627c256-f416-49dc-ac5a-31bcd68c84d3"
+language = "kql"
+name = "Atomic Test: T1518.001 - Security Software Discovery - Windows Firewall Enumeration"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518.001/T1518.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518.001", "9dca5a1d-f78c-4a8d-accb-d6de67cfed6b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-NetFirewallProfile*\\\" AND powershell.script_block_text : \\\"*Format-Table*\\\" AND powershell.script_block_text : \\\"*Name*\\\" OR (process.command_line : \\\"*Get-NetFirewallProfile*\\\" AND process.command_line : \\\"*Format-Table*\\\" AND process.command_line : \\\"*Name*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518.001"
+name = "Security Software Discovery - Windows Firewall Enumeration"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518/001"
+
+

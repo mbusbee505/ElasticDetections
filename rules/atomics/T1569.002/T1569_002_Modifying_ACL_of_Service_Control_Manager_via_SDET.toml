@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modifying ACL of Service Control Manager via SDET' (GUID: bf07f520-3909-4ef5-aa22-877a50f2f77b) of technique T1569.002 (System Services: Service Execution). Test Description: Modify permissions of Service Control Manager via SDSET. This allows any administrative user to escalate privilege and create a service with SYSTEM level privileges.Restart is required.\n[Blog](https://0xv1n.github.io/posts/scmanager/). Command/Steps: sc.exe sdset scmanager D:(A;;KA;;;WD)\n"
+from = "now-9m"
+rule_id = "d69565a2-d320-457c-99b2-5ffd15edbbb9"
+language = "kql"
+name = "Atomic Test: T1569.002 - Modifying ACL of Service Control Manager via SDET"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1569.002/T1569.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1569.002", "bf07f520-3909-4ef5-aa22-877a50f2f77b", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*sc.exe*\\\" AND process.command_line : \\\"*sdset*\\\" AND process.command_line : \\\"*scmanager*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1569.002"
+name = "Modifying ACL of Service Control Manager via SDET"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+

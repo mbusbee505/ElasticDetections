@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Activate Guest Account' (GUID: aa6cb8c4-b582-4f8e-b677-37733914abda) of technique T1078.001 (Valid Accounts: Default Accounts). Test Description: The Adversaries can activate the default Guest user. The guest account is inactivated by default. Command/Steps: net user #{guest_user} /active:yes\n"
+from = "now-9m"
+rule_id = "6862271c-49ee-4d1c-b7a7-8f87d4367f22"
+language = "kql"
+name = "Atomic Test: T1078.001 - Activate Guest Account"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.001/T1078.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.001", "aa6cb8c4-b582-4f8e-b677-37733914abda", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*guest*\\\" AND process.command_line : \\\"*/active:yes*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.001"
+name = "Activate Guest Account"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'BlackCat pre-encryption cmds with Lateral Movement' (GUID: 31eb7828-97d7-4067-9c1e-c6feb85edc4b) of technique T1569.002 (System Services: Service Execution). Test Description: This atomic attempts to emulate the unique behavior of BlackCat ransomware prior to encryption and during Lateral Movement attempts via PsExec on Windows. Uses bundled PsExec like BlackCat. Command/Steps: cmd.exe /c \\\"wmic \tcsproduct \tget UUID\\\" \ncmd.exe /c \\\"fsutil behavior \tset SymlinkEvaluation R2L:1\\\" \ncmd.exe /c \\\"fsutil behavior set \tSymlinkEvaluation ..."
+from = "now-9m"
+rule_id = "39971bd2-cb7a-4c90-a7c4-8cc0ec3dc350"
+language = "kql"
+name = "Atomic Test: T1569.002 - BlackCat pre-encryption cmds with Lateral Movement"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1569.002/T1569.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1569.002", "31eb7828-97d7-4067-9c1e-c6feb85edc4b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*cmd.exe*\\\" AND powershell.script_block_text : \\\"*wmic*\\\" AND powershell.script_block_text : \\\"*csproduct*\\\" OR (process.command_line : \\\"*cmd.exe*\\\" AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*csproduct*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1569.002"
+name = "BlackCat pre-encryption cmds with Lateral Movement"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detect Virtualization Environment (Windows)' (GUID: 502a7dc4-9d6f-4d28-abf2-f0e84692562d) of technique T1497.001 (Virtualization/Sandbox Evasion: System Checks). Test Description: Windows Management Instrumentation(WMI) objects contains system information which helps to detect virtualization. This command will specifically attempt to get the CurrentTemperature value from this object and will check to see if the attempt results in an error that contains the word supported. This is meant to find the result of Not supported, which is the result if run in a virtual machine. Command/Steps: $error.clear()\nGet-WmiObject -Query \\\"SELECT * FROM MSAcpi_ThermalZoneTemperature\\\" -ErrorAction SilentlyContinue\nif($error) {echo \\\"Virtualization Envir..."
+from = "now-9m"
+rule_id = "a3f7e9bb-b479-4689-84ef-7b40f69aeb43"
+language = "kql"
+name = "Atomic Test: T1497.001 - Detect Virtualization Environment (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1497.001/T1497.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1497.001", "502a7dc4-9d6f-4d28-abf2-f0e84692562d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$error.clear()*\\\" AND powershell.script_block_text : \\\"*Get-WmiObject*\\\" AND powershell.script_block_text : \\\"*-Query*\\\" OR (process.command_line : \\\"*$error.clear()*\\\" AND process.command_line : \\\"*Get-WmiObject*\\\" AND process.command_line : \\\"*-Query*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1497.001"
+name = "Detect Virtualization Environment (Windows)"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+

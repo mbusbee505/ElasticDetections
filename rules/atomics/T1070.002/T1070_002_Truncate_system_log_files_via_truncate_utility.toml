@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Truncate system log files via truncate utility' (GUID: 6290f8a8-8ee9-4661-b9cf-390031bf6973) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test truncates the system log files using the truncate utility with (-s 0) parameter which sets file size to zero, thus emptying the file content. Command/Steps: sudo truncate -s 0 #{system_log_path} #size parameter shorthand\n"
+from = "now-9m"
+rule_id = "e515b458-9cfe-4559-ab64-9f54629983a1"
+language = "kql"
+name = "Atomic Test: T1070.002 - Truncate system log files via truncate utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "6290f8a8-8ee9-4661-b9cf-390031bf6973", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*truncate*\\\" AND process.command_line : \\\"*/var/log/system.log*\\\" AND process.command_line : \\\"*#size*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Truncate system log files via truncate utility"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

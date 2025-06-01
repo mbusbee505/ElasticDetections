@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Encrypt files using openssl (FreeBSD/Linux)' (GUID: 142752dc-ca71-443b-9359-cf6f497315f1) of technique T1486 (Data Encrypted for Impact). Test Description: Uses openssl to encrypt a file. Command/Steps: which_openssl=`which openssl`\n$which_openssl genrsa -out #{private_key_path} #{encryption_bit_size}\n$which_openssl rsa -in #{private_key_path} -pubout..."
+from = "now-9m"
+rule_id = "47de5417-c50a-4242-abcd-6e587bebcda2"
+language = "kql"
+name = "Atomic Test: T1486 - Encrypt files using openssl (FreeBSD/Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "142752dc-ca71-443b-9359-cf6f497315f1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*which_openssl=`which*\\\" AND process.command_line : \\\"*openssl`*\\\" AND process.command_line : \\\"*$which_openssl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "Encrypt files using openssl (FreeBSD/Linux)"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

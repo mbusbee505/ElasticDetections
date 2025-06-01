@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope' (GUID: ffbcfd62-15d6-4989-a21a-80bfc8e58bb5) of technique T1087.002 (Account Discovery: Domain Account). Test Description: This test executes LDAP query using powershell command Get-ADComputer with SearchScope as subtree and lists all the properties including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime. Command/Steps: Get-adcomputer -SearchScope subtree -filter \\\"name -like '*'\\\" -Properties *"
+from = "now-9m"
+rule_id = "5ea146e9-04e8-4d4c-b7d2-049d723b772e"
+language = "kql"
+name = "Atomic Test: T1087.002 - Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "ffbcfd62-15d6-4989-a21a-80bfc8e58bb5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-adcomputer*\\\" AND powershell.script_block_text : \\\"*-SearchScope*\\\" AND powershell.script_block_text : \\\"*subtree*\\\" OR (process.command_line : \\\"*Get-adcomputer*\\\" AND process.command_line : \\\"*-SearchScope*\\\" AND process.command_line : \\\"*subtree*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

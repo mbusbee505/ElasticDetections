@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detect Virtualization Environment using sysctl (hw.model)' (GUID: 6beae646-eb4c-4730-95be-691a4094408c) of technique T1497.001 (Virtualization/Sandbox Evasion: System Checks). Test Description: sysctl hw.model will return the model name of the hardware(Macmini8,1, MacBookAir10,1, etc.) in case of native Apple hardware\nbut will return the hypervisor name (VMware7,0).\nReference: https://evasions.checkpoint.com/src/MacOS/macos.html#hardware-model. Command/Steps: if [ \\\"$(sysctl -n hw.model | grep -v 'Mac')\\\" != \\\"\\\" ]; then echo 'Virtualization Environment detected'; fi;\n"
+from = "now-9m"
+rule_id = "034e68e5-9e3e-40a3-8e0d-4d3f86446606"
+language = "kql"
+name = "Atomic Test: T1497.001 - Detect Virtualization Environment using sysctl (hw.model)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1497.001/T1497.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1497.001", "6beae646-eb4c-4730-95be-691a4094408c", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(sysctl*\\\" AND process.command_line : \\\"*hw.model*\\\" AND process.command_line : \\\"*grep*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1497.001"
+name = "Detect Virtualization Environment using sysctl (hw.model)"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'User Discovery With Env Vars PowerShell Script' (GUID: dcb6cdee-1fb0-4087-8bf8-88cfd136ba51) of technique T1033 (System Owner/User Discovery). Test Description: Use the PowerShell environment variables to identify the current logged user.. Command/Steps: [System.Environment]::UserName | Out-File -FilePath .\\\\CurrentactiveUser.txt \n$env:UserName | Out-File -FilePath .\\\\CurrentactiveUser.txt -Append\n"
+from = "now-9m"
+rule_id = "901452b5-1a7f-4c25-a8f6-b61d2bc6d14f"
+language = "kql"
+name = "Atomic Test: T1033 - User Discovery With Env Vars PowerShell Script"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1033/T1033.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1033", "dcb6cdee-1fb0-4087-8bf8-88cfd136ba51", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[System.Environment]::UserName*\\\" AND powershell.script_block_text : \\\"*Out-File*\\\" AND powershell.script_block_text : \\\"*-FilePath*\\\" OR (process.command_line : \\\"*[System.Environment]::UserName*\\\" AND process.command_line : \\\"*Out-File*\\\" AND process.command_line : \\\"*-FilePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1033"
+name = "User Discovery With Env Vars PowerShell Script"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1033"
+
+

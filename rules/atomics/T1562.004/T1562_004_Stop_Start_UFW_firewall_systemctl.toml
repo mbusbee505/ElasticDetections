@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Stop/Start UFW firewall systemctl' (GUID: 9fd99609-1854-4f3c-b47b-97d9a5972bd1) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Stop the Uncomplicated Firewall (UFW) if installed, using systemctl.. Command/Steps: systemctl stop ufw\n"
+from = "now-9m"
+rule_id = "8a73cd8c-4ab2-4ef4-beff-b333f7c6602d"
+language = "kql"
+name = "Atomic Test: T1562.004 - Stop/Start UFW firewall systemctl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "9fd99609-1854-4f3c-b47b-97d9a5972bd1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*systemctl*\\\" AND process.command_line : \\\"*stop*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Stop/Start UFW firewall systemctl"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

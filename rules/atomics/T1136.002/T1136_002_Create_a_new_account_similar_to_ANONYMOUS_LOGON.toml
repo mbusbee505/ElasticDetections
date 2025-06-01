@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new account similar to ANONYMOUS LOGON' (GUID: dc7726d2-8ccb-4cc6-af22-0d5afb53a548) of technique T1136.002 (Create Account: Domain Account). Test Description: Create a new account similar to ANONYMOUS LOGON in a command prompt.. Command/Steps: net user \\\"#{username}\\\" \\\"#{password}\\\" /add /domain\n"
+from = "now-9m"
+rule_id = "dcbc4924-b644-4960-97ec-3ceaed51d8a9"
+language = "kql"
+name = "Atomic Test: T1136.002 - Create a new account similar to ANONYMOUS LOGON"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.002/T1136.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.002", "dc7726d2-8ccb-4cc6-af22-0d5afb53a548", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*ANONYMOUS*\\\" AND process.command_line : \\\"*LOGON*\\\" AND process.command_line : \\\"*/add*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.002"
+name = "Create a new account similar to ANONYMOUS LOGON"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+

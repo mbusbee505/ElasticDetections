@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Run DSInternals Get-ADReplAccount' (GUID: a0bced08-3fc5-4d8b-93b7-e8344739376e) of technique T1003.006 (OS Credential Dumping: DCSync). Test Description: The following Atomic will run Get-ADReplAccount from DSInternals.\nUpon successful execution, domain and credentials will appear in stdout. \n[Reference](https://www.crowdstrike.com/blog/observations-from-the-stellarparticle-campaign/) CrowdStrike StellarParticle.\nhttps://www.dsinternals.com/en/retrieving-active-directory-passwords-remotely/. Command/Steps: Get-ADReplAccount -All -Server #{logonserver}\n"
+from = "now-9m"
+rule_id = "8efc8887-5e61-4303-9e52-7a8e5827cc27"
+language = "kql"
+name = "Atomic Test: T1003.006 - Run DSInternals Get-ADReplAccount"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.006/T1003.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.006", "a0bced08-3fc5-4d8b-93b7-e8344739376e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ADReplAccount*\\\" AND powershell.script_block_text : \\\"*-All*\\\" AND powershell.script_block_text : \\\"*-Server*\\\" OR (process.command_line : \\\"*Get-ADReplAccount*\\\" AND process.command_line : \\\"*-All*\\\" AND process.command_line : \\\"*-Server*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.006"
+name = "Run DSInternals Get-ADReplAccount"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/006"
+
+

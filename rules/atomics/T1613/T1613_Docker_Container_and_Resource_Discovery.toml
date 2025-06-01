@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Docker Container and Resource Discovery' (GUID: ea2255df-d781-493b-9693-ac328f9afc3f) of technique T1613 (Container and Resource Discovery). Test Description: Adversaries may attempt to discover containers and other resources that are available within a containers environment.. Command/Steps: docker build -t t1613 $PathtoAtomicsFolder/T1613/src/\ndocker run --name t1613_container --rm -d -t t1613\ndocker ps\ndocker stats --no-stream\ndocker ins..."
+from = "now-9m"
+rule_id = "05fb859e-2965-474f-a7fd-6a2d51eee291"
+language = "kql"
+name = "Atomic Test: T1613 - Docker Container and Resource Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1613/T1613.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1613", "ea2255df-d781-493b-9693-ac328f9afc3f", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*docker*\\\" AND process.command_line : \\\"*build*\\\" AND process.command_line : \\\"*t1613*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1613"
+name = "Docker Container and Resource Discovery"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1613"
+
+

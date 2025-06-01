@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMIObject Group Discovery' (GUID: 69119e58-96db-4110-ad27-954e48f3bb13) of technique T1069.001 (Permission Groups Discovery: Local Groups). Test Description: Utilizing PowerShell cmdlet - get-wmiobject, to enumerate local groups on the endpoint. Upon execution, Upon execution, information will be displayed of local groups on system.. Command/Steps: Get-WMIObject Win32_Group\n"
+from = "now-9m"
+rule_id = "77eb3e0e-b60d-42e7-b7f2-46f94de6b929"
+language = "kql"
+name = "Atomic Test: T1069.001 - WMIObject Group Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.001/T1069.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.001", "69119e58-96db-4110-ad27-954e48f3bb13", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-WMIObject*\\\" AND powershell.script_block_text : \\\"*Win32_Group*\\\" OR (process.command_line : \\\"*Get-WMIObject*\\\" AND process.command_line : \\\"*Win32_Group*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.001"
+name = "WMIObject Group Discovery"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Cron - Add script to /var/spool/cron/crontabs/ folder' (GUID: 2d943c18-e74a-44bf-936f-25ade6cccab4) of technique T1053.003 (Scheduled Task/Job: Cron). Test Description: This test adds a script to a /var/spool/cron/crontabs folder configured to execute on a schedule. This technique was used by the threat actor Rocke during the exploitation of Linux web servers.. Command/Steps: echo \\\"#{command}\\\" >> /var/spool/cron/crontabs/#{cron_script_name}\n"
+from = "now-9m"
+rule_id = "c499a0dd-6337-4f95-9625-92af79e61962"
+language = "kql"
+name = "Atomic Test: T1053.003 - Cron - Add script to /var/spool/cron/crontabs/ folder"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.003/T1053.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.003", "2d943c18-e74a-44bf-936f-25ade6cccab4", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\" AND process.command_line : \\\"*Team*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.003"
+name = "Cron - Add script to /var/spool/cron/crontabs/ folder"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/003"
+
+

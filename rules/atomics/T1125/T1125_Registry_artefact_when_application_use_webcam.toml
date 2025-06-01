@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Registry artefact when application use webcam' (GUID: 6581e4a7-42e3-43c5-a0d2-5a0d62f9702a) of technique T1125 (Video Capture). Test Description: [can-you-track-processes-accessing-the-camera-and-microphone](https://svch0st.medium.com/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072). Command/Steps: reg add HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\CapabilityAccessManager\\\\ConsentStore\\\\webcam\\\\NonPackaged\\\\C:#Windows#Temp#atomic.exe /v LastUsedT..."
+from = "now-9m"
+rule_id = "329fba48-2a7c-46d6-9994-f1ac8c275178"
+language = "kql"
+name = "Atomic Test: T1125 - Registry artefact when application use webcam"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1125/T1125.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1125", "6581e4a7-42e3-43c5-a0d2-5a0d62f9702a", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\CapabilityAccessManager\\\\ConsentStore\\\\webcam\\\\NonPackaged\\\\C:#Windows#Temp#atomic.exe*\\\" AND process.command_line : \\\"*LastUsedTimeStart*\\\" AND process.command_line : \\\"*REG_BINARY*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1125"
+name = "Registry artefact when application use webcam"
+reference = "https://attack.mitre.org/techniques/T1125"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1125"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1125"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1125"
+
+

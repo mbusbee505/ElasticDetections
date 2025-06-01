@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Masquerading - non-windows exe running as windows exe' (GUID: bc15c13f-d121-4b1f-8c7d-28d95854d086) of technique T1036.003 (Masquerading: Rename System Utilities). Test Description: Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe\n\nUpon successful execution, powershell will execute T1036.003.exe as svchost.exe from on a non-standard path.. Command/Steps: copy \\\"#{inputfile}\\\" #{outputfile}\ntry { $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id }\ncatch { $_; exit $_.Exception.HResult}\nS..."
+from = "now-9m"
+rule_id = "010ed7c6-bb27-4576-933e-c1fa06192500"
+language = "kql"
+name = "Atomic Test: T1036.003 - Masquerading - non-windows exe running as windows exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.003/T1036.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.003", "bc15c13f-d121-4b1f-8c7d-28d95854d086", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*copy*\\\" AND powershell.script_block_text : \\\"*\\\\svchost.exe\\\")*\\\" AND powershell.script_block_text : \\\"*$myT1036_003*\\\" OR (process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*\\\\svchost.exe\\\")*\\\" AND process.command_line : \\\"*$myT1036_003*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.003"
+name = "Masquerading - non-windows exe running as windows exe"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+

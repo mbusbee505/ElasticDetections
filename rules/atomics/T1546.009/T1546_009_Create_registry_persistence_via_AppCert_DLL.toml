@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create registry persistence via AppCert DLL' (GUID: a5ad6104-5bab-4c43-b295-b4c44c7c6b05) of technique T1546.009 (Event Triggered Execution: AppCert DLLs). Test Description: Creates a new 'AtomicTest' value pointing to an AppCert DLL in the AppCertDlls registry key. \nOnce the computer restarted, the DLL will be loaded in multiple processes and write an \n'AtomicTest.txt' file in C:\\\\Users\\\\Public\\\\ to validate that the DLL executed succesfully.\n\nReference: https://skanthak.homepage.t-online.de/appcert.html. Command/Steps: Copy-Item \\\"#{dll_path}\\\" C:\\\\Users\\\\Public\\\\AtomicTest.dll -Force\nreg add \\\"HKEY_LOCAL_MACHINE\\\\System\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\AppCertDlls..."
+from = "now-9m"
+rule_id = "79fed923-5b5b-4515-be69-249375da597c"
+language = "kql"
+name = "Atomic Test: T1546.009 - Create registry persistence via AppCert DLL"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.009/T1546.009.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.009", "a5ad6104-5bab-4c43-b295-b4c44c7c6b05", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" AND powershell.script_block_text : \\\"*HKEY_LOCAL_MACHINE\\\\System\\\\CurrentControlSet\\\\Control\\\\Session*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*-Force*\\\" AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\System\\\\CurrentControlSet\\\\Control\\\\Session*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.009"
+name = "Create registry persistence via AppCert DLL"
+reference = "https://attack.mitre.org/techniques/T1546/009"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/009"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/009"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/009"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'HKLM - Add malicious StubPath value to existing Active Setup Entry' (GUID: 39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a) of technique T1547.014 (Active Setup). Test Description: This test will add a StubPath entry to the Active Setup native registry key associated with 'Internet Explorer Core Fonts' (UUID {C9E9A340-D1F1-11D0-821E-444553540600}) \nSaid key doesn't have a StubPath value by default, by adding one it will launch calc by forcing to run active setup using runonce.exe /AlternateShellStartup. \nWithout the last command it will normally run on next user logon. Note: this test will only run once successfully if no cleanup command is run in between test.. Command/Steps: Set-ItemProperty \\\"HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active Setup\\\\Installed Components\\\\{C9E9A340-D1F1-11D0-821E-444553540600}\\\" \\\"StubPath\\\" \\\"#{payload}\\\" -Force\n& ..."
+from = "now-9m"
+rule_id = "09b65eed-c604-41db-8e7a-937340b4652d"
+language = "kql"
+name = "Atomic Test: T1547.014 - HKLM - Add malicious StubPath value to existing Active Setup Entry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.014/T1547.014.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.014", "39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active*\\\" AND powershell.script_block_text : \\\"*Setup\\\\Installed*\\\" OR (process.command_line : \\\"*Set-ItemProperty*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active*\\\" AND process.command_line : \\\"*Setup\\\\Installed*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.014"
+name = "HKLM - Add malicious StubPath value to existing Active Setup Entry"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+

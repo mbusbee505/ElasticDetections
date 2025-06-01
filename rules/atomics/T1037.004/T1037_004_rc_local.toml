@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'rc.local' (GUID: 126f71af-e1c9-405c-94ef-26a47b16c102) of technique T1037.004 (Boot or Logon Initialization Scripts: Rc.common). Test Description: Modify rc.local. Command/Steps: filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi\n[ \\\"$(uname)\\\" = 'FreeBSD' ] &..."
+from = "now-9m"
+rule_id = "8986cae7-4a8e-4024-a468-ab83a24b8f72"
+language = "kql"
+name = "Atomic Test: T1037.004 - rc.local"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1037.004/T1037.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1037.004", "126f71af-e1c9-405c-94ef-26a47b16c102", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*filename='/etc/rc.local';if*\\\" AND process.command_line : \\\"*$filename*\\\" AND process.command_line : \\\"*];then*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1037.004"
+name = "rc.local"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1037/004"
+
+

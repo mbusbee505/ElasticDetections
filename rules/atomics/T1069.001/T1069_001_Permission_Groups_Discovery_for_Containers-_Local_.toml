@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Permission Groups Discovery for Containers- Local Groups' (GUID: 007d7aa4-8c4d-4f55-ba6a-7c965d51219c) of technique T1069.001 (Permission Groups Discovery: Local Groups). Test Description: Attackers may try to obtain a list of services that are operating on remote hosts and local network infrastructure devices, in order to identify potential vulnerabilities that can be exploited through remote software attacks. They typically use tools to conduct port and vulnerability scans in order to obtain this information.. Command/Steps: docker build -t t1069 $PathtoAtomicsFolder/T1069.001/src/\ndocker run --name t1069_container --rm -d -t t1069\ndocker exec t1069_container ./test.sh"
+from = "now-9m"
+rule_id = "64a1f575-e58c-4cbf-9b8d-b2bc8cdbb75c"
+language = "kql"
+name = "Atomic Test: T1069.001 - Permission Groups Discovery for Containers- Local Groups"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.001/T1069.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.001", "007d7aa4-8c4d-4f55-ba6a-7c965d51219c", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*docker*\\\" AND process.command_line : \\\"*build*\\\" AND process.command_line : \\\"*t1069*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.001"
+name = "Permission Groups Discovery for Containers- Local Groups"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+

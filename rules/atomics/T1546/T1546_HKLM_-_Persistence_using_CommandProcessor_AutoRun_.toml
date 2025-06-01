@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'HKLM - Persistence using CommandProcessor AutoRun key (With Elevation)' (GUID: a574dafe-a903-4cce-9701-14040f4f3532) of technique T1546 (Event Triggered Execution). Test Description: An adversary may abuse the CommandProcessor AutoRun registry key to persist. Every time cmd.exe is executed, the command defined in the AutoRun key also gets executed.\n[reference](https://devblogs.microsoft.com/oldnewthing/20071121-00/?p=24433). Command/Steps: New-ItemProperty -Path \\\"HKLM:\\\\Software\\\\Microsoft\\\\Command Processor\\\" -Name \\\"AutoRun\\\" -Value \\\"#{command}\\\" -PropertyType \\\"String\\\""
+from = "now-9m"
+rule_id = "fa9aa243-f41a-4a2a-b64f-b373cb46f43e"
+language = "kql"
+name = "Atomic Test: T1546 - HKLM - Persistence using CommandProcessor AutoRun key (With Elevation)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546/T1546.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546", "a574dafe-a903-4cce-9701-14040f4f3532", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\Command*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\Command*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546"
+name = "HKLM - Persistence using CommandProcessor AutoRun key (With Elevation)"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+

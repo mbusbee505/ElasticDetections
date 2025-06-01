@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new time provider' (GUID: df1efab7-bc6d-4b88-8be9-91f55ae017aa) of technique T1547.003 (Time Providers). Test Description: Establishes persistence by creating a new time provider registry key under HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\W32Time\\\\TimeProvider.\nThe new time provider will point to a DLL which will be loaded after the w32time service is started. The DLL will then create the file AtomicTest.txt\nin C:\\\\Users\\\\Public\\\\ as validation that the test is successful.\n\nPayload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.003/. Command/Steps: net stop w32time\nCopy-Item \\\"$PathToAtomicsFolder\\\\T1547.003\\\\bin\\\\AtomicTest.dll\\\" C:\\\\Users\\\\Public\\\\AtomicTest.dll\nreg add \\\"HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\Curre..."
+from = "now-9m"
+rule_id = "61661901-c7e9-4ef8-a366-06bf77df952c"
+language = "kql"
+name = "Atomic Test: T1547.003 - Create a new time provider"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.003/T1547.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.003", "df1efab7-bc6d-4b88-8be9-91f55ae017aa", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*stop*\\\" AND powershell.script_block_text : \\\"*w32time*\\\" AND powershell.script_block_text : \\\"*Copy-Item*\\\" OR (process.command_line : \\\"*stop*\\\" AND process.command_line : \\\"*w32time*\\\" AND process.command_line : \\\"*Copy-Item*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.003"
+name = "Create a new time provider"
+reference = "https://attack.mitre.org/techniques/T1547/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/003"
+
+

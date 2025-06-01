@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tamper with Windows Defender ATP PowerShell' (GUID: 6b8df440-51ec-4d53-bf83-899591c9b5d7) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Attempting to disable scheduled scanning and other parts of windows defender atp. Upon execution Virus and Threat Protection will show as disabled\nin Windows settings.. Command/Steps: Set-MpPreference -DisableRealtimeMonitoring 1\nSet-MpPreference -DisableBehaviorMonitoring 1\nSet-MpPreference -DisableScriptScanning 1\nSet-MpPreference..."
+from = "now-9m"
+rule_id = "04e4f870-ec55-490a-8174-910cb936fa10"
+language = "kql"
+name = "Atomic Test: T1562.001 - Tamper with Windows Defender ATP PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "6b8df440-51ec-4d53-bf83-899591c9b5d7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-MpPreference*\\\" AND powershell.script_block_text : \\\"*-DisableRealtimeMonitoring*\\\" AND powershell.script_block_text : \\\"*Set-MpPreference*\\\" OR (process.command_line : \\\"*Set-MpPreference*\\\" AND process.command_line : \\\"*-DisableRealtimeMonitoring*\\\" AND process.command_line : \\\"*Set-MpPreference*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Tamper with Windows Defender ATP PowerShell"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

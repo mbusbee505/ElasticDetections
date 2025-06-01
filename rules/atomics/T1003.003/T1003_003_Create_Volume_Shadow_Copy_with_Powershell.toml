@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Volume Shadow Copy with Powershell' (GUID: 542bb97e-da53-436b-8e43-e0a7d31a6c24) of technique T1003.003 (OS Credential Dumping: NTDS). Test Description: This test is intended to be run on a domain Controller.\n\nThe Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.. Command/Steps: (gwmi -list win32_shadowcopy).Create('#{drive_letter}','ClientAccessible')\n"
+from = "now-9m"
+rule_id = "e7e6d6e3-3665-462c-9c87-947567c031d4"
+language = "kql"
+name = "Atomic Test: T1003.003 - Create Volume Shadow Copy with Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.003/T1003.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.003", "542bb97e-da53-436b-8e43-e0a7d31a6c24", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(gwmi*\\\" AND powershell.script_block_text : \\\"*-list*\\\" AND powershell.script_block_text : \\\"*win32_shadowcopy).Create('C:\\\\','ClientAccessible')*\\\" OR (process.command_line : \\\"*(gwmi*\\\" AND process.command_line : \\\"*-list*\\\" AND process.command_line : \\\"*win32_shadowcopy).Create('C:\\\\','ClientAccessible')*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.003"
+name = "Create Volume Shadow Copy with Powershell"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+

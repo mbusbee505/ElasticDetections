@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows Add Registry Value to Load Service in Safe Mode with Network' (GUID: c173c948-65e5-499c-afbe-433722ed5bd4) of technique T1112 (Modify Registry). Test Description: Modify the registry to allow a driver, service, to persist in Safe Mode with networking.\nsee https://redcanary.com/blog/tracking-driver-inventory-to-expose-rootkits/ and https://blog.didierstevens.com/2007/03/26/playing-with-safe-mode/ for further details.\nAdding a subkey to Netowrk with the name of your service and a default value set to Service, makes that your service will be started when you boot into Safe Mode with networking.. Command/Steps: REG ADD \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\SafeBoot\\\\Network\\\\AtomicSafeMode\\\" /VE /T REG_SZ /F /D \\\"Service\\\"\n"
+from = "now-9m"
+rule_id = "18159d51-befb-441e-9786-fd1f6ef8c2bd"
+language = "kql"
+name = "Atomic Test: T1112 - Windows Add Registry Value to Load Service in Safe Mode with Network"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "c173c948-65e5-499c-afbe-433722ed5bd4", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\SafeBoot\\\\Network\\\\AtomicSafeMode*\\\" AND process.command_line : \\\"*REG_SZ*\\\" AND process.command_line : \\\"*Service*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Windows Add Registry Value to Load Service in Safe Mode with Network"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

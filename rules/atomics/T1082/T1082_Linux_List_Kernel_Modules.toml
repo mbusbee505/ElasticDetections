@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Linux List Kernel Modules' (GUID: 034fe21c-3186-49dd-8d5d-128b35f181c7) of technique T1082 (System Information Discovery). Test Description: Enumerate kernel modules installed 3 different ways. Upon successful execution stdout will display kernel modules installed on host 2 times, followed by list of modules matching 'vmw' if present.. Command/Steps: lsmod\nkmod list\ngrep vmw /proc/modules\n"
+from = "now-9m"
+rule_id = "b944ef20-aa5f-4ef5-9411-17ac898d3fc5"
+language = "kql"
+name = "Atomic Test: T1082 - Linux List Kernel Modules"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "034fe21c-3186-49dd-8d5d-128b35f181c7", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*lsmod*\\\" AND process.command_line : \\\"*kmod*\\\" AND process.command_line : \\\"*list*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Linux List Kernel Modules"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

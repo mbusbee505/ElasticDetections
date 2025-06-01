@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute Commands' (GUID: f592ba2a-e9e8-4d62-a459-ef63abd819fd) of technique T1559.002 (Inter-Process Communication: Dynamic Data Exchange). Test Description: Executes commands via DDE using Microsfot Word. Command/Steps: Open Microsoft Word\n\nInsert tab -> Quick Parts -> Field\n\nChoose = (Formula) and click ok.\n\nAfter that, you should see a Field inserted in the document..."
+from = "now-9m"
+rule_id = "7d455565-8abe-49bb-afe5-f5e55287f981"
+language = "kql"
+name = "Atomic Test: T1559.002 - Execute Commands"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1559.002/T1559.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1559.002", "f592ba2a-e9e8-4d62-a459-ef63abd819fd", "windows",]
+type = "query"
+query = "process.command_line : \\\"*Open*\\\" AND process.command_line : \\\"*Microsoft*\\\" AND process.command_line : \\\"*Word*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1559.002"
+name = "Execute Commands"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+

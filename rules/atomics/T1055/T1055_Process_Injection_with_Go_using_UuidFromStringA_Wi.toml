@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Injection with Go using UuidFromStringA WinAPI' (GUID: 2315ce15-38b6-46ac-a3eb-5e21abef2545) of technique T1055 (Process Injection). Test Description: Uses WinAPI UuidFromStringA to load shellcode to a memory address then executes the shellcode using EnumSystemLocalesA.\nWith this technique, memory is allocated on the heap and does not use commonly suspicious APIs such as VirtualAlloc, WriteProcessMemory, or CreateThread \n- PoC Credit: (https://github.com/Ne0nd0g/go-shellcode/tree/master#uuidfromstringa)\n- References: \n  - https://research.nccgroup.com/2021/01/23/rift-analysing-a-lazarus-shellcode-execution-method/\n  - https://twitter.com/_CPResearch_/status/1352310521752662018\n  - https://blog.securehat.co.uk/process-injection/shellcode-execution-via-enumsystemlocala. Command/Steps: $PathToAtomicsFolder\\T1055\\bin\\u0064\\\\UuidFromStringA.exe -debug\n"
+from = "now-9m"
+rule_id = "9b0292b2-b687-44a3-acd1-770d31d464bc"
+language = "kql"
+name = "Atomic Test: T1055 - Process Injection with Go using UuidFromStringA WinAPI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "2315ce15-38b6-46ac-a3eb-5e21abef2545", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*-debug*\\\" OR (process.command_line : \\\"*-debug*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "Process Injection with Go using UuidFromStringA WinAPI"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

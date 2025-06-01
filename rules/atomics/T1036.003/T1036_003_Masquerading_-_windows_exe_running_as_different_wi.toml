@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Masquerading - windows exe running as different windows exe' (GUID: c3d24a39-2bfe-4c6a-b064-90cd73896cb0) of technique T1036.003 (Masquerading: Rename System Utilities). Test Description: Copies a windows exe, renames it as another windows exe, and launches it to masquerade as second windows exe. Command/Steps: copy \\\"#{inputfile}\\\" #{outputfile}\n$myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id\nStop-Process -ID $myT1036_003\n"
+from = "now-9m"
+rule_id = "92bbcb9c-3231-4670-a81a-092493ce9211"
+language = "kql"
+name = "Atomic Test: T1036.003 - Masquerading - windows exe running as different windows exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.003/T1036.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.003", "c3d24a39-2bfe-4c6a-b064-90cd73896cb0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*copy*\\\" AND powershell.script_block_text : \\\"*$env:ComSpec*\\\" AND powershell.script_block_text : \\\"*\\\\svchost.exe\\\")*\\\" OR (process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*$env:ComSpec*\\\" AND process.command_line : \\\"*\\\\svchost.exe\\\")*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.003"
+name = "Masquerading - windows exe running as different windows exe"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/003"
+
+

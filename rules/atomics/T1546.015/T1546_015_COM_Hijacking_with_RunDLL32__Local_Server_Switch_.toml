@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'COM Hijacking with RunDLL32 (Local Server Switch)' (GUID: 123520cc-e998-471b-a920-bd28e3feafa0) of technique T1546.015 (Event Triggered Execution: Component Object Model Hijacking). Test Description: This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via \\\"rundll32.exe -localserver [clsid]\\\". \nThis method is generally used as an alternative to 'rundll32.exe -sta [clsid]' to execute dll's while evading detection. \nReference: https://www.hexacorn.com/blog/2020/02/13/run-lola-bin-run/\nUpon successful execution of this test with the default options, whenever certain apps are opened (for example, Notepad), a calculator window will also be opened.. Command/Steps: New-Item -Path 'HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\#{clsid}' -Value '#{clsid_description}'\nNew-Item -Path 'HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\#{clsid}\\\\InprocServe..."
+from = "now-9m"
+rule_id = "3f199fe6-30a6-4001-ab41-4da5ab8df52e"
+language = "kql"
+name = "Atomic Test: T1546.015 - COM Hijacking with RunDLL32 (Local Server Switch)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.015/T1546.015.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.015", "123520cc-e998-471b-a920-bd28e3feafa0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.015"
+name = "COM Hijacking with RunDLL32 (Local Server Switch)"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+

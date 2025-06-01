@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Register Portable Virtualbox' (GUID: c59f246a-34f8-4e4d-9276-c295ef9ba0dd) of technique T1564.006 (Run Virtual Instance). Test Description: ransomware payloads via virtual machines (VM). \n[Maze ransomware](https://threatpost.com/maze-ransomware-ragnar-locker-virtual-machine/159350/). Command/Steps: \\\"C:\\\\Program Files\\\\Oracle\\\\VirtualBox\\\\VBoxSVC.exe\\\" /reregserver\nregsvr32 /S \\\"C:\\\\Program Files\\\\Oracle\\\\VirtualBox\\\\VboxC.dll\\\"\nrundll32 \\\"C:\\\\Program Files\\\\Or..."
+from = "now-9m"
+rule_id = "2ee19141-41be-4aec-b784-3f1ea57b23b5"
+language = "kql"
+name = "Atomic Test: T1564.006 - Register Portable Virtualbox"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.006/T1564.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.006", "c59f246a-34f8-4e4d-9276-c295ef9ba0dd", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Program*\\\" AND process.command_line : \\\"*Files\\\\Oracle\\\\VirtualBox\\\\VBoxSVC.exe*\\\" AND process.command_line : \\\"*/reregserver*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.006"
+name = "Register Portable Virtualbox"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/006"
+
+

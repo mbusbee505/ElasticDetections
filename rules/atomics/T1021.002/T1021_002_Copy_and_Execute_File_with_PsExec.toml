@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy and Execute File with PsExec' (GUID: 0eb03d41-79e4-4393-8e57-6344856be1cf) of technique T1021.002 (Remote Services: SMB/Windows Admin Shares). Test Description: Copies a file to a remote host and executes it using PsExec. Requires the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).. Command/Steps: \\\"#{psexec_exe}\\\" #{remote_host} -accepteula -c #{command_path}\n"
+from = "now-9m"
+rule_id = "2204781a-26f7-439b-9ae3-da6b0cb4b9b0"
+language = "kql"
+name = "Atomic Test: T1021.002 - Copy and Execute File with PsExec"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.002/T1021.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.002", "0eb03d41-79e4-4393-8e57-6344856be1cf", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*\\\\\\\\localhost*\\\" AND process.command_line : \\\"*-accepteula*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\cmd.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.002"
+name = "Copy and Execute File with PsExec"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/002"
+
+

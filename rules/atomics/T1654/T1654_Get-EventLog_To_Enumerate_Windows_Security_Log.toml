@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get-EventLog To Enumerate Windows Security Log' (GUID: a9030b20-dd4b-4405-875e-3462c6078fdc) of technique T1654 (Log Enumeration). Test Description: Uses the built-in PowerShell commandlet Get-EventLog to search for 'SYSTEM' keyword and saves results to a text file.\n\nThis technique was observed in a [TheDFIRReport case](https://thedfirreport.com/2023/04/03/malicious-iso-file-leads-to-domain-wide-ransomware/) \nwhere the threat actor enumerated the Windows Security audit log to determine user accounts and associated IPv4 addresses.\n\nSuccessful execution will save matching log events to the users temp folder.. Command/Steps: powershell -c {get-eventlog 'Security' | where {$_.Message -like '*SYSTEM*'} | export-csv $env:temp\\\\T1654_events.txt}"
+from = "now-9m"
+rule_id = "494d791e-d444-4a5a-95d3-2da65c76228b"
+language = "kql"
+name = "Atomic Test: T1654 - Get-EventLog To Enumerate Windows Security Log"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1654/T1654.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1654", "a9030b20-dd4b-4405-875e-3462c6078fdc", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*{get-eventlog*\\\" AND powershell.script_block_text : \\\"*Security*\\\" AND powershell.script_block_text : \\\"*where*\\\" OR (process.command_line : \\\"*{get-eventlog*\\\" AND process.command_line : \\\"*Security*\\\" AND process.command_line : \\\"*where*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1654"
+name = "Get-EventLog To Enumerate Windows Security Log"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1654"
+
+

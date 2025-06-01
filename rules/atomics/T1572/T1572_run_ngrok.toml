@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'run ngrok' (GUID: 4cdc9fc7-53fb-4894-9f0c-64836943ea60) of technique T1572 (Protocol Tunneling). Test Description: Download and run ngrok. Create tunnel to chosen port.. Command/Steps: C:\\\\Users\\\\Public\\\\ngrok\\\\ngrok.exe config add-authtoken #{api_token} | Out-Null\nStart-Job -ScriptBlock { C:\\\\Users\\\\Public\\\\ngrok\\\\ngrok.exe tcp #{port_num} ..."
+from = "now-9m"
+rule_id = "4f414085-93c4-4120-b288-2720e0e7c2d4"
+language = "kql"
+name = "Atomic Test: T1572 - run ngrok"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1572/T1572.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1572", "4cdc9fc7-53fb-4894-9f0c-64836943ea60", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*config*\\\" AND powershell.script_block_text : \\\"*add-authtoken*\\\" AND powershell.script_block_text : \\\"*Out-Null*\\\" OR (process.command_line : \\\"*config*\\\" AND process.command_line : \\\"*add-authtoken*\\\" AND process.command_line : \\\"*Out-Null*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1572"
+name = "run ngrok"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+

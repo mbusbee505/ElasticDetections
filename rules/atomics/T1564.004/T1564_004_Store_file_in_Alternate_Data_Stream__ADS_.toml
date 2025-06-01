@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Store file in Alternate Data Stream (ADS)' (GUID: 2ab75061-f5d5-4c1a-b666-ba2a50df5b02) of technique T1564.004 (Hide Artifacts: NTFS File Attributes). Test Description: Storing files in Alternate Data Stream (ADS) similar to Astaroth malware.\nUpon execution, cmd will run and attempt to launch desktop.ini. No windows remain open after the test. Command/Steps: if (!(Test-Path C:\\\\Users\\\\Public\\\\Libraries\\\\yanki -PathType Container)) {\n    New-Item -ItemType Directory -Force -Path C:\\\\Users\\\\Public\\\\Libraries\\\\yanki\n..."
+from = "now-9m"
+rule_id = "5f2d91d7-e6ad-4987-bb16-bee75e65a722"
+language = "kql"
+name = "Atomic Test: T1564.004 - Store file in Alternate Data Stream (ADS)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.004/T1564.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.004", "2ab75061-f5d5-4c1a-b666-ba2a50df5b02", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(!(Test-Path*\\\" AND powershell.script_block_text : \\\"*-PathType*\\\" AND powershell.script_block_text : \\\"*Container))*\\\" OR (process.command_line : \\\"*(!(Test-Path*\\\" AND process.command_line : \\\"*-PathType*\\\" AND process.command_line : \\\"*Container))*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.004"
+name = "Store file in Alternate Data Stream (ADS)"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/004"
+
+

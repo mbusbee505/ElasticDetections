@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Install a custom VIB on an ESXi host' (GUID: 7f843046-abf2-443f-b880-07a83cf968ec) of technique T1129 (Server Software Component). Test Description: An adversary can maintain persistence within an ESXi host by installing malicious vSphere Installation Bundles (VIBs).\n[Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-malware-persistence). Command/Steps: #{pscp_file} -pw #{vm_pass} #{vib_file} #{vm_user}@#{vm_host}:/tmp\necho \\\"\\\" | \\\"#{plink_file}\\\" \\\"#{vm_host}\\\" -ssh  -l \\\"#{vm_user}\\\" -pw \\\"#{vm_pass}\\\" -m \\\"#..."
+from = "now-9m"
+rule_id = "47fea81f-e444-4199-ad09-eb3754d085d0"
+language = "kql"
+name = "Atomic Test: T1129 - ESXi - Install a custom VIB on an ESXi host"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1129/T1129.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1129", "7f843046-abf2-443f-b880-07a83cf968ec", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*pass*\\\" AND process.command_line : \\\"*root@atomic.local:/tmp*\\\" AND process.command_line : \\\"*atomic.local*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1129"
+name = "ESXi - Install a custom VIB on an ESXi host"
+reference = "https://attack.mitre.org/techniques/T1129"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1129"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1129"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1129"
+
+

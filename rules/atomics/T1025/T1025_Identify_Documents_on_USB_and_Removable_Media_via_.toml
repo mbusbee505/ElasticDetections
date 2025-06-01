@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Identify Documents on USB and Removable Media via PowerShell' (GUID: 0b29f7e3-a050-44b7-bf05-9fb86af1ec2e) of technique T1025 (Data from Removable Media). Test Description: This test simulates an attack where PowerShell is used to detect connected USB or other removable storage devices and gather a list of specific document files \n(e.g., .docx, .xls, .txt, .pdf). The command works by first identifying removable drives on the system and then recursively searching through each one for files \nmatching the targeted extensions. If no removable drives are present, the script will return a message stating that no media is detected. This behavior mimics \nhow adversaries might scan for sensitive documents on removable devices for exfiltration or analysis.. Command/Steps: powershell.exe -c \\\"Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | ForEach-Object { Get-ChildItem -Path ($_.DriveLetter + ':\\\\*') -Recurse -..."
+from = "now-9m"
+rule_id = "3c55a434-a335-49d6-b421-a879fa382673"
+language = "kql"
+name = "Atomic Test: T1025 - Identify Documents on USB and Removable Media via PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1025/T1025.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1025", "0b29f7e3-a050-44b7-bf05-9fb86af1ec2e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*Get-Volume*\\\" AND process.command_line : \\\"*Where-Object*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1025"
+name = "Identify Documents on USB and Removable Media via PowerShell"
+reference = "https://attack.mitre.org/techniques/T1025"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1025"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1025"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1025"
+
+

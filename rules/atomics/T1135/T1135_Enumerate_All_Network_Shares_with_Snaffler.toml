@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate All Network Shares with Snaffler' (GUID: b19d74b7-5e72-450a-8499-82e49e379d1a) of technique T1135 (Network Share Discovery). Test Description: Snaffler is an open-source tool that has been used by various threat groups, including Scattered Spider/Muddled Libra, to enumerate accessible shares and credential-containing files within a domain. \n[Reference](https://unit42.paloaltonetworks.com/muddled-libra/). Command/Steps: invoke-expression 'cmd /c start powershell -command { cmd /c \\\"#{snaffler_path}\\\" -a -o \\\"#{output_path}\\\" }; start-sleep 90; stop-process -name \\\"snaffler..."
+from = "now-9m"
+rule_id = "2ed731ef-1df4-4b8d-a7b7-5553edc50f51"
+language = "kql"
+name = "Atomic Test: T1135 - Enumerate All Network Shares with Snaffler"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1135/T1135.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1135", "b19d74b7-5e72-450a-8499-82e49e379d1a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*invoke-expression*\\\" AND powershell.script_block_text : \\\"*start*\\\" AND powershell.script_block_text : \\\"*-command*\\\" OR (process.command_line : \\\"*invoke-expression*\\\" AND process.command_line : \\\"*start*\\\" AND process.command_line : \\\"*-command*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1135"
+name = "Enumerate All Network Shares with Snaffler"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+

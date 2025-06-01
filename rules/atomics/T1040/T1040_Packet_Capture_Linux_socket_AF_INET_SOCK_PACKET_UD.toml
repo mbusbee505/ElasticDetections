@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo' (GUID: 515575ab-d213-42b1-aa64-ef6a2dd4641b) of technique T1040 (Network Sniffing). Test Description: Captures packets with domain=AF_INET,type=SOCK_PACKET,protocol=UDP for a few seconds.\nSOCK_PACKET is \\\"obsolete\\\" according to the man page, but still works on Ubuntu 20.04. Command/Steps: sudo #{program_path} -4 -P -p 17 -t 3\n"
+from = "now-9m"
+rule_id = "941dc84b-1132-4994-92d6-c5bbed475ec4"
+language = "kql"
+name = "Atomic Test: T1040 - Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "515575ab-d213-42b1-aa64-ef6a2dd4641b", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

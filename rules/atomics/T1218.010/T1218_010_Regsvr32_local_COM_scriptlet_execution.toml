@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Regsvr32 local COM scriptlet execution' (GUID: 449aa403-6aba-47ce-8a37-247d21ef0306) of technique T1218.010 (Signed Binary Proxy Execution: Regsvr32). Test Description: Regsvr32.exe is a command-line program used to register and unregister OLE controls. Upon execution, calc.exe will be launched.. Command/Steps: #{regsvr32path}\\\\#{regsvr32name} /s /u /i:\\\"#{filename}\\\" scrobj.dll\n"
+from = "now-9m"
+rule_id = "cabf262a-01f8-4951-a025-48249615af8e"
+language = "kql"
+name = "Atomic Test: T1218.010 - Regsvr32 local COM scriptlet execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.010/T1218.010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.010", "449aa403-6aba-47ce-8a37-247d21ef0306", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\system32\\\\regsvr32.exe*\\\" AND process.command_line : \\\"*scrobj.dll*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.010"
+name = "Regsvr32 local COM scriptlet execution"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/010"
+
+

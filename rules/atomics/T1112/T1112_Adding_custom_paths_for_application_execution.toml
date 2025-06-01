@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Adding custom paths for application execution' (GUID: 573d15da-c34e-4c59-a7d2-18f20d92dfa3) of technique T1112 (Modify Registry). Test Description: As per Microsoft,the entries found under App Paths are used primarily to map an application’s executable file name to that file’s fully qualified path and to pre-pend information to the PATH environment variable on a per-application, per-process basis. \nThe path can be modified to load a custom application of choice. \nPost the registry changes of this test, when someone tries to manually run msedge.exe via StartMenu/Run window , notepad will be launched.. Command/Steps: reg add \\\"HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\#{app_name}\\\" /t REG_SZ /d #{new_path} /f\n"
+from = "now-9m"
+rule_id = "48b10b77-908e-4bf8-a72c-c5a14d53ccc9"
+language = "kql"
+name = "Atomic Test: T1112 - Adding custom paths for application execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "573d15da-c34e-4c59-a7d2-18f20d92dfa3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App*\\\" AND process.command_line : \\\"*Paths\\\\msedge.exe*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Adding custom paths for application execution"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

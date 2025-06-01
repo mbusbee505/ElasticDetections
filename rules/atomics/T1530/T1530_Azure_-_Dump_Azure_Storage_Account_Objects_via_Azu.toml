@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Dump Azure Storage Account Objects via Azure CLI' (GUID: 67374845-b4c8-4204-adcc-9b217b65d4f1) of technique T1530 (Data from Cloud Storage Object). Test Description: This test dumps the content of the storage account objects present in the file defined in file_shares_csv_file_path. Note that this file is created in the atomic test T1619 \\\"Azure - Enumerate Storage Account Objects via Key-based authentication using Azure CLI\\\". When created manually, it must contain the columns \\\"ResourceGroup\\\",\\\"StorageAccountName\\\", \\\"FileShareName\\\", \\\"ContainerName\\\", \\\"BlobName\\\".\n\nRequirements:\n    - The test is intended to be executed in interactive mode (with -Interactive parameter) in order to complete the az login command when MFA is required.\n    - The EntraID user must have the role \\\"Storage Account Contributor\\\", or a role with similar permissions.. Command/Steps: $storage_account_objects = Import-Csv -Path \\\"#{storage_account_objects_csv_file_path}\\\"\n\n# Login to Azure\naz login\n\nif (-not (Test-Path -Path \\\"#{output..."
+from = "now-9m"
+rule_id = "5966f5c2-465e-4f44-a74b-777289219ab0"
+language = "kql"
+name = "Atomic Test: T1530 - Azure - Dump Azure Storage Account Objects via Azure CLI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1530/T1530.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1530", "67374845-b4c8-4204-adcc-9b217b65d4f1", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$storage_account_objects*\\\" AND powershell.script_block_text : \\\"*Import-Csv*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" OR (process.command_line : \\\"*$storage_account_objects*\\\" AND process.command_line : \\\"*Import-Csv*\\\" AND process.command_line : \\\"*-Path*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1530"
+name = "Azure - Dump Azure Storage Account Objects via Azure CLI"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+

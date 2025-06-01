@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execution of program.exe as service with unquoted service path' (GUID: 2770dea7-c50f-457b-84c4-c40a47460d9f) of technique T1574.009 (Hijack Execution Flow: Path Interception by Unquoted Path). Test Description: When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability\nknown as Unquoted Service Path which allows a user to gain SYSTEM privileges.\nIn this case, if an executable program.exe in C:\\\\ exists, C:\\\\program.exe will be executed instead of test.exe in C:\\\\Program Files\\\\subfolder\\\\test.exe.. Command/Steps: copy \\\"#{service_executable}\\\" \\\"C:\\\\Program Files\\\\windows_service.exe\\\"\ncopy \\\"#{service_executable}\\\" \\\"C:\\\\program.exe\\\"\nsc create \\\"Example Service\\\" binpath=..."
+from = "now-9m"
+rule_id = "59e8a52f-051f-4bd7-b8e6-88acf0f6b9f3"
+language = "kql"
+name = "Atomic Test: T1574.009 - Execution of program.exe as service with unquoted service path"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.009/T1574.009.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.009", "2770dea7-c50f-457b-84c4-c40a47460d9f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*C:\\\\Program*\\\" AND process.command_line : \\\"*Files\\\\windows_service.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.009"
+name = "Execution of program.exe as service with unquoted service path"
+reference = "https://attack.mitre.org/techniques/T1574/009"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/009"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/009"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/009"
+
+

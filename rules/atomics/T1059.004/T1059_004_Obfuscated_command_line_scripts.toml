@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Obfuscated command line scripts' (GUID: 5bec4cc8-f41e-437b-b417-33ff60acf9af) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: An adversary may pre-compute the base64 representations of the terminal commands that they wish to execute in an attempt to avoid or frustrate detection. The following commands base64 encodes the text string id, then base64 decodes the string, then pipes it as a command to bash, which results in the id command being executed.. Command/Steps: [ \\\"$(uname)\\\" = 'FreeBSD' ] && encodecmd=\\\"b64encode -r -\\\" && decodecmd=\\\"b64decode -r\\\" || encodecmd=\\\"base64 -w 0\\\" && decodecmd=\\\"base64 -d\\\"\nART=$(echo -n..."
+from = "now-9m"
+rule_id = "150ab79f-0171-4a29-a300-6d8e4e0d68b3"
+language = "kql"
+name = "Atomic Test: T1059.004 - Obfuscated command line scripts"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "5bec4cc8-f41e-437b-b417-33ff60acf9af", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(uname)*\\\" AND process.command_line : \\\"*FreeBSD*\\\" AND process.command_line : \\\"*encodecmd=\\\"b64encode*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Obfuscated command line scripts"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

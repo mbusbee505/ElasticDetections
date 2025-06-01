@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MSBuild Bypass Using Inline Tasks (VB)' (GUID: ab042179-c0c5-402f-9bc8-42741f5ce359) of technique T1127.001 (Trusted Developer Utilities Proxy Execution: MSBuild). Test Description: Executes the code in a project file using msbuild.exe. The default Visual Basic example file (vb.xml) will simply print \\\"Hello from a Visual Basic inline task!\\\" to the screen.. Command/Steps: #{msbuildpath}\\\\#{msbuildname} \\\"#{filename}\\\"\n"
+from = "now-9m"
+rule_id = "5a2c7882-7cc2-465e-aa8d-dfb5e1074faf"
+language = "kql"
+name = "Atomic Test: T1127.001 - MSBuild Bypass Using Inline Tasks (VB)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1127.001/T1127.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1127.001", "ab042179-c0c5-402f-9bc8-42741f5ce359", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\msbuild.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1127.001"
+name = "MSBuild Bypass Using Inline Tasks (VB)"
+reference = "https://attack.mitre.org/techniques/T1127/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1127/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1127/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1127/001"
+
+

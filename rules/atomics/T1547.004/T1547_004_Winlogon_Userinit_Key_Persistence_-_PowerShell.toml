@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Winlogon Userinit Key Persistence - PowerShell' (GUID: fb32c935-ee2e-454b-8fa3-1c46b42e8dfb) of technique T1547.004 (Boot or Logon Autostart Execution: Winlogon Helper DLL). Test Description: PowerShell code to set Winlogon userinit key to execute a binary at logon along with userinit.exe.\n\nUpon successful execution, PowerShell will modify a registry value to execute cmd.exe upon logon/logoff.. Command/Steps: Set-ItemProperty \\\"HKCU:\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\\\\" \\\"Userinit\\\" \\\"Userinit.exe, #{binary_to_execute}\\\" -Force\n"
+from = "now-9m"
+rule_id = "e97b0609-2376-461f-bbd3-d5e658d44422"
+language = "kql"
+name = "Atomic Test: T1547.004 - Winlogon Userinit Key Persistence - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.004/T1547.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.004", "fb32c935-ee2e-454b-8fa3-1c46b42e8dfb", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Windows*\\\" AND powershell.script_block_text : \\\"*NT\\\\CurrentVersion\\\\Winlogon\\\\*\\\" OR (process.command_line : \\\"*Set-ItemProperty*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Winlogon\\\\*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.004"
+name = "Winlogon Userinit Key Persistence - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+

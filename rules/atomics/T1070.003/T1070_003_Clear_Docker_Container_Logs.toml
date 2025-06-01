@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Clear Docker Container Logs' (GUID: 553b39f9-1e8c-47b1-abf5-8daf7b0391e9) of technique T1070.003 (Indicator Removal on Host: Clear Command History). Test Description: Clears Docker container logs using the Docker CLI and the truncate command, removing all log entries.. Command/Steps: docker container prune -f && sudo truncate -s 0 /var/lib/docker/containers/*/*-json.log\n"
+from = "now-9m"
+rule_id = "5a8aa65f-1f12-4dc0-882b-d826c503f412"
+language = "kql"
+name = "Atomic Test: T1070.003 - Clear Docker Container Logs"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.003/T1070.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.003", "553b39f9-1e8c-47b1-abf5-8daf7b0391e9", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*docker*\\\" AND process.command_line : \\\"*container*\\\" AND process.command_line : \\\"*prune*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.003"
+name = "Clear Docker Container Logs"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/003"
+
+

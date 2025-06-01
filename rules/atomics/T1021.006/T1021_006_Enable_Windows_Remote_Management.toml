@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable Windows Remote Management' (GUID: 9059e8de-3d7d-4954-a322-46161880b9cf) of technique T1021.006 (Remote Services: Windows Remote Management). Test Description: Powershell Enable WinRM\n\nUpon successful execution, powershell will \\\"Enable-PSRemoting\\\" allowing for remote PS access.. Command/Steps: Enable-PSRemoting -Force\n"
+from = "now-9m"
+rule_id = "44a0d5d4-5d6f-4058-a6f4-5667a5bd13f4"
+language = "kql"
+name = "Atomic Test: T1021.006 - Enable Windows Remote Management"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.006/T1021.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.006", "9059e8de-3d7d-4954-a322-46161880b9cf", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Enable-PSRemoting*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*Enable-PSRemoting*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.006"
+name = "Enable Windows Remote Management"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/006"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Radmin Viewer Utility' (GUID: b4988cad-6ed2-434d-ace5-ea2670782129) of technique T1072 (Software Deployment Tools). Test Description: An adversary may use Radmin Viewer Utility to remotely control Windows device, this will start the radmin console.. Command/Steps: \\\"%PROGRAMFILES(x86)%/#{radmin_exe}\\\"\n"
+from = "now-9m"
+rule_id = "3db22485-d30c-4bc3-8a79-2252860aaf24"
+language = "kql"
+name = "Atomic Test: T1072 - Radmin Viewer Utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1072/T1072.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1072", "b4988cad-6ed2-434d-ace5-ea2670782129", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%PROGRAMFILES(x86)%/Radmin*\\\" AND process.command_line : \\\"*Viewer*\\\" AND process.command_line : \\\"*3/Radmin.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1072"
+name = "Radmin Viewer Utility"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+

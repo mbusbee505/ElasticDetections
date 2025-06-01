@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Pad Binary to Change Hash using truncate command - Linux/macOS' (GUID: e22a9e89-69c7-410f-a473-e6c212cd2292) of technique T1027.001 (Obfuscated Files or Information: Binary Padding). Test Description: Uses truncate to add a byte to the binary to change the hash.\n\nUpon successful execution, truncate will modify `/tmp/evil-binary`, therefore the expected hash will change.. Command/Steps: truncate -s +1 #{file_to_pad} #adds a byte to the file size\n"
+from = "now-9m"
+rule_id = "4634e947-4255-476d-8232-b5661a911e93"
+language = "kql"
+name = "Atomic Test: T1027.001 - Pad Binary to Change Hash using truncate command - Linux/macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.001/T1027.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.001", "e22a9e89-69c7-410f-a473-e6c212cd2292", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*truncate*\\\" AND process.command_line : \\\"*#adds*\\\" AND process.command_line : \\\"*byte*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.001"
+name = "Pad Binary to Change Hash using truncate command - Linux/macOS"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/001"
+
+

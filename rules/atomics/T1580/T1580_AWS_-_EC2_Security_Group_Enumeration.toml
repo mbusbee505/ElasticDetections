@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - EC2 Security Group Enumeration' (GUID: 99b38f24-5acc-4aa3-85e5-b7f97a5d37ac) of technique T1580 (Cloud Infrastructure Discovery). Test Description: Simulate an attacker's action to enumerate EC2 Security Groups in a compromised AWS environment.. Command/Steps: aws ec2 describe-security-groups --profile #{aws_profile} --output #{output_format}\n"
+from = "now-9m"
+rule_id = "8c41924f-ccbf-46d0-89af-cc8971ca2d29"
+language = "kql"
+name = "Atomic Test: T1580 - AWS - EC2 Security Group Enumeration"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1580/T1580.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1580", "99b38f24-5acc-4aa3-85e5-b7f97a5d37ac", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*describe-security-groups*\\\" AND process.command_line : \\\"*--profile*\\\" AND process.command_line : \\\"*default*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1580"
+name = "AWS - EC2 Security Group Enumeration"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1580"
+
+

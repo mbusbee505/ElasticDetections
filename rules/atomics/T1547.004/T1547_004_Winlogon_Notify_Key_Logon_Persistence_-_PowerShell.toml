@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Winlogon Notify Key Logon Persistence - PowerShell' (GUID: d40da266-e073-4e5a-bb8b-2b385023e5f9) of technique T1547.004 (Boot or Logon Autostart Execution: Winlogon Helper DLL). Test Description: PowerShell code to set Winlogon Notify key to execute a notification package DLL at logon.\n\nUpon successful execution, PowerShell will modify a registry value to execute atomicNotificationPackage.dll upon logon.\n\nPlease note that Winlogon Notifications have been removed as of Windows Vista / Windows Server 2008 and that this test thus only applies to erlier versions of Windows.. Command/Steps: New-Item \\\"HKCU:\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\Notify\\\\AtomicRedTeam\\\" -Force\nSet-ItemProperty \\\"HKCU:\\\\Software\\\\Microsoft\\\\Windows ..."
+from = "now-9m"
+rule_id = "bff82f0f-f770-4423-84dc-993080dc8e6d"
+language = "kql"
+name = "Atomic Test: T1547.004 - Winlogon Notify Key Logon Persistence - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.004/T1547.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.004", "d40da266-e073-4e5a-bb8b-2b385023e5f9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Windows*\\\" AND powershell.script_block_text : \\\"*NT\\\\CurrentVersion\\\\Winlogon\\\\Notify\\\\AtomicRedTeam*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Winlogon\\\\Notify\\\\AtomicRedTeam*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.004"
+name = "Winlogon Notify Key Logon Persistence - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/004"
+
+

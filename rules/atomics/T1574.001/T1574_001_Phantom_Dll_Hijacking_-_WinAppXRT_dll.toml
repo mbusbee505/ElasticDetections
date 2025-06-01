@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Phantom Dll Hijacking - WinAppXRT.dll' (GUID: 46ed938b-c617-429a-88dc-d49b5c9ffedb) of technique T1574.001 (Hijack Execution Flow: DLL). Test Description: .NET components (a couple of DLLs loaded anytime .NET apps are executed) when they are loaded they look for an environment variable called APPX_PROCESS\nSetting the environmental variable and dropping the phantom WinAppXRT.dll in e.g. c:\\\\windows\\\\system32 (or any other location accessible via PATH) will ensure the \nWinAppXRT.dll is loaded everytime user launches an application using .NET.\n\nUpon successful execution, amsi.dll will be copied and renamed to WinAppXRT.dll and then WinAppXRT.dll will be copied to system32 folder for loading during execution of any .NET application.. Command/Steps: copy %windir%\\\\System32\\\\amsi.dll %APPDATA%\\\\amsi.dll\nren %APPDATA%\\\\amsi.dll WinAppXRT.dll\ncopy %APPDATA%\\\\WinAppXRT.dll %windir%\\\\System32\\\\WinAppXRT.dll\nr..."
+from = "now-9m"
+rule_id = "3cb48768-5953-4436-95c4-fe20b0ee7c25"
+language = "kql"
+name = "Atomic Test: T1574.001 - Phantom Dll Hijacking - WinAppXRT.dll"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.001/T1574.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.001", "46ed938b-c617-429a-88dc-d49b5c9ffedb", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*copy*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\amsi.dll*\\\" AND process.command_line : \\\"*%APPDATA%\\\\amsi.dll*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.001"
+name = "Phantom Dll Hijacking - WinAppXRT.dll"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/001"
+
+

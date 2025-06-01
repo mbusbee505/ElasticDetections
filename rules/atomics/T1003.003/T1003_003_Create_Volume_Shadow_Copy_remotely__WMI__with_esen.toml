@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Volume Shadow Copy remotely (WMI) with esentutl' (GUID: 21c7bf80-3e8b-40fa-8f9d-f5b194ff2865) of technique T1003.003 (OS Credential Dumping: NTDS). Test Description: This test is intended to be run from a remote workstation with domain admin context.\nThe Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy created with esentutl.. Command/Steps: wmic /node:\\\"#{target_host}\\\" process call create \\\"cmd.exe /c esentutl.exe /y /vss #{source_path} /d #{target_path}\\\"\n"
+from = "now-9m"
+rule_id = "037cbb04-3b13-4054-8520-d87399b04fd2"
+language = "kql"
+name = "Atomic Test: T1003.003 - Create Volume Shadow Copy remotely (WMI) with esentutl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.003/T1003.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.003", "21c7bf80-3e8b-40fa-8f9d-f5b194ff2865", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*/node:\\\"localhost*\\\" AND process.command_line : \\\"*process*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.003"
+name = "Create Volume Shadow Copy remotely (WMI) with esentutl"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+

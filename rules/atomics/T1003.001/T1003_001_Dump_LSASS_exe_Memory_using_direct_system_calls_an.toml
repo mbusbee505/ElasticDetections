@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dump LSASS.exe Memory using direct system calls and API unhooking' (GUID: 7ae7102c-a099-45c8-b985-4c7a2d05790d) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. \nhttps://github.com/outflanknl/Dumpert\nhttps://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/\nUpon successful execution, you should see the following file created C:\\\\\\\\windows\\\\\\\\temp\\\\\\\\dumpert.dmp.\n\nIf you see a message saying \\\\\\\"The system cannot find the path specified.\\\\\\\", try using the  get-prereq_commands to download the  tool first.. Command/Steps: \\\"#{dumpert_exe}\\\"\n"
+from = "now-9m"
+rule_id = "4022e887-01fa-4af4-98ef-eed86cf5c636"
+language = "kql"
+name = "Atomic Test: T1003.001 - Dump LSASS.exe Memory using direct system calls and API unhooking"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "7ae7102c-a099-45c8-b985-4c7a2d05790d", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Dump LSASS.exe Memory using direct system calls and API unhooking"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

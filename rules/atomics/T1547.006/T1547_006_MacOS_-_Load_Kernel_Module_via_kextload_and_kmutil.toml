@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MacOS - Load Kernel Module via kextload and kmutil' (GUID: f4391089-d3a5-4dd1-ab22-0419527f2672) of technique T1547.006 (Boot or Logon Autostart Execution: Kernel Modules and Extensions). Test Description: This test uses the kextload and kmutil commands to load and unload a MacOS kernel module.. Command/Steps: set -x\nsudo kextload #{module_path}\nkextstat 2>/dev/null | grep SoftRAID\nsudo kextunload #{module_path}\nsudo kmutil load -p #{module_path}\nkextstat 2>..."
+from = "now-9m"
+rule_id = "eaf5fef3-1fa7-4d47-ae26-a7efd74bd2f8"
+language = "kql"
+name = "Atomic Test: T1547.006 - MacOS - Load Kernel Module via kextload and kmutil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.006/T1547.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.006", "f4391089-d3a5-4dd1-ab22-0419527f2672", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*kextload*\\\" AND process.command_line : \\\"*/Library/Extensions/SoftRAID.kext*\\\" AND process.command_line : \\\"*kextstat*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.006"
+name = "MacOS - Load Kernel Module via kextload and kmutil"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/006"
+
+

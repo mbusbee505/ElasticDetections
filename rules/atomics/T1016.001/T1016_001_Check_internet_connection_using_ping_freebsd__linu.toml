@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Check internet connection using ping freebsd, linux or macos' (GUID: be8f4019-d8b6-434c-a814-53123cdcc11e) of technique T1016.001 (System Network Configuration Discovery: Internet Connection Discovery). Test Description: Check internet connection using ping on Linux, MACOS. The default target of the ping is 8.8.8.8 (Google Public DNS).. Command/Steps: ping -c 4 #{ping_target}\n"
+from = "now-9m"
+rule_id = "07a7f990-a712-48e1-8af3-3c95b2a7e359"
+language = "kql"
+name = "Atomic Test: T1016.001 - Check internet connection using ping freebsd, linux or macos"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016.001/T1016.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016.001", "be8f4019-d8b6-434c-a814-53123cdcc11e", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ping*\\\" AND process.command_line : \\\"*8.8.8.8*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016.001"
+name = "Check internet connection using ping freebsd, linux or macos"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016/001"
+
+

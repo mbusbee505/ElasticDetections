@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detect a Debugger Presence in the Machine' (GUID: 58bd8c8d-3a1a-4467-a69c-439c75469b07) of technique T1622 (Debugger Evasion). Test Description: Detecting a running debugger process or if the debugger is attached to a process via PowerShell. Command/Steps: # Check for common debugger processes\n$debuggerProcesses = Get-Process | Where-Object { $_.ProcessName -match \\\"dbg\\\" -or $_.ProcessName -match \\\"debug\\\" ..."
+from = "now-9m"
+rule_id = "9cbf698b-8be7-4cfb-a1cc-a9b0fe54d543"
+language = "kql"
+name = "Atomic Test: T1622 - Detect a Debugger Presence in the Machine"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1622/T1622.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1622", "58bd8c8d-3a1a-4467-a69c-439c75469b07", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Check*\\\" AND powershell.script_block_text : \\\"*common*\\\" AND powershell.script_block_text : \\\"*debugger*\\\" OR (process.command_line : \\\"*Check*\\\" AND process.command_line : \\\"*common*\\\" AND process.command_line : \\\"*debugger*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1622"
+name = "Detect a Debugger Presence in the Machine"
+reference = "https://attack.mitre.org/techniques/T1622"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1622"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1622"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1622"
+
+

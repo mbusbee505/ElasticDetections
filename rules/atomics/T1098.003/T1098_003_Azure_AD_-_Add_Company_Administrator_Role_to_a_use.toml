@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure AD - Add Company Administrator Role to a user' (GUID: 4d77f913-56f5-4a14-b4b1-bf7bb24298ad) of technique T1098.003 (Account Manipulation: Additional Cloud Roles). Test Description: Add an existing Azure user account the Company Administrator Role.. Command/Steps: Import-Module MSOnline\n$Password = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force\n$Credential = New-Object -TypeName System.Manageme..."
+from = "now-9m"
+rule_id = "37223596-4728-46fe-ad7d-f17137206f30"
+language = "kql"
+name = "Atomic Test: T1098.003 - Azure AD - Add Company Administrator Role to a user"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098.003/T1098.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098.003", "4d77f913-56f5-4a14-b4b1-bf7bb24298ad", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*MSOnline*\\\" AND powershell.script_block_text : \\\"*$Password*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*MSOnline*\\\" AND process.command_line : \\\"*$Password*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098.003"
+name = "Azure AD - Add Company Administrator Role to a user"
+reference = "https://attack.mitre.org/techniques/T1098/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098/003"
+
+

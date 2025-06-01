@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ICMP C2' (GUID: 0268e63c-e244-42db-bef7-72a9e59fc1fc) of technique T1095 (Non-Application Layer Protocol). Test Description: This will attempt to  start C2 Session Using ICMP. For information on how to set up the listener\nrefer to the following blog: https://www.blackhillsinfosec.com/how-to-c2-over-icmp/. Command/Steps: IEX (New-Object System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/S..."
+from = "now-9m"
+rule_id = "bbb5fd1a-86dd-4065-9076-32f1c4d422a2"
+language = "kql"
+name = "Atomic Test: T1095 - ICMP C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1095/T1095.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1095", "0268e63c-e244-42db-bef7-72a9e59fc1fc", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(New-Object*\\\" AND powershell.script_block_text : \\\"*System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/Shells/Invoke-PowerShellIcmp.ps1')*\\\" AND powershell.script_block_text : \\\"*Invoke-PowerShellIcmp*\\\" OR (process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/Shells/Invoke-PowerShellIcmp.ps1')*\\\" AND process.command_line : \\\"*Invoke-PowerShellIcmp*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1095"
+name = "ICMP C2"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+

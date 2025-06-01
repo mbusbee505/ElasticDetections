@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete User via dscl utility' (GUID: 4d938c43-2fe8-4d70-a5b3-5bf239aa7846) of technique T1531 (Account Access Removal). Test Description: This test deletes the user account using the dscl utility.. Command/Steps: dscl . -delete /Users/#{user_account} #enter admin password\n"
+from = "now-9m"
+rule_id = "cb80115e-b00a-494d-b15e-db8413e6655e"
+language = "kql"
+name = "Atomic Test: T1531 - Delete User via dscl utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1531/T1531.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1531", "4d938c43-2fe8-4d70-a5b3-5bf239aa7846", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*dscl*\\\" AND process.command_line : \\\"*-delete*\\\" AND process.command_line : \\\"*/Users/ARTUser*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1531"
+name = "Delete User via dscl utility"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1531"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Check computer location' (GUID: 96be6002-9200-47db-94cb-c3e27de1cb36) of technique T1082 (System Information Discovery). Test Description: Looks up country code configured in the registry, likely geofence. Upon execution, country code info will be displayed.\n- https://tria.ge/210111-eaz8mqhgh6/behavioral1. Command/Steps: reg query \\\"HKEY_CURRENT_USER\\\\Control Panel\\\\International\\\\Geo\\\"\n"
+from = "now-9m"
+rule_id = "44e62ab8-e27d-46a2-adb0-7860b2a1f559"
+language = "kql"
+name = "Atomic Test: T1082 - Check computer location"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "96be6002-9200-47db-94cb-c3e27de1cb36", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Control*\\\" AND process.command_line : \\\"*Panel\\\\International\\\\Geo*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Check computer location"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

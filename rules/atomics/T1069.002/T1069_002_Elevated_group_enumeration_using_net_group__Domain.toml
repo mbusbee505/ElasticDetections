@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Elevated group enumeration using net group (Domain)' (GUID: 0afb5163-8181-432e-9405-4322710c0c37) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: Runs \\\"net group\\\" command including command aliases and loose typing to simulate enumeration/discovery of high value domain groups. This\ntest will display some errors if run on a computer not connected to a domain. Upon execution, domain information will be displayed.. Command/Steps: net groups \\\"Account Operators\\\" /doma\nnet groups \\\"Exchange Organization Management\\\" /doma\nnet group \\\"BUILTIN\\\\Backup Operators\\\" /doma\nnet group /domai \\\"..."
+from = "now-9m"
+rule_id = "83438e6f-4c9a-4774-81fe-372907ce3142"
+language = "kql"
+name = "Atomic Test: T1069.002 - Elevated group enumeration using net group (Domain)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "0afb5163-8181-432e-9405-4322710c0c37", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*groups*\\\" AND process.command_line : \\\"*Account*\\\" AND process.command_line : \\\"*Operators*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Elevated group enumeration using net group (Domain)"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

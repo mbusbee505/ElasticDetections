@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Time Machine' (GUID: ed952f70-91d4-445a-b7ff-30966bfb1aff) of technique T1490 (Inhibit System Recovery). Test Description: Disables Time Machine which is Apple's automated backup utility software. Attackers can use this to prevent backups from occurring and hinder the victim's ability to recover from any damage.. Command/Steps: sudo tmutil disable"
+from = "now-9m"
+rule_id = "6e4d634b-764e-42c7-b6f1-ffb5327b70c9"
+language = "kql"
+name = "Atomic Test: T1490 - Disable Time Machine"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1490/T1490.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1490", "ed952f70-91d4-445a-b7ff-30966bfb1aff", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*tmutil*\\\" AND process.command_line : \\\"*disable*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1490"
+name = "Disable Time Machine"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1490"
+
+

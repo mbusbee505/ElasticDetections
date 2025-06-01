@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Carbon Black Response' (GUID: 8fba7766-2d11-4b4a-979a-1e3d9cc9a88c) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Disables Carbon Black Response. Command/Steps: sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist\nsudo launchctl unload /Library/LaunchDaemons/com.carbonblack.defense.daemon...."
+from = "now-9m"
+rule_id = "c2c27684-79aa-4668-937e-f801417b5f54"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Carbon Black Response"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "8fba7766-2d11-4b4a-979a-1e3d9cc9a88c", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*launchctl*\\\" AND process.command_line : \\\"*unload*\\\" AND process.command_line : \\\"*/Library/LaunchDaemons/com.carbonblack.daemon.plist*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Carbon Black Response"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

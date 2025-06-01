@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Shell Creation using awk command' (GUID: ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created and used to break out from restricted environments with the awk command.\nReference - https://gtfobins.github.io/gtfobins/awk/#shell. Command/Steps: awk 'BEGIN {system(\\\"/bin/sh &\\\")}'"
+from = "now-9m"
+rule_id = "58891169-0be9-45fd-9016-38545fd8da53"
+language = "kql"
+name = "Atomic Test: T1059.004 - Shell Creation using awk command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*BEGIN*\\\" AND process.command_line : \\\"*{system(\\\"/bin/sh*\\\" AND process.command_line : \\\"*&\\\")}*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Shell Creation using awk command"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

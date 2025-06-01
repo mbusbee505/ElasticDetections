@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language by locale file' (GUID: 5d7057c9-2c8a-4026-91dd-13b5584daa69) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: Identify System language with the by reading the locale configuration file.\n\nThe locale configuration file contains the `LANG` environment variable which\nwill contain the 5 character locale that can be looked up to correlate the\nlanguage and territory.. Command/Steps: [ -f /etc/locale.conf ] && cat /etc/locale.conf || cat /etc/default/locale\n"
+from = "now-9m"
+rule_id = "6ad8f4d1-0cd6-498a-bb50-d4ca91af174e"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language by locale file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "5d7057c9-2c8a-4026-91dd-13b5584daa69", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/etc/locale.conf*\\\" AND process.command_line : \\\"*/etc/locale.conf*\\\" AND process.command_line : \\\"*/etc/default/locale*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language by locale file"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

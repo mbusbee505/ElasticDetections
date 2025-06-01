@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Compile After Delivery using csc.exe' (GUID: ffcdbd6a-b0e8-487d-927a-09127fe9a206) of technique T1027.004 (Obfuscated Files or Information: Compile After Delivery). Test Description: Compile C# code using csc.exe binary used by .NET\nUpon execution an exe named T1027.004.exe will be placed in the temp folder. Command/Steps: C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\csc.exe /out:#{output_file} \\\"#{input_file}\\\"\n"
+from = "now-9m"
+rule_id = "e1c41fd1-abc4-4e5b-a96a-1d98a3e216bd"
+language = "kql"
+name = "Atomic Test: T1027.004 - Compile After Delivery using csc.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027.004/T1027.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027.004", "ffcdbd6a-b0e8-487d-927a-09127fe9a206", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\v4.0.30319\\\\csc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027.004"
+name = "Compile After Delivery using csc.exe"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bypass UAC using Event Viewer (PowerShell)' (GUID: a6ce9acf-842a-4af6-8f79-539be7608e2b) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/\nUpon execution command prompt should be launched with administrative privalages. Command/Steps: New-Item \\\"HKCU:\\\\software\\\\classes\\\\mscfile\\\\shell\\\\open\\\\command\\\" -Force\nSet-ItemProperty \\\"HKCU:\\\\software\\\\classes\\\\mscfile\\\\shell\\\\open\\\\command\\\" -Name \\\"(defau..."
+from = "now-9m"
+rule_id = "a4baabf5-5358-4c76-a358-54953bf36b8f"
+language = "kql"
+name = "Atomic Test: T1548.002 - Bypass UAC using Event Viewer (PowerShell)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "a6ce9acf-842a-4af6-8f79-539be7608e2b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\software\\\\classes\\\\mscfile\\\\shell\\\\open\\\\command*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*HKCU:\\\\software\\\\classes\\\\mscfile\\\\shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Bypass UAC using Event Viewer (PowerShell)"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

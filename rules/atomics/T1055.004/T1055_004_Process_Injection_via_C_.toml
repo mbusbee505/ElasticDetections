@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Injection via C#' (GUID: 611b39b7-e243-4c81-87a4-7145a90358b1) of technique T1055.004 (Process Injection: Asynchronous Procedure Call). Test Description: Process Injection using C#\nreference: https://github.com/pwndizzle/c-sharp-memory-injection\nExcercises Five Techniques\n1. Process injection\n2. ApcInjectionAnyProcess\n3. ApcInjectionNewProcess\n4. IatInjection\n5. ThreadHijack\nUpon successful execution, cmd.exe will execute T1055.exe, which exercises 5 techniques. Output will be via stdout.. Command/Steps: \\\"#{exe_binary}\\\"\n"
+from = "now-9m"
+rule_id = "89d30e6a-92d6-4440-9438-b0b14596811c"
+language = "kql"
+name = "Atomic Test: T1055.004 - Process Injection via C#"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055.004/T1055.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055.004", "611b39b7-e243-4c81-87a4-7145a90358b1", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055.004"
+name = "Process Injection via C#"
+reference = "https://attack.mitre.org/techniques/T1055/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055/004"
+
+

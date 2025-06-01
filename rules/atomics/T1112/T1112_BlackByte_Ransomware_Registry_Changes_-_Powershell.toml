@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'BlackByte Ransomware Registry Changes - Powershell' (GUID: 0b79c06f-c788-44a2-8630-d69051f1123d) of technique T1112 (Modify Registry). Test Description: This task recreates the steps taken by BlackByte ransomware before it worms to other machines via Powershell.  See \\\"Preparing to Worm\\\" section: https://redcanary.com/blog/blackbyte-ransomware/\nThe steps are as follows:\n<ol>\n    <li>1. Elevate Local Privilege by disabling UAC Remote Restrictions</li>\n    <li>2. Enable OS to share network connections between different privilege levels</li>\n    <li>3. Enable long path values for file paths, names, and namespaces to ensure encryption of all file names and paths</li>\n</ol>\nThe registry keys and their respective values will be created upon successful execution.. Command/Steps: New-ItemProperty \\\"HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\" -Name LocalAccountTokenFilterPolicy -PropertyType DWord -Value 1 -F..."
+from = "now-9m"
+rule_id = "44ae6ce2-6f8b-42f2-ae22-4d51c3dd22cf"
+language = "kql"
+name = "Atomic Test: T1112 - BlackByte Ransomware Registry Changes - Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "0b79c06f-c788-44a2-8630-d69051f1123d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System*\\\" AND process.command_line : \\\"*-Name*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "BlackByte Ransomware Registry Changes - Powershell"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

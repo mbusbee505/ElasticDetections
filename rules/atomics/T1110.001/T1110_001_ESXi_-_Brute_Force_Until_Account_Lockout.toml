@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ESXi - Brute Force Until Account Lockout' (GUID: ed6c2c87-bba6-4a28-ac6e-c8af3d6c2ab5) of technique T1110.001 (Brute Force: Password Guessing). Test Description: An adversary may attempt to brute force the password of privilleged account for privilege escalation.\nIn the process, the TA may lock the account, which can be used for detection. [Reference](https://news.sophos.com/en-us/2022/07/14/blackcat-ransomware-attacks-not-merely-a-byproduct-of-bad-luck/#:~:text=A%20ransomware%20group%20attacking%20large,internal%20systems%20after%20establishing%20a). Command/Steps: $lockout_threshold = [int]\\\"#{lockout_threshold}\\\"\nfor ($var = 1; $var -le $lockout_threshold; $var++) {\n  #{plink_file} -ssh \\\"#{vm_host}\\\" -l root -pw f..."
+from = "now-9m"
+rule_id = "916cd93e-e7c1-4297-9442-bf2c84227396"
+language = "kql"
+name = "Atomic Test: T1110.001 - ESXi - Brute Force Until Account Lockout"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1110.001/T1110.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1110.001", "ed6c2c87-bba6-4a28-ac6e-c8af3d6c2ab5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$lockout_threshold*\\\" AND powershell.script_block_text : \\\"*[int]\\\"5*\\\" AND powershell.script_block_text : \\\"*($var*\\\" OR (process.command_line : \\\"*$lockout_threshold*\\\" AND process.command_line : \\\"*[int]\\\"5*\\\" AND process.command_line : \\\"*($var*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1110.001"
+name = "ESXi - Brute Force Until Account Lockout"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+

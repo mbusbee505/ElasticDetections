@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tor Proxy Usage - MacOS' (GUID: 12631354-fdbc-4164-92be-402527e748da) of technique T1090.003 (Proxy: Multi-hop Proxy). Test Description: This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.\nUpon successful execution, the tor proxy service will be launched.. Command/Steps: osascript -e 'tell application \\\"Terminal\\\" to do script \\\"tor\\\"'\n"
+from = "now-9m"
+rule_id = "125c168c-20c0-418f-917d-027877ce24d9"
+language = "kql"
+name = "Atomic Test: T1090.003 - Tor Proxy Usage - MacOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1090.003/T1090.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1090.003", "12631354-fdbc-4164-92be-402527e748da", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*osascript*\\\" AND process.command_line : \\\"*tell*\\\" AND process.command_line : \\\"*application*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1090.003"
+name = "Tor Proxy Usage - MacOS"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1090/003"
+
+

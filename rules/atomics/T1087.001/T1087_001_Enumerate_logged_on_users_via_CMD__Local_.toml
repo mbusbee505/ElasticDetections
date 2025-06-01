@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate logged on users via CMD (Local)' (GUID: a138085e-bfe5-46ba-a242-74a6fb884af3) of technique T1087.001 (Account Discovery: Local Account). Test Description: Enumerate logged on users. Upon execution, logged on users will be displayed.. Command/Steps: query user\n"
+from = "now-9m"
+rule_id = "a8a1813a-c3e8-48e2-b1c9-f879e0f2eecd"
+language = "kql"
+name = "Atomic Test: T1087.001 - Enumerate logged on users via CMD (Local)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.001/T1087.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.001", "a138085e-bfe5-46ba-a242-74a6fb884af3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*query*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.001"
+name = "Enumerate logged on users via CMD (Local)"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Remote Desktop Anti-Alias Setting Through Registry' (GUID: 61d35188-f113-4334-8245-8c6556d43909) of technique T1112 (Modify Registry). Test Description: A modification registry to disable RDP anti-alias settings. This technique was seen in DarkGate malware as part of its installation. Command/Steps: reg add \\\"HKEY_LOCAL_MACHINE\\\\Software\\\\Policies\\\\Microsoft\\\\Windows NT\\\\Terminal Services\\\" /v \\\"DisableRemoteDesktopAntiAlias\\\" /t REG_DWORD /d 1 /f\n"
+from = "now-9m"
+rule_id = "33b15d43-a2dc-4b40-a4cc-f56d9777da5d"
+language = "kql"
+name = "Atomic Test: T1112 - Disable Remote Desktop Anti-Alias Setting Through Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "61d35188-f113-4334-8245-8c6556d43909", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\Software\\\\Policies\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\Terminal*\\\" AND process.command_line : \\\"*Services*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Disable Remote Desktop Anti-Alias Setting Through Registry"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

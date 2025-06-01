@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get Printer Device List via PowerShell Command' (GUID: 5c876daf-db1e-41cf-988d-139a7443ccd4) of technique T1120 (Peripheral Device Discovery). Test Description: This test uses PowerShell to list printers on a Windows system, demonstrating a discovery technique attackers might use to \ngather details on connected devices. Using Get-Printer, they can view information on all available printers, identifying \npotential devices for further targeting.. Command/Steps: Get-Printer\n"
+from = "now-9m"
+rule_id = "1953a5a0-faf4-4879-a6c0-662471583cc7"
+language = "kql"
+name = "Atomic Test: T1120 - Get Printer Device List via PowerShell Command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1120/T1120.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1120", "5c876daf-db1e-41cf-988d-139a7443ccd4", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Printer*\\\" OR (process.command_line : \\\"*Get-Printer*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1120"
+name = "Get Printer Device List via PowerShell Command"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+

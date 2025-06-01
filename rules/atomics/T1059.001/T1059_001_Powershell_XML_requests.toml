@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell XML requests' (GUID: 4396927f-e503-427b-b023-31049b9b09a6) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Powershell xml download request. Upon execution, \\\"Download Cradle test success!\\\" will be dispalyed.\n\nProvided by https://github.com/mgreen27/mgreen27.github.io. Command/Steps: \\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\" -exec bypass -noprofile \\\"$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load('#{url}');$X..."
+from = "now-9m"
+rule_id = "43c257bd-1c95-48f3-b38f-fae52c7d743d"
+language = "kql"
+name = "Atomic Test: T1059.001 - Powershell XML requests"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "4396927f-e503-427b-b023-31049b9b09a6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe*\\\" AND process.command_line : \\\"*-exec*\\\" AND process.command_line : \\\"*bypass*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Powershell XML requests"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

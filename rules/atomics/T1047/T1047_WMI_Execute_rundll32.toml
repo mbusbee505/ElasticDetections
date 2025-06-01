@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMI Execute rundll32' (GUID: 00738d2a-4651-4d76-adf2-c43a41dfb243) of technique T1047 (Windows Management Instrumentation). Test Description: This test uses wmic.exe to execute a DLL function using rundll32. Specify a valid value for remote IP using the node parameter.. Command/Steps: wmic /node:#{node} process call create \\\"rundll32.exe \\\\\\\"#{dll_to_execute}\\\\\\\" #{function_to_execute}\\\"\n"
+from = "now-9m"
+rule_id = "f069e268-e40e-4742-96d0-a63202836141"
+language = "kql"
+name = "Atomic Test: T1047 - WMI Execute rundll32"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1047/T1047.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1047", "00738d2a-4651-4d76-adf2-c43a41dfb243", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*/node:127.0.0.1*\\\" AND process.command_line : \\\"*process*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1047"
+name = "WMI Execute rundll32"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+

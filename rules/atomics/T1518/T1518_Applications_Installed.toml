@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Applications Installed' (GUID: c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b) of technique T1518 (Software Discovery). Test Description: Query the registry to determine software and versions installed on the system. Upon execution a table of\nsoftware name and version information will be displayed.. Command/Steps: Get-ItemProperty HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Uninstall\\\\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | For..."
+from = "now-9m"
+rule_id = "9763e948-c2e3-48f9-9864-cbf90dab470a"
+language = "kql"
+name = "Atomic Test: T1518 - Applications Installed"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1518/T1518.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1518", "c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Uninstall\\\\*\\\" AND powershell.script_block_text : \\\"*Select-Object*\\\" OR (process.command_line : \\\"*Get-ItemProperty*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Uninstall\\\\*\\\" AND process.command_line : \\\"*Select-Object*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1518"
+name = "Applications Installed"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1518"
+
+

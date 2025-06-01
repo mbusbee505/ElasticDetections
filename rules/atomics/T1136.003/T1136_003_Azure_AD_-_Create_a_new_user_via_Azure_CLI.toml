@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure AD - Create a new user via Azure CLI' (GUID: 228c7498-be31-48e9-83b7-9cb906504ec8) of technique T1136.003 (Create Account: Cloud Account). Test Description: Creates a new user in Azure AD via the Azure CLI. Upon successful creation, a new user will be created. Adversaries create new users so that their malicious activity does not interrupt the normal functions of the compromised users and can remain undetected for a long time.. Command/Steps: az login\n$userprincipalname = \\\"#{userprincipalname}\\\"\n$username = \\\"#{username}\\\"      \n$password = \\\"#{password}\\\"\naz ad user create --display-name $usern..."
+from = "now-9m"
+rule_id = "7755fbe2-c740-4cf8-8300-b2251626d40a"
+language = "kql"
+name = "Atomic Test: T1136.003 - Azure AD - Create a new user via Azure CLI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.003/T1136.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.003", "228c7498-be31-48e9-83b7-9cb906504ec8", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*login*\\\" AND powershell.script_block_text : \\\"*$userprincipalname*\\\" AND powershell.script_block_text : \\\"*atomicredteam@yourdomain.com*\\\" OR (process.command_line : \\\"*login*\\\" AND process.command_line : \\\"*$userprincipalname*\\\" AND process.command_line : \\\"*atomicredteam@yourdomain.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.003"
+name = "Azure AD - Create a new user via Azure CLI"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/003"
+
+

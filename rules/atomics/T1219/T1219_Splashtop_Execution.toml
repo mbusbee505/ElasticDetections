@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Splashtop Execution' (GUID: b025c580-029e-4023-888d-a42710d76934) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading Splashtop for use as a C2 channel.\nUpon successful execution, Splashtop will be executed.. Command/Steps: Start-Process \\\"#{Splashtop_Path}\\\"\n"
+from = "now-9m"
+rule_id = "93de45db-681e-4cb4-bcd5-ce18f16328bc"
+language = "kql"
+name = "Atomic Test: T1219 - Splashtop Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "b025c580-029e-4023-888d-a42710d76934", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*${env:programfiles(x86)}\\\\Splashtop\\\\Splashtop*\\\" AND powershell.script_block_text : \\\"*Remote\\\\Client*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*${env:programfiles(x86)}\\\\Splashtop\\\\Splashtop*\\\" AND process.command_line : \\\"*Remote\\\\Client*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "Splashtop Execution"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

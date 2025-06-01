@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Active Directory Users with ADSISearcher' (GUID: 02e8be5a-3065-4e54-8cc8-a14d138834d3) of technique T1087.002 (Account Discovery: Domain Account). Test Description: The following Atomic test will utilize ADSISearcher to enumerate users within Active Directory.\nUpon successful execution a listing of users will output with their paths in AD.\nReference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/. Command/Steps: ([adsisearcher]\\\"objectcategory=user\\\").FindAll(); ([adsisearcher]\\\"objectcategory=user\\\").FindOne()\n"
+from = "now-9m"
+rule_id = "8f67bd2c-f6e0-43c8-a477-fe45d88f5cf1"
+language = "kql"
+name = "Atomic Test: T1087.002 - Enumerate Active Directory Users with ADSISearcher"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "02e8be5a-3065-4e54-8cc8-a14d138834d3", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*([adsisearcher]\\\"objectcategory=user\\\").FindAll()*\\\" AND powershell.script_block_text : \\\"*([adsisearcher]\\\"objectcategory=user\\\").FindOne()*\\\" OR (process.command_line : \\\"*([adsisearcher]\\\"objectcategory=user\\\").FindAll()*\\\" AND process.command_line : \\\"*([adsisearcher]\\\"objectcategory=user\\\").FindOne()*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Enumerate Active Directory Users with ADSISearcher"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

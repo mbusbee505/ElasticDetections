@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Scheduled task Local' (GUID: 42f53695-ad4a-4546-abb6-7d837f644a71) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10.. Command/Steps: SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}\n"
+from = "now-9m"
+rule_id = "42c9d91d-2f46-4630-ba85-4f3bea808392"
+language = "kql"
+name = "Atomic Test: T1053.005 - Scheduled task Local"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "42f53695-ad4a-4546-abb6-7d837f644a71", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*SCHTASKS*\\\" AND process.command_line : \\\"*/Create*\\\" AND process.command_line : \\\"*ONCE*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Scheduled task Local"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

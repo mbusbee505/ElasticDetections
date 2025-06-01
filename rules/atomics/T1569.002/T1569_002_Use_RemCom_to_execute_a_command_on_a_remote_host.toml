@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Use RemCom to execute a command on a remote host' (GUID: a5d8cdeb-be90-43a9-8b26-cc618deac1e0) of technique T1569.002 (System Services: Service Execution). Test Description: Requires having RemCom installed, path to RemCom is one of the input input_arguments\nWill start a process on a remote host.\nUpon successful execution, cmd will utilize RemCom.exe to spawn calc.exe on a remote endpoint (default:localhost).. Command/Steps: \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\remcom.exe\\\" \\\\\\\\#{remote_host} /user:#{user_name} /pwd:#{password} cmd.exe\n"
+from = "now-9m"
+rule_id = "2207fe30-8638-4857-8206-e72e9793125b"
+language = "kql"
+name = "Atomic Test: T1569.002 - Use RemCom to execute a command on a remote host"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1569.002/T1569.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1569.002", "a5d8cdeb-be90-43a9-8b26-cc618deac1e0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*\\\\\\\\localhost*\\\" AND process.command_line : \\\"*/user:Administrator*\\\" AND process.command_line : \\\"*/pwd:P@ssw0rd1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1569.002"
+name = "Use RemCom to execute a command on a remote host"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+

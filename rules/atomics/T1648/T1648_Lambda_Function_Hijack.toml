@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Lambda Function Hijack' (GUID: 87a4a141-c2bb-49d1-a604-8679082d8b91) of technique T1648 (Serverless Execution). Test Description: Modify an existing Lambda function to execute arbitrary code.. Command/Steps: Import-Module \\\"PathToAtomicsFolder/T1648/src/T1648-1/LambdaAttack.ps1\\\" -Force\n$access_key = \\\"#{access_key}\\\"\n$secret_key = \\\"#{secret_key}\\\"\n$session_tok..."
+from = "now-9m"
+rule_id = "55edc4ef-957f-4388-8f0e-38f497306adc"
+language = "kql"
+name = "Atomic Test: T1648 - Lambda Function Hijack"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1648/T1648.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1648", "87a4a141-c2bb-49d1-a604-8679082d8b91", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" AND powershell.script_block_text : \\\"*$access_key*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-Force*\\\" AND process.command_line : \\\"*$access_key*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1648"
+name = "Lambda Function Hijack"
+reference = "https://attack.mitre.org/techniques/T1648"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1648"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1648"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1648"
+
+

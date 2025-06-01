@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Extract Edge Browsing History' (GUID: 74094120-e1f5-47c9-b162-a418a0f624d5) of technique T1217 (Browser Bookmark Discovery). Test Description: This test will extract Microsoft Edge browser's history of current user. Command/Steps: $URL_Regex = '(htt(p|s))://([\\\\w-]+\\\\.)+[\\\\w-]+(/[\\\\w- ./?%&=]*)*?'\n$History = Get-Content -Path \\\"#{history_path}\\\" | Select-String -AllMatches $URL_Regex ..."
+from = "now-9m"
+rule_id = "819241a5-2dc4-4600-981d-fc28377046c7"
+language = "kql"
+name = "Atomic Test: T1217 - Extract Edge Browsing History"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1217/T1217.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1217", "74094120-e1f5-47c9-b162-a418a0f624d5", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$URL_Regex*\\\" AND powershell.script_block_text : \\\"*(htt(p|s))://([\\\\w-]+\\\\.)+[\\\\w-]+(/[\\\\w-*\\\" AND powershell.script_block_text : \\\"*$History*\\\" OR (process.command_line : \\\"*$URL_Regex*\\\" AND process.command_line : \\\"*(htt(p|s))://([\\\\w-]+\\\\.)+[\\\\w-]+(/[\\\\w-*\\\" AND process.command_line : \\\"*$History*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1217"
+name = "Extract Edge Browsing History"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+

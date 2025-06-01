@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'UEFI Persistence via Wpbbin.exe File Creation' (GUID: b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1) of technique T1542.001 (Pre-OS Boot: System Firmware). Test Description: Creates Wpbbin.exe in %systemroot%. This technique can be used for UEFI-based pre-OS boot persistence mechanisms.\n- https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c\n- http://download.microsoft.com/download/8/a/2/8a2fb72d-9b96-4e2d-a559-4a27cf905a80/windows-platform-binary-table.docx\n- https://github.com/tandasat/WPBT-Builder. Command/Steps: echo \\\"Creating %systemroot%\\\\wpbbin.exe\\\"      \nNew-Item -ItemType File -Path \\\"$env:SystemRoot\\\\System32\\\\wpbbin.exe\\\"\n"
+from = "now-9m"
+rule_id = "9788f861-b9f6-4731-ba86-66ac50976250"
+language = "kql"
+name = "Atomic Test: T1542.001 - UEFI Persistence via Wpbbin.exe File Creation"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1542.001/T1542.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1542.001", "b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Creating*\\\" AND powershell.script_block_text : \\\"*%systemroot%\\\\wpbbin.exe*\\\" AND powershell.script_block_text : \\\"*New-Item*\\\" OR (process.command_line : \\\"*Creating*\\\" AND process.command_line : \\\"*%systemroot%\\\\wpbbin.exe*\\\" AND process.command_line : \\\"*New-Item*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1542.001"
+name = "UEFI Persistence via Wpbbin.exe File Creation"
+reference = "https://attack.mitre.org/techniques/T1542/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1542/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1542/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1542/001"
+
+

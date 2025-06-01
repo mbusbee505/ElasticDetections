@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a Process using WMI Query and an Encoded Command' (GUID: 7db7a7f9-9531-4840-9b30-46220135441c) of technique T1047 (Windows Management Instrumentation). Test Description: Solarigate persistence is achieved via backdoors deployed via various techniques including using PowerShell with an EncodedCommand\n Powershell -nop -exec bypass -EncodedCommand <encoded command>\nWhere the –EncodedCommand, once decoded, would resemble:\n  Invoke-WMIMethod win32_process -name create -argumentlist ‘rundll32 c:\\\\windows\\\\idmu\\\\common\\\\ypprop.dll _XInitImageFuncPtrs’ -ComputerName WORKSTATION\nThe EncodedCommand in this atomic is the following: Invoke-WmiMethod -Path win32_process -Name create -ArgumentList notepad.exe\nYou should expect to see notepad.exe running after execution of this test.\n[Solarigate Analysis from Microsoft](https://www.microsoft.com/security/blog/2020/12/18/analyzing-solorigate-the-compromised-dll-file-that-started-a-sophisticated-cyberattack-and-how-microsoft-defender-helps-protect/). Command/Steps: powershell -exec bypass -e SQBuAHYAbwBrAGUALQBXAG0AaQBNAGUAdABoAG8AZAAgAC0AUABhAHQAaAAgAHcAaQBuADMAMgBfAHAAcgBvAGMAZQBzAHMAIAAtAE4AYQBtAGUAIABjAHIAZQB..."
+from = "now-9m"
+rule_id = "a16cd962-980f-4566-90c4-92a75593d66d"
+language = "kql"
+name = "Atomic Test: T1047 - Create a Process using WMI Query and an Encoded Command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1047/T1047.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1047", "7db7a7f9-9531-4840-9b30-46220135441c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*-exec*\\\" AND process.command_line : \\\"*bypass*\\\" AND process.command_line : \\\"*SQBuAHYAbwBrAGUALQBXAG0AaQBNAGUAdABoAG8AZAAgAC0AUABhAHQAaAAgAHcAaQBuADMAMgBfAHAAcgBvAGMAZQBzAHMAIAAtAE4AYQBtAGUAIABjAHIAZQBhAHQAZQAgAC0AQQByAGcAdQBtAGUAbgB0AEwAaQBzAHQAIABuAG8AdABlAHAAYQBkAC4AZQB4AGUA*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1047"
+name = "Create a Process using WMI Query and an Encoded Command"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1047"
+
+

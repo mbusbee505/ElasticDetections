@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Read-Write-Execute process Injection' (GUID: 0128e48e-8c1a-433a-a11a-a5387384f1e1) of technique T1055 (Process Injection). Test Description: This test exploited the vulnerability in legitimate PE formats where sections have RWX permission and enough space for shellcode.\nThe RWX injection avoided the use of VirtualAlloc, WriteVirtualMemory, and ProtectVirtualMemory, thus evading detection mechanisms \nthat relied on API call sequences and heuristics. The RWX injection utilises API call sequences: LoadLibrary --> GetModuleInformation --> GetModuleHandleA --> RtlCopyMemory --> CreateThread.\nThe injected shellcode will open a message box and a notepad.\nRWX Process Injection, also known as MockingJay, was introduced to the security community by SecurityJoes.\nMore details can be found at https://www.securityjoes.com/post/process-mockingjay-echoing-rwx-in-userland-to-achieve-code-execution.\nThe original injector and idea were developed for game cheats, as visible at https://github.com/M-r-J-o-h-n/SWH-Injector.. Command/Steps: $address = (& \"$PathToAtomicsFolder\T1055\bin\u0064\\searchVuln.exe\\" \\"$PathToAtomicsFolder\\T1055\\bin\\u0064\\\\vuln_dll\\\\\\\" | Out-String | Select-String -Pattern..."
+from = "now-9m"
+rule_id = "2942023a-80f1-4b8d-a1a0-4e1c78e3d2ae"
+language = "kql"
+name = "Atomic Test: T1055 - Read-Write-Execute process Injection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "0128e48e-8c1a-433a-a11a-a5387384f1e1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$address*\\\" AND powershell.script_block_text : \\\"*Out-String*\\\" AND powershell.script_block_text : \\\"*Select-String*\\\" OR (process.command_line : \\\"*$address*\\\" AND process.command_line : \\\"*Out-String*\\\" AND process.command_line : \\\"*Select-String*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "Read-Write-Execute process Injection"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

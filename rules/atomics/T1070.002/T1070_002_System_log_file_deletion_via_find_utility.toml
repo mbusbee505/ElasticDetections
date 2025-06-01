@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System log file deletion via find utility' (GUID: bc8eeb4a-cc3e-45ec-aa6e-41e973da2558) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test finds and deletes the system log files within /var/log/ directory using various executions(rm, shred, unlink). Command/Steps: sudo find /var/log -name '#{system_log_name1}*' -exec rm {} \\\\; #using \\\"rm\\\" execution\nsudo find /var/log -name \\\"#{system_log_name2}*\\\" -exec shred -u -z..."
+from = "now-9m"
+rule_id = "14da18c1-189a-4b57-bd6c-fe23f623cc5d"
+language = "kql"
+name = "Atomic Test: T1070.002 - System log file deletion via find utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "bc8eeb4a-cc3e-45ec-aa6e-41e973da2558", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*/var/log*\\\" AND process.command_line : \\\"*-name*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "System log file deletion via find utility"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

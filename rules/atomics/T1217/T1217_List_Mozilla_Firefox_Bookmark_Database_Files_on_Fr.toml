@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux' (GUID: 3a41f169-a5ab-407f-9269-abafdb5da6c2) of technique T1217 (Browser Bookmark Discovery). Test Description: Searches for Mozilla Firefox's places.sqlite file (on FreeBSD or Linux distributions) that contains bookmarks and lists any found instances to a text file.. Command/Steps: find / -path \\\"*.mozilla/firefox/*/places.sqlite\\\" 2>/dev/null -exec echo {} >> #{output_file} \\\\;\ncat #{output_file} 2>/dev/null\n"
+from = "now-9m"
+rule_id = "82b5e243-80ad-4e67-92d1-cb5d8fbcee9a"
+language = "kql"
+name = "Atomic Test: T1217 - List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1217/T1217.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1217", "3a41f169-a5ab-407f-9269-abafdb5da6c2", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*find*\\\" AND process.command_line : \\\"*-path*\\\" AND process.command_line : \\\"*2>/dev/null*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1217"
+name = "List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+

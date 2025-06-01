@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete an entire folder - Windows cmd' (GUID: ded937c4-2add-42f7-9c2c-c742b7a98698) of technique T1070.004 (Indicator Removal on Host: File Deletion). Test Description: Recursively delete a folder in the temporary directory using cmd.exe.\nUpon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.. Command/Steps: rmdir /s /q #{folder_to_delete}\n"
+from = "now-9m"
+rule_id = "c73425a1-a7c8-4a44-962b-b3e1c09ac864"
+language = "kql"
+name = "Atomic Test: T1070.004 - Delete an entire folder - Windows cmd"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.004/T1070.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.004", "ded937c4-2add-42f7-9c2c-c742b7a98698", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rmdir*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.004"
+name = "Delete an entire folder - Windows cmd"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/004"
+
+

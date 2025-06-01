@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bypass UAC by Mocking Trusted Directories' (GUID: f7a35090-6f7f-4f64-bb47-d657bf5b10c1) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: Creates a fake \\\"trusted directory\\\" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems\nUpon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch. Command/Steps: mkdir \\\"\\\\\\\\?\\\\C:\\\\Windows \\\\System32\\\\\\\"\ncopy \\\"#{executable_binary}\\\" \\\"\\\\\\\\?\\\\C:\\\\Windows \\\\System32\\\\mmc.exe\\\"\nmklink c:\\\\testbypass.exe \\\"\\\\\\\\?\\\\C:\\\\Windows \\\\System32\\\\mm..."
+from = "now-9m"
+rule_id = "d3b0c4b5-7c4d-418f-82e4-1768437d385e"
+language = "kql"
+name = "Atomic Test: T1548.002 - Bypass UAC by Mocking Trusted Directories"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "f7a35090-6f7f-4f64-bb47-d657bf5b10c1", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*\\\\\\\\?\\\\C:\\\\Windows*\\\" AND process.command_line : \\\"*\\\\System32\\\\*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Bypass UAC by Mocking Trusted Directories"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

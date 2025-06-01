@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Linux - Stop service by killing process using pkill' (GUID: 08b4718f-a8bf-4bb5-a552-294fc5178fea) of technique T1489 (Service Stop). Test Description: Stops a specified service by sending a SIGTERM signal to the linked process using pkill. This method is effective when multiple instances of the process may be running.\nUpon execution, if any instances of the process were running, they will be terminated. If no instances were running, pkill will not find any processes to kill.\nStopped service can be restarted by running the cleanup command.\nYou can list all available services with following command: \\\"systemctl list-units --type=service\\\". Command/Steps: sudo pkill -SIGTERM #{process_pattern}\n"
+from = "now-9m"
+rule_id = "ee7882a0-0126-4ee3-b21c-03c59dfbc2ce"
+language = "kql"
+name = "Atomic Test: T1489 - Linux - Stop service by killing process using pkill"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1489/T1489.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1489", "08b4718f-a8bf-4bb5-a552-294fc5178fea", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*pkill*\\\" AND process.command_line : \\\"*-SIGTERM*\\\" AND process.command_line : \\\"*^cron$*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1489"
+name = "Linux - Stop service by killing process using pkill"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Gsecdump' (GUID: 96345bfc-8ae7-4b6a-80b7-223200f24ef9) of technique T1003 (OS Credential Dumping). Test Description: Dump credentials from memory using Gsecdump.\n\nUpon successful execution, you should see domain\\\\username's followed by two 32 character hashes.\n\nIf you see output that says \\\"compat: error: failed to create child process\\\", execution was likely blocked by Anti-Virus. \nYou will receive only error output if you do not run this test from an elevated context (run as administrator)\n\nIf you see a message saying \\\"The system cannot find the path specified\\\", try using the get-prereq_commands to download and install Gsecdump first.. Command/Steps: \\\"#{gsecdump_exe}\\\" -a\n"
+from = "now-9m"
+rule_id = "025f6f06-7faa-4506-83c5-7245395d42bb"
+language = "kql"
+name = "Atomic Test: T1003 - Gsecdump"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003/T1003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003", "96345bfc-8ae7-4b6a-80b7-223200f24ef9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003"
+name = "Gsecdump"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003"
+
+

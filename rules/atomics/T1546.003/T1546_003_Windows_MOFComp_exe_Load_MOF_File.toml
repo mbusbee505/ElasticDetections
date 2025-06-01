@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows MOFComp.exe Load MOF File' (GUID: 29786d7e-8916-4de6-9c55-be7b093b2706) of technique T1546.003 (Event Triggered Execution: Windows Management Instrumentation Event Subscription). Test Description: The following Atomic will utilize MOFComp.exe to load a local MOF file.\nThe Managed Object Format (MOF) compiler parses a file containing MOF statements and adds the classes and class instances defined in the file to the WMI repository. \nTo query for the class:  gwmi __eventfilter -namespace root\\\\subscription\nA successful execution will add the class to WMI root namespace.\nReference: https://pentestlab.blog/2020/01/21/persistence-wmi-event-subscription/ and https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/.. Command/Steps: #{mofcomp_path} \\\"#{mof_file}\\\"\n"
+from = "now-9m"
+rule_id = "fe04150f-b5fa-46aa-9fcd-e25540b37b25"
+language = "kql"
+name = "Atomic Test: T1546.003 - Windows MOFComp.exe Load MOF File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.003/T1546.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.003", "29786d7e-8916-4de6-9c55-be7b093b2706", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*c:\\\\windows\\\\system32\\\\wbem\\\\mofcomp.exe*\\\" OR (process.command_line : \\\"*c:\\\\windows\\\\system32\\\\wbem\\\\mofcomp.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.003"
+name = "Windows MOFComp.exe Load MOF File"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+

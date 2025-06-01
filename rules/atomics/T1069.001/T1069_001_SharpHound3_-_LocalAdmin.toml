@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'SharpHound3 - LocalAdmin' (GUID: e03ada14-0980-4107-aff1-7783b2b59bb1) of technique T1069.001 (Permission Groups Discovery: Local Groups). Test Description: This module runs the Windows executable of SharpHound in order to remotely list members of the local Administrators group (SAMR). Command/Steps: New-Item -Path \\\"#{output_path}\\\" -ItemType Directory > $null\n& \\\"#{sharphound_path}\\\" -d \\\"#{domain}\\\" --CollectionMethod LocalAdmin --NoSaveCache --Output..."
+from = "now-9m"
+rule_id = "5de4b9f1-0f6b-4254-8f22-e0ac0e3e26c5"
+language = "kql"
+name = "Atomic Test: T1069.001 - SharpHound3 - LocalAdmin"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.001/T1069.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.001", "e03ada14-0980-4107-aff1-7783b2b59bb1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*-ItemType*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*-ItemType*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.001"
+name = "SharpHound3 - LocalAdmin"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+

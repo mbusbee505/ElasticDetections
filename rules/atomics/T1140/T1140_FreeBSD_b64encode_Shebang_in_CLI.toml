@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'FreeBSD b64encode Shebang in CLI' (GUID: 18ee2002-66e8-4518-87c5-c0ec9c8299ac) of technique T1140 (Deobfuscate/Decode Files or Information). Test Description: Using b64decode shell scripts that have Shebang in them. This is commonly how attackers obfuscate passing and executing a shell script. Seen [here](https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html) by TrendMicro, as well as [LinPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS). Also a there is a great Sigma rule [here](https://github.com/SigmaHQ/sigma/blob/master/rules/linux/process_creation/proc_creation_lnx_base64_shebang_cli.yml) for it.. Command/Steps: echo #{bash_encoded} | b64decode -r | sh\necho #{dash_encoded} | b64decode -r | sh\necho #{fish_encoded} | b64decode -r | sh\necho #{sh_encoded} | b64dec..."
+from = "now-9m"
+rule_id = "342cb16b-7cce-4436-826e-1e2d752bd87e"
+language = "kql"
+name = "Atomic Test: T1140 - FreeBSD b64encode Shebang in CLI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1140/T1140.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1140", "18ee2002-66e8-4518-87c5-c0ec9c8299ac", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*IyEvYmluL2Jhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=*\\\" AND process.command_line : \\\"*b64decode*\\\" AND process.command_line : \\\"*IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1140"
+name = "FreeBSD b64encode Shebang in CLI"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+

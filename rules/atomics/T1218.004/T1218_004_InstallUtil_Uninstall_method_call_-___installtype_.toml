@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant' (GUID: 06d9deba-f732-48a8-af8e-bdd6e4d98c1d) of technique T1218.004 (Signed Binary Proxy Execution: InstallUtil). Test Description: Executes the Uninstall Method. Upon execution, version information will be displayed the .NET framework install utility.. Command/Steps: # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly\n. \\\"#{test_harness}\\\"\n\n$InstallerAssemblyDir = \\\"#{assembly_dir}\\\"\n$..."
+from = "now-9m"
+rule_id = "854c1ef6-5ca4-4b3f-9d5d-bc949a75c8c0"
+language = "kql"
+name = "Atomic Test: T1218.004 - InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.004/T1218.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.004", "06d9deba-f732-48a8-af8e-bdd6e4d98c1d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import*\\\" AND powershell.script_block_text : \\\"*required*\\\" AND powershell.script_block_text : \\\"*harness*\\\" OR (process.command_line : \\\"*Import*\\\" AND process.command_line : \\\"*required*\\\" AND process.command_line : \\\"*harness*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.004"
+name = "InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/004"
+
+

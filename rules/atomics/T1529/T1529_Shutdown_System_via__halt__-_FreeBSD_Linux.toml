@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Shutdown System via `halt` - FreeBSD/Linux' (GUID: 918f70ab-e1ef-49ff-bc57-b27021df84dd) of technique T1529 (System Shutdown/Reboot). Test Description: This test shuts down a FreeBSD/Linux system using `halt`.. Command/Steps: halt -p\n"
+from = "now-9m"
+rule_id = "aebf790f-b257-47d9-a2b4-f97607546123"
+language = "kql"
+name = "Atomic Test: T1529 - Shutdown System via `halt` - FreeBSD/Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1529/T1529.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1529", "918f70ab-e1ef-49ff-bc57-b27021df84dd", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*halt*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1529"
+name = "Shutdown System via `halt` - FreeBSD/Linux"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+

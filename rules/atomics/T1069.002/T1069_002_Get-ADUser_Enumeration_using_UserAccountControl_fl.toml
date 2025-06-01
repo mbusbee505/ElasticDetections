@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting)' (GUID: 43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: When successful, accounts that do not require kerberos pre-auth will be returned.\nReference: https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html. Command/Steps: Get-ADUser -Filter 'useraccountcontrol -band 4194304' -Properties useraccountcontrol | Format-Table name\n"
+from = "now-9m"
+rule_id = "b8ec62e4-e81a-4828-a69a-1e5a3971a424"
+language = "kql"
+name = "Atomic Test: T1069.002 - Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ADUser*\\\" AND powershell.script_block_text : \\\"*-Filter*\\\" AND powershell.script_block_text : \\\"*useraccountcontrol*\\\" OR (process.command_line : \\\"*Get-ADUser*\\\" AND process.command_line : \\\"*-Filter*\\\" AND process.command_line : \\\"*useraccountcontrol*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting)"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

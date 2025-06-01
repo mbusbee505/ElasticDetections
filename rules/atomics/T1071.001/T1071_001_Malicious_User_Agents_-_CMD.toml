@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Malicious User Agents - CMD' (GUID: dc3488b0-08c7-4fea-b585-905c83b48180) of technique T1071.001 (Application Layer Protocol: Web Protocols). Test Description: This test simulates an infected host beaconing to command and control. Upon execution, no out put will be displayed. \nUse an application such as Wireshark to record the session and observe user agent strings and responses.\n\nInspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat. Command/Steps: #{curl_path} -s -A \\\"HttpBrowser/1.0\\\" -m3 #{domain} >nul 2>&1\n#{curl_path} -s -A \\\"Wget/1.9+cvs-stable (Red Hat modified)\\\" -m3 #{domain} >nul 2>&1\n#{cur..."
+from = "now-9m"
+rule_id = "c9cfeee0-6695-45c4-b0c8-c64fbbea7fe9"
+language = "kql"
+name = "Atomic Test: T1071.001 - Malicious User Agents - CMD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1071.001/T1071.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1071.001", "dc3488b0-08c7-4fea-b585-905c83b48180", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\Curl.exe*\\\" AND process.command_line : \\\"*HttpBrowser/1.0*\\\" AND process.command_line : \\\"*www.google.com*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1071.001"
+name = "Malicious User Agents - CMD"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1071/001"
+
+

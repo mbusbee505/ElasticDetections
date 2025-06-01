@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'COM Hijacking - InprocServer32' (GUID: 48117158-d7be-441b-bc6a-d9e36e47b52b) of technique T1546.015 (Event Triggered Execution: Component Object Model Hijacking). Test Description: This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.\n\nReference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/. Command/Steps: New-Item -Path 'HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\#{clsid}' -Value '#{clsid_description}'\nNew-Item -Path 'HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\#{clsid}\\\\InprocServe..."
+from = "now-9m"
+rule_id = "9b9b0877-35b9-49a9-b4c2-c23b2dca639d"
+language = "kql"
+name = "Atomic Test: T1546.015 - COM Hijacking - InprocServer32"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.015/T1546.015.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.015", "48117158-d7be-441b-bc6a-d9e36e47b52b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKCU:\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.015"
+name = "COM Hijacking - InprocServer32"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/015"
+
+

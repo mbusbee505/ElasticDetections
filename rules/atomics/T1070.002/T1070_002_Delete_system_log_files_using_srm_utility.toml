@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete system log files using srm utility' (GUID: b0768a5e-0f32-4e75-ae5b-d036edcf96b6) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test securely deletes the system log files individually and recursively using the srm utility.\nInstall srm using Homebrew with the command: brew install khell/homebrew-srm/srm\nRefer: https://github.com/khell/homebrew-srm/issues/1 for installation. Command/Steps: sudo srm #{system_log_path} #system log file deletion\nsudo srm -r #{system_log_folder} #recursive deletion of log files\n"
+from = "now-9m"
+rule_id = "f92c7b0d-627e-4288-a3c0-067dc084311f"
+language = "kql"
+name = "Atomic Test: T1070.002 - Delete system log files using srm utility"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "b0768a5e-0f32-4e75-ae5b-d036edcf96b6", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/var/log/system.log*\\\" AND process.command_line : \\\"*#system*\\\" AND process.command_line : \\\"*file*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Delete system log files using srm utility"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

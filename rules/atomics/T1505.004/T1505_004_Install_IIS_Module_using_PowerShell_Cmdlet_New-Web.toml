@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install IIS Module using PowerShell Cmdlet New-WebGlobalModule' (GUID: cc3381fb-4bd0-405c-a8e4-6cacfac3b06c) of technique T1505.004 (IIS Components). Test Description: The following Atomic will utilize PowerShell Cmdlet New-WebGlobalModule to install a new IIS Module. IIS must be installed.\nThis atomic utilizes a DLL on disk, but to test further suspiciousness, compile and load [IIS-Raid](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/).\nA successful execution will install a module into IIS using New-WebGlobalModule.\n[Managing IIS Modules with PowerShell](https://learn.microsoft.com/en-us/powershell/module/webadministration/set-webglobalmodule?view=windowsserver2022-ps)\n[IIS Modules](https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/). Command/Steps: New-WebGlobalModule -Name #{module_name} -Image #{dll_path}\n"
+from = "now-9m"
+rule_id = "45a095e7-9af9-4a07-8fe8-13eb6ba728f1"
+language = "kql"
+name = "Atomic Test: T1505.004 - Install IIS Module using PowerShell Cmdlet New-WebGlobalModule"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1505.004/T1505.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1505.004", "cc3381fb-4bd0-405c-a8e4-6cacfac3b06c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-WebGlobalModule*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*DefaultDocumentModule_Atomic*\\\" OR (process.command_line : \\\"*New-WebGlobalModule*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*DefaultDocumentModule_Atomic*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1505.004"
+name = "Install IIS Module using PowerShell Cmdlet New-WebGlobalModule"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1505/004"
+
+

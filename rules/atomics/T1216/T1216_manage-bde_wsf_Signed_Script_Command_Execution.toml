@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'manage-bde.wsf Signed Script Command Execution' (GUID: 2a8f2d3c-3dec-4262-99dd-150cb2a4d63a) of technique T1216 (Signed Script Proxy Execution). Test Description: Executes the signed manage-bde.wsf script with options to execute an arbitrary command.. Command/Steps: set comspec=#{command_to_execute}\ncscript %windir%\\\\System32\\\\manage-bde.wsf\n"
+from = "now-9m"
+rule_id = "2aba670a-5e15-4970-a6ac-30822ec4436b"
+language = "kql"
+name = "Atomic Test: T1216 - manage-bde.wsf Signed Script Command Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1216/T1216.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1216", "2a8f2d3c-3dec-4262-99dd-150cb2a4d63a", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*comspec=%windir%\\\\System32\\\\calc.exe*\\\" AND process.command_line : \\\"*cscript*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\manage-bde.wsf*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1216"
+name = "manage-bde.wsf Signed Script Command Execution"
+reference = "https://attack.mitre.org/techniques/T1216"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1216"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1216"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1216"
+
+

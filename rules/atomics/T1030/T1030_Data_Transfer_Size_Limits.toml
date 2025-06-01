@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Data Transfer Size Limits' (GUID: ab936c51-10f4-46ce-9144-e02137b2016a) of technique T1030 (Data Transfer Size Limits). Test Description: Take a file/directory, split it into 5Mb chunks. Command/Steps: cd #{folder_path}; split -b 5000000 #{file_name}\nls -l #{folder_path}\n"
+from = "now-9m"
+rule_id = "5887384e-f69d-4c19-88e8-7c0120e6db5f"
+language = "kql"
+name = "Atomic Test: T1030 - Data Transfer Size Limits"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1030/T1030.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1030", "ab936c51-10f4-46ce-9144-e02137b2016a", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*split*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1030"
+name = "Data Transfer Size Limits"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1030"
+
+

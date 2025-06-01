@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify Service to Run Arbitrary Binary (Powershell)' (GUID: 1f896ce4-8070-4959-8a25-2658856a70c9) of technique T1543.003 (Create or Modify System Process: Windows Service). Test Description: This test will use PowerShell to temporarily modify a service to run an arbitrary executable by changing its binary path and will then revert the binary path change, restoring the service to its original state.\nThis technique was previously observed through SnapMC's use of Powerspolit's invoke-serviceabuse function. \n[Reference](https://blog.fox-it.com/2021/10/11/snapmc-skips-ransomware-steals-data/). Command/Steps: Stop-Service -Name \\\"#{service_name}\\\" -force -erroraction silentlycontinue | Out-Null\nset-servicebinarypath -name \\\"#{service_name}\\\" -path \\\"#{new_bin_pa..."
+from = "now-9m"
+rule_id = "6dc26923-91d8-4e41-b2db-0fa8cbfc1230"
+language = "kql"
+name = "Atomic Test: T1543.003 - Modify Service to Run Arbitrary Binary (Powershell)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.003/T1543.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.003", "1f896ce4-8070-4959-8a25-2658856a70c9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Stop-Service*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*-force*\\\" OR (process.command_line : \\\"*Stop-Service*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*-force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.003"
+name = "Modify Service to Run Arbitrary Binary (Powershell)"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enabling Restricted Admin Mode via Command_Prompt' (GUID: fe7974e5-5813-477b-a7bd-311d4f535e83) of technique T1112 (Modify Registry). Test Description: Enabling Restricted Admin Mode via Command_Prompt,enables an attacker to perform a pass-the-hash attack using RDP.\n\nSee [Passing the Hash with Remote Desktop](https://www.kali.org/blog/passing-hash-remote-desktop/). Command/Steps: reg add \\\"hklm\\\\system\\\\currentcontrolset\\\\control\\\\lsa\\\" /f /v DisableRestrictedAdmin /t REG_DWORD /d 0\n"
+from = "now-9m"
+rule_id = "85c43e65-bdf4-47d7-81a9-b2c7e9483de8"
+language = "kql"
+name = "Atomic Test: T1112 - Enabling Restricted Admin Mode via Command_Prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "fe7974e5-5813-477b-a7bd-311d4f535e83", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*hklm\\\\system\\\\currentcontrolset\\\\control\\\\lsa*\\\" AND process.command_line : \\\"*DisableRestrictedAdmin*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Enabling Restricted Admin Mode via Command_Prompt"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

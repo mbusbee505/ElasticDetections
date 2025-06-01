@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Scheduled Task Executing Base64 Encoded Commands From Registry' (GUID: e895677d-4f06-49ab-91b6-ae3742d0a2ba) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: A Base64 Encoded command will be stored in the registry (ping 127.0.0.1) and then a scheduled task will be created.\nThe scheduled task will launch powershell to decode and run the command in the registry daily.\nThis is a persistence mechanism recently seen in use by Qakbot.  \n\n[Additiona Information](https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/). Command/Steps: reg add HKCU\\\\SOFTWARE\\\\ATOMIC-T1053.005 /v test /t REG_SZ /d cGluZyAxMjcuMC4wLjE= /f\nschtasks.exe /Create /F /TN \\\"ATOMIC-T1053.005\\\" /TR \\\"cmd /c start /..."
+from = "now-9m"
+rule_id = "837cea2c-c24f-44bc-b2ee-2cd4e06a862f"
+language = "kql"
+name = "Atomic Test: T1053.005 - Scheduled Task Executing Base64 Encoded Commands From Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "e895677d-4f06-49ab-91b6-ae3742d0a2ba", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*REG_SZ*\\\" AND process.command_line : \\\"*cGluZyAxMjcuMC4wLjE=*\\\" AND process.command_line : \\\"*schtasks.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Scheduled Task Executing Base64 Encoded Commands From Registry"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

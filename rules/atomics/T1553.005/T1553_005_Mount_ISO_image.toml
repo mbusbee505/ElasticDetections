@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mount ISO image' (GUID: 002cca30-4778-4891-878a-aaffcfa502fa) of technique T1553.005 (Subvert Trust Controls: Mark-of-the-Web Bypass). Test Description: Mounts ISO image downloaded from internet to evade Mark-of-the-Web. Upon successful execution, powershell will download the .iso from the Atomic Red Team repo, and mount the image. The provided sample ISO simply has a Reports shortcut file in it. Reference: https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/. Command/Steps: Mount-DiskImage -ImagePath \\\"#{path_of_iso}\\\"\n"
+from = "now-9m"
+rule_id = "1c60449d-a1be-40d0-8c98-7f80aea7097d"
+language = "kql"
+name = "Atomic Test: T1553.005 - Mount ISO image"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.005/T1553.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.005", "002cca30-4778-4891-878a-aaffcfa502fa", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Mount-DiskImage*\\\" AND powershell.script_block_text : \\\"*-ImagePath*\\\" OR (process.command_line : \\\"*Mount-DiskImage*\\\" AND process.command_line : \\\"*-ImagePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.005"
+name = "Mount ISO image"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+

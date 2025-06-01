@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install root CA on macOS' (GUID: cc4a0b8c-426f-40ff-9426-4e10e5bf4c49) of technique T1553.004 (Subvert Trust Controls: Install Root Certificate). Test Description: Creates a root CA with openssl. Command/Steps: sudo security add-trusted-cert -d -r trustRoot -k \\\"/Library/Keychains/System.keychain\\\" \\\"#{cert_filename}\\\"\n"
+from = "now-9m"
+rule_id = "a87c6d09-0e43-40ba-8daf-d302a8ec533d"
+language = "kql"
+name = "Atomic Test: T1553.004 - Install root CA on macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.004/T1553.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.004", "cc4a0b8c-426f-40ff-9426-4e10e5bf4c49", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*security*\\\" AND process.command_line : \\\"*add-trusted-cert*\\\" AND process.command_line : \\\"*trustRoot*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.004"
+name = "Install root CA on macOS"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/004"
+
+

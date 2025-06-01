@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Uninstall Crowdstrike Falcon on Windows' (GUID: b32b1ccf-f7c1-49bc-9ddd-7d7466a7b297) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Uninstall Crowdstrike Falcon. If the WindowsSensor.exe path is not provided as an argument we need to search for it. Since the executable is located in a folder named with a random guid we need to identify it before invoking the uninstaller.. Command/Steps: if (Test-Path \\\"#{falcond_path}\\\") {. \\\"#{falcond_path}\\\" /repair /uninstall /quiet } else { Get-ChildItem -Path \\\"C:\\\\ProgramData\\\\Package Cache\\\" -Include \\\"..."
+from = "now-9m"
+rule_id = "28d7972c-5558-46a2-a448-3d14c0e06c70"
+language = "kql"
+name = "Atomic Test: T1562.001 - Uninstall Crowdstrike Falcon on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "b32b1ccf-f7c1-49bc-9ddd-7d7466a7b297", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(Test-Path*\\\" AND powershell.script_block_text : \\\"*C:\\\\ProgramData\\\\Package*\\\" AND powershell.script_block_text : \\\"*Cache\\\\{7489ba93-b668-447f-8401-7e57a6fe538d}\\\\WindowsSensor.exe\\\")*\\\" OR (process.command_line : \\\"*(Test-Path*\\\" AND process.command_line : \\\"*C:\\\\ProgramData\\\\Package*\\\" AND process.command_line : \\\"*Cache\\\\{7489ba93-b668-447f-8401-7e57a6fe538d}\\\\WindowsSensor.exe\\\")*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Uninstall Crowdstrike Falcon on Windows"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

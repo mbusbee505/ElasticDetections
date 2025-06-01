@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - Create Snapshot from EBS Volume' (GUID: a3c09662-85bb-4ea8-b15b-6dc8a844e236) of technique T1578.001 (Modify Cloud Compute Infrastructure: Create Snapshot). Test Description: Creates an EBS snapshot in AWS using the AWS CLI.\nThis simulates an adversary duplicating volume data via snapshots for persistence or exfiltration.. Command/Steps: aws ec2 create-snapshot --region #{aws_region} --volume-id #{aws_volume_id} --description \\\"Atomic Red Team Test Snapshot\\\" --query \\\"SnapshotId\\\" --outpu..."
+from = "now-9m"
+rule_id = "e3f3a07e-7725-4fc7-b8a7-da990c62e562"
+language = "kql"
+name = "Atomic Test: T1578.001 - AWS - Create Snapshot from EBS Volume"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1578.001/T1578.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1578.001", "a3c09662-85bb-4ea8-b15b-6dc8a844e236", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*create-snapshot*\\\" AND process.command_line : \\\"*--region*\\\" AND process.command_line : \\\"*us-east-1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1578.001"
+name = "AWS - Create Snapshot from EBS Volume"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+

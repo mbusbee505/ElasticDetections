@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Rundll32 execute payload by calling RouteTheCall' (GUID: 8a7f56ee-10e7-444c-a139-0109438288eb) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Launch an executable payload by calling RouteTheCall. Test execution of a command using rundll32.exe to execute a payload{calc.exe} by calling RouteTheCall. Upon execution, calc.exe will be launched.\nReference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Zipfldr.yml. Command/Steps: rundll32.exe zipfldr.dll,RouteTheCall \\\"#{exe_to_launch}\\\""
+from = "now-9m"
+rule_id = "6fbf224f-13fb-4aa9-ad7d-b86a351d8c0d"
+language = "kql"
+name = "Atomic Test: T1218.011 - Rundll32 execute payload by calling RouteTheCall"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "8a7f56ee-10e7-444c-a139-0109438288eb", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*rundll32.exe*\\\" AND powershell.script_block_text : \\\"*zipfldr.dll,RouteTheCall*\\\" AND powershell.script_block_text : \\\"*%windir%\\\\System32\\\\calc.exe*\\\" OR (process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*zipfldr.dll,RouteTheCall*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\calc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Rundll32 execute payload by calling RouteTheCall"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

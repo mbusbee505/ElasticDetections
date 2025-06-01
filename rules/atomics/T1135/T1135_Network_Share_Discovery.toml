@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Network Share Discovery' (GUID: f94b5ad9-911c-4eff-9718-fd21899db4f7) of technique T1135 (Network Share Discovery). Test Description: Network Share Discovery. Command/Steps: df -aH\nsmbutil view -g //#{computer_name}\nshowmount #{computer_name}\n"
+from = "now-9m"
+rule_id = "3815522d-d0bc-45d7-8096-a8e55cbedb2d"
+language = "kql"
+name = "Atomic Test: T1135 - Network Share Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1135/T1135.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1135", "f94b5ad9-911c-4eff-9718-fd21899db4f7", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*smbutil*\\\" AND process.command_line : \\\"*view*\\\" AND process.command_line : \\\"*//computer1*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1135"
+name = "Network Share Discovery"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+

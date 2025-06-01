@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Auto-start application on user logon' (GUID: 7125eba8-7b30-426b-9147-781d152be6fb) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Executes code specified in the registry on new user logon session automatically by registration of new AT and modification of configuration value.\nThis test will register new AT named malware_test with code for cmd.exe and add a configuration value for the code to be run during user logon session.. Command/Steps: reg add \\\"HKLM\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Accessibility\\\\ATs\\\\malware_test\\\" /f\nreg add \\\"HKLM\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersi..."
+from = "now-9m"
+rule_id = "3ed9922f-a17d-490f-813f-b0dbf90813f9"
+language = "kql"
+name = "Atomic Test: T1546.008 - Auto-start application on user logon"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "7125eba8-7b30-426b-9147-781d152be6fb", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\Software\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*NT\\\\CurrentVersion\\\\Accessibility\\\\ATs\\\\malware_test*\\\" AND process.command_line : \\\"*HKLM\\\\Software\\\\Microsoft\\\\Windows*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Auto-start application on user logon"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

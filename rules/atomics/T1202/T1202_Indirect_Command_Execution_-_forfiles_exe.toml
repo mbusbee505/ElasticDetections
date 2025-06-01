@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Indirect Command Execution - forfiles.exe' (GUID: 8b34a448-40d9-4fc3-a8c8-4bb286faf7dc) of technique T1202 (Indirect Command Execution). Test Description: forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.\n[Reference](https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Forfiles.yml)\n\\\"This is basically saying for each occurrence of notepad.exe in c:\\\\windows\\\\system32 run calc.exe\\\"\nUpon execution calc.exe will be opened.. Command/Steps: forfiles /p c:\\\\windows\\\\system32 /m notepad.exe /c #{process}\n"
+from = "now-9m"
+rule_id = "65c2d52b-dcbb-4afb-88c3-29f90f351ac4"
+language = "kql"
+name = "Atomic Test: T1202 - Indirect Command Execution - forfiles.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1202/T1202.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1202", "8b34a448-40d9-4fc3-a8c8-4bb286faf7dc", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*forfiles*\\\" AND process.command_line : \\\"*c:\\\\windows\\\\system32*\\\" AND process.command_line : \\\"*notepad.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1202"
+name = "Indirect Command Execution - forfiles.exe"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+

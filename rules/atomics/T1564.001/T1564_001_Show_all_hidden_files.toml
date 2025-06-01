@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Show all hidden files' (GUID: 9a1ec7da-b892-449f-ad68-67066d04380c) of technique T1564.001 (Hide Artifacts: Hidden Files and Directories). Test Description: Show all hidden files on MacOS. Command/Steps: defaults write com.apple.finder AppleShowAllFiles YES\n"
+from = "now-9m"
+rule_id = "5af85ac6-a951-40b7-80ce-28630ace04e7"
+language = "kql"
+name = "Atomic Test: T1564.001 - Show all hidden files"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.001/T1564.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.001", "9a1ec7da-b892-449f-ad68-67066d04380c", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*defaults*\\\" AND process.command_line : \\\"*write*\\\" AND process.command_line : \\\"*com.apple.finder*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.001"
+name = "Show all hidden files"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+

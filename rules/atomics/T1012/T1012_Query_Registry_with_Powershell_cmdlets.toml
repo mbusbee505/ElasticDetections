@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Query Registry with Powershell cmdlets' (GUID: 0434d081-bb32-42ce-bcbb-3548e4f2628f) of technique T1012 (Query Registry). Test Description: Query Windows Registry with Powershell cmdlets, i.e., Get-Item and Get-ChildItem. The results from above can also be achieved with Get-Item and Get-ChildItem.\nUnlike using \\\"reg query\\\" which then executes reg.exe, using cmdlets won't generate new processes, which may evade detection systems monitoring process generation.. Command/Steps: Get-Item -Path \\\"HKLM:SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Windows\\\"\nGet-ChildItem -Path \\\"HKLM:SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\\\\" | ..."
+from = "now-9m"
+rule_id = "c2fa7503-b1bb-414c-aa49-9dbeedf2127c"
+language = "kql"
+name = "Atomic Test: T1012 - Query Registry with Powershell cmdlets"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1012/T1012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1012", "0434d081-bb32-42ce-bcbb-3548e4f2628f", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Item*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:SOFTWARE\\\\Microsoft\\\\Windows*\\\" OR (process.command_line : \\\"*Get-Item*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:SOFTWARE\\\\Microsoft\\\\Windows*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1012"
+name = "Query Registry with Powershell cmdlets"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Encrypt files using gpg (FreeBSD/Linux)' (GUID: 7b8ce084-3922-4618-8d22-95f996173765) of technique T1486 (Data Encrypted for Impact). Test Description: Uses gpg to encrypt a file. Command/Steps: echo \\\"#{pwd_for_encrypted_file}\\\" | $which_gpg --batch --yes --passphrase-fd 0 --cipher-algo #{encryption_alg} -o #{encrypted_file_path} -c #{input_fil..."
+from = "now-9m"
+rule_id = "e5f20786-fb20-4291-bbfc-42f57bfa368f"
+language = "kql"
+name = "Atomic Test: T1486 - Encrypt files using gpg (FreeBSD/Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "7b8ce084-3922-4618-8d22-95f996173765", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*passwd*\\\" AND process.command_line : \\\"*$which_gpg*\\\" AND process.command_line : \\\"*--batch*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "Encrypt files using gpg (FreeBSD/Linux)"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

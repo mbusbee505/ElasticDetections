@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Data Encrypted with GPG4Win' (GUID: 4541e2c2-33c8-44b1-be79-9161440f1718) of technique T1486 (Data Encrypted for Impact). Test Description: Gpg4win is a Windows tool (also called Kleopatra which is the preferred certificate manager) that uses email and file encryption packages for symmetric encryption. It is used by attackers to encrypt disks. User will need to add pass phrase to encrypt file as automation is not allowed under newer versions.. Command/Steps: Set-Content -Path \\\"#{File_to_Encrypt_Location}\\\" -Value \\\"populating this file with some text\\\"  # Create the test.txt file again in case prereqs failed\n..."
+from = "now-9m"
+rule_id = "6faed167-5da8-42ed-9de6-1b94b223fd33"
+language = "kql"
+name = "Atomic Test: T1486 - Data Encrypted with GPG4Win"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1486/T1486.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1486", "4541e2c2-33c8-44b1-be79-9161440f1718", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-Content*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*$env:temp\\\\test.txt*\\\" OR (process.command_line : \\\"*Set-Content*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*$env:temp\\\\test.txt*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1486"
+name = "Data Encrypted with GPG4Win"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1486"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a new Domain Account using PowerShell' (GUID: 5a3497a4-1568-4663-b12a-d4a5ed70c7d7) of technique T1136.002 (Create Account: Domain Account). Test Description: Creates a new Domain User using the credentials of the Current User. Command/Steps: $SamAccountName = '#{username}'\n$AccountPassword = ConvertTo-SecureString '#{password}' -AsPlainText -Force\nAdd-Type -AssemblyName System.DirectorySer..."
+from = "now-9m"
+rule_id = "a471ef3d-0f81-43e3-bf6e-632ad2afd285"
+language = "kql"
+name = "Atomic Test: T1136.002 - Create a new Domain Account using PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1136.002/T1136.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1136.002", "5a3497a4-1568-4663-b12a-d4a5ed70c7d7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$SamAccountName*\\\" AND powershell.script_block_text : \\\"*$AccountPassword*\\\" AND powershell.script_block_text : \\\"*ConvertTo-SecureString*\\\" OR (process.command_line : \\\"*$SamAccountName*\\\" AND process.command_line : \\\"*$AccountPassword*\\\" AND process.command_line : \\\"*ConvertTo-SecureString*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1136.002"
+name = "Create a new Domain Account using PowerShell"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1136/002"
+
+

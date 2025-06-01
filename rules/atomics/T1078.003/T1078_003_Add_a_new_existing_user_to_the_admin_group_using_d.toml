@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add a new/existing user to the admin group using dseditgroup utility - macOS' (GUID: 433842ba-e796-4fd5-a14f-95d3a1970875) of technique T1078.003 (Valid Accounts: Local Accounts). Test Description: After execution the current/new user will be added to the Admin group. Command/Steps: dseditgroup -o edit -a art-user -t user admin"
+from = "now-9m"
+rule_id = "9ded6b99-0c1f-4e5a-9d24-8df6232e5629"
+language = "kql"
+name = "Atomic Test: T1078.003 - Add a new/existing user to the admin group using dseditgroup utility - macOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.003/T1078.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.003", "433842ba-e796-4fd5-a14f-95d3a1970875", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*dseditgroup*\\\" AND process.command_line : \\\"*edit*\\\" AND process.command_line : \\\"*art-user*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.003"
+name = "Add a new/existing user to the admin group using dseditgroup utility - macOS"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+

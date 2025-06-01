@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover Specific Process - tasklist' (GUID: 11ba69ee-902e-4a0f-b3b6-418aed7d7ddb) of technique T1057 (Process Discovery). Test Description: Adversaries may use command line tools to discover specific processes in preparation of further attacks. \nExamples of this could be discovering the PID of lsass.exe to dump its memory or discovering whether specific security processes (e.g. AV or EDR) are running.. Command/Steps: tasklist | findstr #{process_to_enumerate}\n"
+from = "now-9m"
+rule_id = "1c79e386-6778-4a4a-8719-0685f85ed677"
+language = "kql"
+name = "Atomic Test: T1057 - Discover Specific Process - tasklist"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "11ba69ee-902e-4a0f-b3b6-418aed7d7ddb", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*tasklist*\\\" AND process.command_line : \\\"*findstr*\\\" AND process.command_line : \\\"*lsass*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Discover Specific Process - tasklist"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

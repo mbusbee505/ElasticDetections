@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell enumerate domains and forests' (GUID: c58fbc62-8a62-489e-8f2d-3565d7d96f30) of technique T1482 (Domain Trust Discovery). Test Description: Use powershell to enumerate AD information.\nRequires the installation of PowerShell AD admin cmdlets via Windows RSAT or the Windows Server AD DS role.. Command/Steps: Import-Module \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\PowerView.ps1\\\"\nGet-NetDomainTrust\nGet-NetForestTrust\nGet-ADDomain\nGet-ADGroupMember Administrat..."
+from = "now-9m"
+rule_id = "b22ad64e-7b94-4294-b0ef-94769c96cc86"
+language = "kql"
+name = "Atomic Test: T1482 - Powershell enumerate domains and forests"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1482/T1482.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1482", "c58fbc62-8a62-489e-8f2d-3565d7d96f30", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*Get-NetDomainTrust*\\\" AND powershell.script_block_text : \\\"*Get-NetForestTrust*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*Get-NetDomainTrust*\\\" AND process.command_line : \\\"*Get-NetForestTrust*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1482"
+name = "Powershell enumerate domains and forests"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+

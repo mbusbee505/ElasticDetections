@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS Run Command (and Control)' (GUID: a3cc9c95-c160-4b86-af6f-84fba87bfd30) of technique T1651 (Cloud Administration Command). Test Description: This test simulates an adversary using the AWS Run Command service to execute commands on EC2 instances.. Command/Steps: Import-Module \\\"PathToAtomicsFolder/T1651/src/T1651-1/AWSSSMAttack.ps1\\\" -Force\n$access_key = \\\"#{access_key}\\\"\n$secret_key = \\\"#{secret_key}\\\"\n$session_tok..."
+from = "now-9m"
+rule_id = "f1c8a1c7-fcd4-4e4f-8d66-c8809133867a"
+language = "kql"
+name = "Atomic Test: T1651 - AWS Run Command (and Control)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1651/T1651.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1651", "a3cc9c95-c160-4b86-af6f-84fba87bfd30", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" AND powershell.script_block_text : \\\"*$access_key*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-Force*\\\" AND process.command_line : \\\"*$access_key*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1651"
+name = "AWS Run Command (and Control)"
+reference = "https://attack.mitre.org/techniques/T1651"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1651"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1651"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1651"
+
+

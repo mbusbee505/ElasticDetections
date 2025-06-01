@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Wmic Group Discovery' (GUID: 7413be50-be8e-430f-ad4d-07bf197884b2) of technique T1069.001 (Permission Groups Discovery: Local Groups). Test Description: Utilizing wmic.exe to enumerate groups on the local system. Upon execution, information will be displayed of local groups on system.. Command/Steps: wmic group get name\n"
+from = "now-9m"
+rule_id = "57ac0f54-a500-47c5-af73-8cd69baf7be7"
+language = "kql"
+name = "Atomic Test: T1069.001 - Wmic Group Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.001/T1069.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.001", "7413be50-be8e-430f-ad4d-07bf197884b2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*group*\\\" AND process.command_line : \\\"*name*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.001"
+name = "Wmic Group Discovery"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/001"
+
+

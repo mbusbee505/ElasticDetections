@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote Process Injection in LSASS via mimikatz' (GUID: 3203ad24-168e-4bec-be36-f79b13ef8a83) of technique T1055 (Process Injection). Test Description: Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).\nEspecially useful against domain controllers in Active Directory environments.\nIt must be executed in the context of a user who is privileged on remote `machine`.\n\nThe effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>. Command/Steps: \\\"#{psexec_path}\\\" /accepteula \\\\\\\\#{machine} -c #{mimikatz_path} \\\"lsadump::lsa /inject /id:500\\\" \\\"exit\\\"\n"
+from = "now-9m"
+rule_id = "d246efc8-0977-428b-9a24-1f6c720d6c9a"
+language = "kql"
+name = "Atomic Test: T1055 - Remote Process Injection in LSASS via mimikatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "3203ad24-168e-4bec-be36-f79b13ef8a83", "windows",]
+type = "query"
+query = "(process.name : (\\"cmd.exe\\", \\"cmmon32.exe\\") OR process.parent.name : (\\"cmd.exe\\", \\"cmmon32.exe\\")) AND process.command_line : \\"*/accepteula*\\" AND process.command_line : \\"*\\\\DC1*\\" AND process.command_line : \\"*%tmp%\\mimikatz\\u0064\\\\mimikatz.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "Remote Process Injection in LSASS via mimikatz"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

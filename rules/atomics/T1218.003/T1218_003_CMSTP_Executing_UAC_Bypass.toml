@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'CMSTP Executing UAC Bypass' (GUID: 748cb4f6-2fb3-4e97-b7ad-b22635a09ab0) of technique T1218.003 (Signed Binary Proxy Execution: CMSTP). Test Description: Adversaries may invoke cmd.exe (or other malicious commands) by embedding them in the RunPreSetupCommandsSection of an INF file. Command/Steps: cmstp.exe /s \\\"#{inf_file_uac}\\\" /au\n"
+from = "now-9m"
+rule_id = "51c12c00-876e-40d9-91af-7cd769420682"
+language = "kql"
+name = "Atomic Test: T1218.003 - CMSTP Executing UAC Bypass"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.003/T1218.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.003", "748cb4f6-2fb3-4e97-b7ad-b22635a09ab0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*cmstp.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.003"
+name = "CMSTP Executing UAC Bypass"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/003"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Network Share Discovery via dir command' (GUID: 13daa2cf-195a-43df-a8bd-7dd5ffb607b5) of technique T1135 (Network Share Discovery). Test Description: Network Share Discovery utilizing the dir command prompt. The computer ip variable may need to be modified to point to a different host ip\nUpon execution available network shares will be displayed in the commandline session. Command/Steps: dir \\\\\\\\#{computer_ip}\\\\c$\ndir \\\\\\\\#{computer_ip}\\\\admin$\ndir \\\\\\\\#{computer_ip}\\\\IPC$\n"
+from = "now-9m"
+rule_id = "35170317-e078-4eb9-907e-c986003b314f"
+language = "kql"
+name = "Atomic Test: T1135 - Network Share Discovery via dir command"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1135/T1135.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1135", "13daa2cf-195a-43df-a8bd-7dd5ffb607b5", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*\\\\\\\\127.0.0.1\\\\c$*\\\" AND process.command_line : \\\"*\\\\\\\\127.0.0.1\\\\admin$*\\\" AND process.command_line : \\\"*\\\\\\\\127.0.0.1\\\\IPC$*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1135"
+name = "Network Share Discovery via dir command"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+

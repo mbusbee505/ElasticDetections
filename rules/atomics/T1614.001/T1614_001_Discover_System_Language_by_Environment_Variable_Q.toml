@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Discover System Language by Environment Variable Query' (GUID: cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a) of technique T1614.001 (System Location Discovery: System Language Discovery). Test Description: Identify System language by checking the environment variables\n\nUpon successful execution, the 5 character locale result can be looked up to\ncorrelate the language and territory. Environment query commands are likely\nto run with a pattern match command e.g. `env | grep LANG`\n\nNote: `env` and `printenv` will usually provide the same results. `set` is\nalso used as a builtin command that does not generate syscall telemetry but\ndoes provide a list of the environment variables.. Command/Steps: env | grep LANG\nprintenv LANG\nset | grep LANG\n"
+from = "now-9m"
+rule_id = "a8c861eb-b8b5-4c37-9ac3-dfd6d60a37a5"
+language = "kql"
+name = "Atomic Test: T1614.001 - Discover System Language by Environment Variable Query"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1614.001/T1614.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1614.001", "cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*grep*\\\" AND process.command_line : \\\"*LANG*\\\" AND process.command_line : \\\"*printenv*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1614.001"
+name = "Discover System Language by Environment Variable Query"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1614/001"
+
+

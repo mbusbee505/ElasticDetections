@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Simulating MAZE Directory Enumeration' (GUID: c6c34f61-1c3e-40fb-8a58-d017d88286d8) of technique T1083 (File and Directory Discovery). Test Description: This test emulates MAZE ransomware's ability to enumerate directories using Powershell. \nUpon successful execution, this test will output the directory enumeration results to a specified file, as well as display them in the active window. \nSee https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents. Command/Steps: $folderarray = @(\\\"Desktop\\\", \\\"Downloads\\\", \\\"Documents\\\", \\\"AppData/Local\\\", \\\"AppData/Roaming\\\")\nGet-ChildItem -Path $env:homedrive -ErrorAction SilentlyCont..."
+from = "now-9m"
+rule_id = "e59694a1-fe0e-406d-a8ab-5d6eda883f92"
+language = "kql"
+name = "Atomic Test: T1083 - Simulating MAZE Directory Enumeration"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1083/T1083.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1083", "c6c34f61-1c3e-40fb-8a58-d017d88286d8", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$folderarray*\\\" AND powershell.script_block_text : \\\"*@(\\\"Desktop\\\"*\\\" AND powershell.script_block_text : \\\"*Downloads\\\"*\\\" OR (process.command_line : \\\"*$folderarray*\\\" AND process.command_line : \\\"*@(\\\"Desktop\\\"*\\\" AND process.command_line : \\\"*Downloads\\\"*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1083"
+name = "Simulating MAZE Directory Enumeration"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1083"
+
+

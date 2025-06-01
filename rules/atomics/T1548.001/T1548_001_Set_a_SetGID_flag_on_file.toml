@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Set a SetGID flag on file' (GUID: db55f666-7cba-46c6-9fe6-205a05c3242c) of technique T1548.001 (Abuse Elevation Control Mechanism: Setuid and Setgid). Test Description: This test sets the SetGID flag on a file in Linux and macOS.. Command/Steps: sudo touch #{file_to_setuid}\nsudo chown root #{file_to_setuid}\nsudo chmod g+xs #{file_to_setuid}\n"
+from = "now-9m"
+rule_id = "50ed30bb-4b54-4019-8ca0-8e41bd7f973b"
+language = "kql"
+name = "Atomic Test: T1548.001 - Set a SetGID flag on file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.001/T1548.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.001", "db55f666-7cba-46c6-9fe6-205a05c3242c", "macos", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*chown*\\\" AND process.command_line : \\\"*root*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.001"
+name = "Set a SetGID flag on file"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/001"
+
+

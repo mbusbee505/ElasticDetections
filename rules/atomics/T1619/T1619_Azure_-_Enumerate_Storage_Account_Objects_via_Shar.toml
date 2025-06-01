@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Enumerate Storage Account Objects via Shared Key authorization using Azure CLI' (GUID: 070322a4-2c60-4c50-8ffb-c450a34fe7bf) of technique T1619 (Cloud Storage Object Discovery). Test Description: This test enumerates all existing storage accounts and tries to fetch for each account the contained storage account objects. The access to storage objects is only possible if Shared Key authorization is enabled (e.g this is the case per default for storage objects creaded by Azure Function Apps).\n\nRequirements:\n- The test is intended to be executed in interactive mode (with -Interactive parameter) in order to complete the az login command when MFA is required.\n- The EntraID user must have the role \\\"Storage Account Contributor\\\", or a role with similar permissions.\n\nOutput format: Csv file that contains the found storage account objects\n- Columns: ResourceGroup, StorageAccountName, FileShareName, ContainerName, BlobName, TableName, QueueName\n- The content of these columns is filled out depending on the object. Not-required columns are left empt. Example: For a blob object the ResourceGroup, StorageAccountName, ContainerName, BlobName are filled out, the other fields are left empty.. Command/Steps: az login    # Login to Azure\n\n# Get all storage accounts in the subscription\n$storageAccounts = az storage account list --query \\\"[].{name:name, resour..."
+from = "now-9m"
+rule_id = "62411e96-3328-4c30-b716-bc3e028739cc"
+language = "kql"
+name = "Atomic Test: T1619 - Azure - Enumerate Storage Account Objects via Shared Key authorization using Azure CLI"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1619/T1619.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1619", "070322a4-2c60-4c50-8ffb-c450a34fe7bf", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*login*\\\" AND powershell.script_block_text : \\\"*Login*\\\" AND powershell.script_block_text : \\\"*Azure*\\\" OR (process.command_line : \\\"*login*\\\" AND process.command_line : \\\"*Login*\\\" AND process.command_line : \\\"*Azure*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1619"
+name = "Azure - Enumerate Storage Account Objects via Shared Key authorization using Azure CLI"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1619"
+
+

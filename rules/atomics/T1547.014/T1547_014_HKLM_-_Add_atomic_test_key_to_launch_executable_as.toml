@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'HKLM - Add atomic_test key to launch executable as part of user setup' (GUID: deff4586-0517-49c2-981d-bbea24d48d71) of technique T1547.014 (Active Setup). Test Description: This test will create an \\\"atomic_test\\\" key under 'HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active Setup\\\\Installed Components' to launch calc by configuring an active setup executable and \nforcing to run active setup using the \\\"runonce.exe /AlternateShellStartup\\\" command. \nWithout the \\\"runonce.exe /AlternateShellStartup\\\" command it would run during the next logon for each user.\n\nNote: If you logout before running the cleanup command, you will be required to go through the OOBE (out-of-box experience) setup sequence to log back in. \nThe payload will only run once unless the cleanup command is run in between tests.\n\n[Active Setup Explained](https://helgeklein.com/blog/active-setup-explained/). Command/Steps: New-Item \\\"HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active Setup\\\\Installed Components\\\" -Name \\\"atomic_test\\\" -Force\nSet-ItemProperty \\\"HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active Set..."
+from = "now-9m"
+rule_id = "02063595-545a-4487-b043-1a7ddc535a0b"
+language = "kql"
+name = "Atomic Test: T1547.014 - HKLM - Add atomic_test key to launch executable as part of user setup"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.014/T1547.014.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.014", "deff4586-0517-49c2-981d-bbea24d48d71", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-Item*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active*\\\" AND powershell.script_block_text : \\\"*Setup\\\\Installed*\\\" OR (process.command_line : \\\"*New-Item*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Microsoft\\\\Active*\\\" AND process.command_line : \\\"*Setup\\\\Installed*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.014"
+name = "HKLM - Add atomic_test key to launch executable as part of user setup"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/014"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mimikatz - Cradlecraft PsSendKeys' (GUID: af1800cf-9f9d-4fd1-a709-14b1e6de020d) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Run mimikatz via PsSendKeys. Upon execution, automated actions will take place to open file explorer, open notepad and input code, then mimikatz dump info will be displayed.. Command/Steps: $url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell..."
+from = "now-9m"
+rule_id = "430e8ed7-d277-4ccb-9b02-2f747221ffbb"
+language = "kql"
+name = "Atomic Test: T1059.001 - Mimikatz - Cradlecraft PsSendKeys"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "af1800cf-9f9d-4fd1-a709-14b1e6de020d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object*\\\" AND powershell.script_block_text : \\\"*-ComObject*\\\" AND powershell.script_block_text : \\\"*WScript.Shell;$reg='HKCU:\\\\Software\\\\Microsoft\\\\Notepad';$app='Notepad';$props=(Get-ItemProperty*\\\" OR (process.command_line : \\\"*$url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object*\\\" AND process.command_line : \\\"*-ComObject*\\\" AND process.command_line : \\\"*WScript.Shell;$reg='HKCU:\\\\Software\\\\Microsoft\\\\Notepad';$app='Notepad';$props=(Get-ItemProperty*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Mimikatz - Cradlecraft PsSendKeys"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

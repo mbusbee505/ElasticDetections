@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'IcedID Botnet HTTP PUT' (GUID: 9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0) of technique T1020 (Automated Exfiltration). Test Description: Creates a text file\nTries to upload to a server via HTTP PUT method with ContentType Header\nDeletes a created file. Command/Steps: $fileName = \\\"#{file}\\\"\n$url = \\\"#{domain}\\\"\n$file = New-Item -Force $fileName -Value \\\"This is ART IcedID Botnet Exfil Test\\\"\n$contentType = \\\"application/o..."
+from = "now-9m"
+rule_id = "98903a8b-8b67-4cbb-8ee6-12d810f4b399"
+language = "kql"
+name = "Atomic Test: T1020 - IcedID Botnet HTTP PUT"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1020/T1020.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1020", "9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$fileName*\\\" AND powershell.script_block_text : \\\"*$url*\\\" AND powershell.script_block_text : \\\"*https://google.com*\\\" OR (process.command_line : \\\"*$fileName*\\\" AND process.command_line : \\\"*$url*\\\" AND process.command_line : \\\"*https://google.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1020"
+name = "IcedID Botnet HTTP PUT"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1020"
+
+

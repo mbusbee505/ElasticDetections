@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Testing usage of uncommonly used port' (GUID: 5db21e1d-dd9c-4a50-b885-b1e748912767) of technique T1571 (Non-Standard Port). Test Description: Testing uncommonly used port utilizing telnet.. Command/Steps: echo quit | telnet #{domain} #{port}\nexit 0\n"
+from = "now-9m"
+rule_id = "de921944-65f3-43db-9828-530cccc93fad"
+language = "kql"
+name = "Atomic Test: T1571 - Testing usage of uncommonly used port"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1571/T1571.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1571", "5db21e1d-dd9c-4a50-b885-b1e748912767", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*quit*\\\" AND process.command_line : \\\"*telnet*\\\" AND process.command_line : \\\"*google.com*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1571"
+name = "Testing usage of uncommonly used port"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+

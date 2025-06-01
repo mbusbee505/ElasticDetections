@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LOLBAS Msedge to Spawn Process' (GUID: e5eedaed-ad42-4c1e-8783-19529738a349) of technique T1218 (Signed Binary Proxy Execution). Test Description: Executes a process under a trusted Microsoft signed binary,mseddge. This test will spawn \\\"calc.exe\\\" as a child process of msedge.exe\n- https://lolbas-project.github.io/lolbas/Binaries/Msedge/. Command/Steps: $edgePath64 = \\\"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\\\"\nif (Test-Path $edgePath64) {\n    $edgePath = $edgePath64\n} else {\n    # Check 3..."
+from = "now-9m"
+rule_id = "d15dad91-5b3b-4891-8820-ef3ff21302e6"
+language = "kql"
+name = "Atomic Test: T1218 - LOLBAS Msedge to Spawn Process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "e5eedaed-ad42-4c1e-8783-19529738a349", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$edgePath64*\\\" AND powershell.script_block_text : \\\"*C:\\\\Program*\\\" AND powershell.script_block_text : \\\"*Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe*\\\" OR (process.command_line : \\\"*$edgePath64*\\\" AND process.command_line : \\\"*C:\\\\Program*\\\" AND process.command_line : \\\"*Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "LOLBAS Msedge to Spawn Process"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

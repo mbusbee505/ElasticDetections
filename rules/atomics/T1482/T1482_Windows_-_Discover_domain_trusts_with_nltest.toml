@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Discover domain trusts with nltest' (GUID: 2e22641d-0498-48d2-b9ff-c71e496ccdbe) of technique T1482 (Domain Trust Discovery). Test Description: Uses the nltest command to discover domain trusts.\nRequires the installation of nltest via Windows RSAT or the Windows Server AD DS role.\nThis technique has been used by the Trickbot malware family.. Command/Steps: nltest /domain_trusts\nnltest /trusted_domains\n"
+from = "now-9m"
+rule_id = "660bb2bd-0f99-4e1d-831c-2eb19669aaf0"
+language = "kql"
+name = "Atomic Test: T1482 - Windows - Discover domain trusts with nltest"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1482/T1482.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1482", "2e22641d-0498-48d2-b9ff-c71e496ccdbe", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*nltest*\\\" AND process.command_line : \\\"*/domain_trusts*\\\" AND process.command_line : \\\"*nltest*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1482"
+name = "Windows - Discover domain trusts with nltest"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+

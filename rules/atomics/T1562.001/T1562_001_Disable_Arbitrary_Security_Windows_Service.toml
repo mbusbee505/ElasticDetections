@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Arbitrary Security Windows Service' (GUID: a1230893-56ac-4c81-b644-2108e982f8f5) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: With administrative rights, an adversary can disable Windows Services related to security products. This test requires McAfeeDLPAgentService to be installed.\nChange the service_name input argument for your AV solution. Upon exeuction, infomration will be displayed stating the status of the service.\nTo verify that the service has stopped, run \\\"sc query McAfeeDLPAgentService\\\". Command/Steps: net.exe stop #{service_name}\nsc.exe config #{service_name} start= disabled\n"
+from = "now-9m"
+rule_id = "507e15f5-54b1-4087-8a82-dc62c4596f86"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Arbitrary Security Windows Service"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "a1230893-56ac-4c81-b644-2108e982f8f5", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*net.exe*\\\" AND process.command_line : \\\"*stop*\\\" AND process.command_line : \\\"*McAfeeDLPAgentService*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Arbitrary Security Windows Service"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

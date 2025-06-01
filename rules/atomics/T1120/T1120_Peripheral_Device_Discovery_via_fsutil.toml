@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Peripheral Device Discovery via fsutil' (GUID: 424e18fd-48b8-4201-8d3a-bf591523a686) of technique T1120 (Peripheral Device Discovery). Test Description: Performs pheripheral device discovery utilizing fsutil to list all drives.. Command/Steps: fsutil fsinfo drives"
+from = "now-9m"
+rule_id = "97aa34c1-09c0-41db-a8cf-96623b220213"
+language = "kql"
+name = "Atomic Test: T1120 - Peripheral Device Discovery via fsutil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1120/T1120.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1120", "424e18fd-48b8-4201-8d3a-bf591523a686", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*fsutil*\\\" AND process.command_line : \\\"*fsinfo*\\\" AND process.command_line : \\\"*drives*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1120"
+name = "Peripheral Device Discovery via fsutil"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1120"
+
+

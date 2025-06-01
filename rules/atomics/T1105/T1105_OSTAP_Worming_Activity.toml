@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'OSTAP Worming Activity' (GUID: 2ca61766-b456-4fcf-a35a-1233685e1cad) of technique T1105 (Ingress Tool Transfer). Test Description: OSTap copies itself in a specfic way to shares and secondary drives. This emulates the activity.. Command/Steps: pushd #{destination_path}\necho var fileObject = WScript.createobject(\\\"Scripting.FileSystemObject\\\");var newfile = fileObject.CreateTextFile(\\\"AtomicTest..."
+from = "now-9m"
+rule_id = "feef7847-2c62-4f91-ac0f-a8ab0e2cda5f"
+language = "kql"
+name = "Atomic Test: T1105 - OSTAP Worming Activity"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "2ca61766-b456-4fcf-a35a-1233685e1cad", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*pushd*\\\" AND process.command_line : \\\"*\\\\\\\\localhost\\\\C$*\\\" AND process.command_line : \\\"*fileObject*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "OSTAP Worming Activity"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

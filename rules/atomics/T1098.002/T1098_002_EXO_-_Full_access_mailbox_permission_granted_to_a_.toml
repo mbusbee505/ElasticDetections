@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'EXO - Full access mailbox permission granted to a user' (GUID: 17d046be-fdd0-4cbb-b5c7-55c85d9d0714) of technique T1098.002 (Account Manipulation: Additional Email Delegate Permissions). Test Description: Give a nominated user, full mailbox delegation access of another user.\nThis can be used by an adversary to maintain persistent access to a target's mailbox in M365.. Command/Steps: Import-Module ExchangeOnlineManagement\n$secure_pwd = \\\"#{password}\\\" | ConvertTo-SecureString -AsPlainText -Force\n$creds = New-Object System.Management...."
+from = "now-9m"
+rule_id = "4b2cfdd3-45c1-4119-b0cc-54b4bfb75111"
+language = "kql"
+name = "Atomic Test: T1098.002 - EXO - Full access mailbox permission granted to a user"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098.002/T1098.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098.002", "17d046be-fdd0-4cbb-b5c7-55c85d9d0714", "office-365",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*ExchangeOnlineManagement*\\\" AND powershell.script_block_text : \\\"*$secure_pwd*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*ExchangeOnlineManagement*\\\" AND process.command_line : \\\"*$secure_pwd*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098.002"
+name = "EXO - Full access mailbox permission granted to a user"
+reference = "https://attack.mitre.org/techniques/T1098/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098/002"
+
+

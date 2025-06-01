@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Copy Safari BinaryCookies files using AppleScript' (GUID: e57ba07b-3a33-40cd-a892-748273b9b49a) of technique T1539 (Steal Web Session Cookie). Test Description: This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.. Command/Steps: osascript -e 'tell application \\\"Finder\\\"' -e 'set destinationFolderPath to POSIX file \\\"#{destination_path}\\\"' -e 'set safariFolder to ((path to library ..."
+from = "now-9m"
+rule_id = "55104d87-e030-4d4c-b56f-704eaf360d5c"
+language = "kql"
+name = "Atomic Test: T1539 - Copy Safari BinaryCookies files using AppleScript"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1539/T1539.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1539", "e57ba07b-3a33-40cd-a892-748273b9b49a", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*osascript*\\\" AND process.command_line : \\\"*tell*\\\" AND process.command_line : \\\"*application*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1539"
+name = "Copy Safari BinaryCookies files using AppleScript"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+

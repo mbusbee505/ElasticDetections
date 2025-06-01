@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - net group Domain Computers' (GUID: f1bf6c8f-9016-4edf-aff9-80b65f5d711f) of technique T1018 (Remote System Discovery). Test Description: Identify remote systems with net.exe querying the Active Directory Domain Computers group.\n\nUpon successful execution, cmd.exe will execute cmd.exe against Active Directory to list the \\\"Domain Computers\\\" group. Output will be via stdout.. Command/Steps: net group \\\"Domain Computers\\\" /domain\n"
+from = "now-9m"
+rule_id = "dcfaba94-50e7-4caa-b303-b727edd66f2b"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - net group Domain Computers"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "f1bf6c8f-9016-4edf-aff9-80b65f5d711f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*group*\\\" AND process.command_line : \\\"*Domain*\\\" AND process.command_line : \\\"*Computers*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - net group Domain Computers"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

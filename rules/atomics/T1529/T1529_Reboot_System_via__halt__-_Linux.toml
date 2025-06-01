@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Reboot System via `halt` - Linux' (GUID: 78f92e14-f1e9-4446-b3e9-f1b921f2459e) of technique T1529 (System Shutdown/Reboot). Test Description: This test restarts a Linux system using `halt`.. Command/Steps: halt --reboot\n"
+from = "now-9m"
+rule_id = "ef8c2e87-a5b9-443d-a6d4-5633eaa52c22"
+language = "kql"
+name = "Atomic Test: T1529 - Reboot System via `halt` - Linux"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1529/T1529.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1529", "78f92e14-f1e9-4446-b3e9-f1b921f2459e", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*halt*\\\" AND process.command_line : \\\"*--reboot*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1529"
+name = "Reboot System via `halt` - Linux"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1529"
+
+

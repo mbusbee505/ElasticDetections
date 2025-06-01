@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persistence via WMI Event Subscription - ActiveScriptEventConsumer' (GUID: fecd0dfd-fb55-45fa-a10b-6250272d0832) of technique T1546.003 (Event Triggered Execution: Windows Management Instrumentation Event Subscription). Test Description: Run from an administrator powershell window. After running, reboot the victim machine.\nAfter it has been online for 4 minutes you should see notepad.exe running as SYSTEM.\n\nCode references\n\nhttps://gist.github.com/mgreen27/ef726db0baac5623dc7f76bfa0fc494c. Command/Steps: $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example';\n                EventNameSpace='root\\\\CimV2';\n                Qu..."
+from = "now-9m"
+rule_id = "3b18b126-01b6-4ffb-ad04-5f2624a70445"
+language = "kql"
+name = "Atomic Test: T1546.003 - Persistence via WMI Event Subscription - ActiveScriptEventConsumer"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.003/T1546.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.003", "fecd0dfd-fb55-45fa-a10b-6250272d0832", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$FilterArgs*\\\" AND powershell.script_block_text : \\\"*@{name='AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example'*\\\" AND powershell.script_block_text : \\\"*EventNameSpace='root\\\\CimV2'*\\\" OR (process.command_line : \\\"*$FilterArgs*\\\" AND process.command_line : \\\"*@{name='AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example'*\\\" AND process.command_line : \\\"*EventNameSpace='root\\\\CimV2'*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.003"
+name = "Persistence via WMI Event Subscription - ActiveScriptEventConsumer"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/003"
+
+

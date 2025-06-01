@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete system log files using OSAScript' (GUID: 810a465f-cd4f-47bc-b43e-d2de3b033ecc) of technique T1070.002 (Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs). Test Description: This test deletes the system log file using osascript via \\\"do shell script\\\"(sh/bash by default) which in-turn spawns rm utility, requires admin privileges. Command/Steps: osascript -e 'do shell script \\\"rm #{system_log_path}\\\" with administrator privileges'\n"
+from = "now-9m"
+rule_id = "84292eaf-39d0-49cd-894b-19c8214a7d16"
+language = "kql"
+name = "Atomic Test: T1070.002 - Delete system log files using OSAScript"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.002/T1070.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.002", "810a465f-cd4f-47bc-b43e-d2de3b033ecc", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*osascript*\\\" AND process.command_line : \\\"*shell*\\\" AND process.command_line : \\\"*script*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.002"
+name = "Delete system log files using OSAScript"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/002"
+
+

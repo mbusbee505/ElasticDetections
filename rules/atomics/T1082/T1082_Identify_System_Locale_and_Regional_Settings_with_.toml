@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Identify System Locale and Regional Settings with PowerShell' (GUID: ce479c1a-e8fa-42b2-812a-96b0f2f4d28a) of technique T1082 (System Information Discovery). Test Description: This action demonstrates how an attacker might gather a system's region and language settings using PowerShell, which could aid in profiling \nthe machine's location and user language preferences. The command outputs system locale details to a temporary file for further analysis.. Command/Steps: powershell.exe -c \\\"Get-Culture | Format-List | Out-File -FilePath %TMP%\\\\a.txt\\\"\n"
+from = "now-9m"
+rule_id = "95c96b3f-b237-4f7b-b0ab-4173abb1e0f1"
+language = "kql"
+name = "Atomic Test: T1082 - Identify System Locale and Regional Settings with PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "ce479c1a-e8fa-42b2-812a-96b0f2f4d28a", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*powershell.exe*\\\" AND process.command_line : \\\"*Get-Culture*\\\" AND process.command_line : \\\"*Format-List*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "Identify System Locale and Regional Settings with PowerShell"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Session Creation and Use' (GUID: 7c1acec2-78fa-4305-a3e0-db2a54cddecd) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Connect to a remote powershell session and interact with the host.\nUpon execution, network test info and 'T1086 PowerShell Session Creation and Use' will be displayed.. Command/Steps: New-PSSession -ComputerName #{hostname_to_connect}\nTest-Connection $env:COMPUTERNAME\nSet-Content -Path $env:TEMP\\\\T1086_PowerShell_Session_Creation_and..."
+from = "now-9m"
+rule_id = "9f15ce94-3943-4e1e-a9c8-1066e417a08f"
+language = "kql"
+name = "Atomic Test: T1059.001 - PowerShell Session Creation and Use"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "7c1acec2-78fa-4305-a3e0-db2a54cddecd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-PSSession*\\\" AND powershell.script_block_text : \\\"*-ComputerName*\\\" AND powershell.script_block_text : \\\"*$env:COMPUTERNAME*\\\" OR (process.command_line : \\\"*New-PSSession*\\\" AND process.command_line : \\\"*-ComputerName*\\\" AND process.command_line : \\\"*$env:COMPUTERNAME*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "PowerShell Session Creation and Use"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

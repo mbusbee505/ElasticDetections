@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List macOS Firewall Rules' (GUID: ff1d8c25-2aa4-4f18-a425-fede4a41ee88) of technique T1016 (System Network Configuration Discovery). Test Description: \\\"This will test if the macOS firewall is enabled and/or show what rules are configured. Must be run with elevated privileges. Upon successful execution, these commands will output various information about the firewall configuration, including status and specific port/protocol blocks or allows. \n\nUsing `defaults`, additional arguments can be added to see filtered details, such as `globalstate` for global configuration (\\\\\\\"Is it on or off?\\\\\\\"), `firewall` for common application allow rules, and `explicitauths` for specific rules configured by the user. \n\nUsing `socketfilterfw`, flags such as --getglobalstate or --listapps can be used for similar filtering. At least one flag is required to send parseable output to standard out.. Command/Steps: sudo defaults read /Library/Preferences/com.apple.alf\nsudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate\n"
+from = "now-9m"
+rule_id = "5e21a5f9-d8fb-4ea2-9445-5e9aec42497b"
+language = "kql"
+name = "Atomic Test: T1016 - List macOS Firewall Rules"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1016/T1016.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1016", "ff1d8c25-2aa4-4f18-a425-fede4a41ee88", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*defaults*\\\" AND process.command_line : \\\"*read*\\\" AND process.command_line : \\\"*/Library/Preferences/com.apple.alf*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1016"
+name = "List macOS Firewall Rules"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1016"
+
+

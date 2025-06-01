@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Trigger an authenticated RPC call to a target server with no Sign flag set' (GUID: 81cfdd7f-1f41-4cc5-9845-bb5149438e37) of technique T1187 (Forced Authentication). Test Description: RpcPing command can be used to trigger an authenticated RPC call to the target server (/s) that could be relayed to a privileged resource (Sign flag not Set)\nRef: https://twitter.com/splinter_code/status/1421144623678988298. Command/Steps: rpcping -s #{server_ip} -e #{custom_port} /a connect /u NTLM 1>$Null"
+from = "now-9m"
+rule_id = "93a1b327-55a3-4def-a914-5d4d30ffe938"
+language = "kql"
+name = "Atomic Test: T1187 - Trigger an authenticated RPC call to a target server with no Sign flag set"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1187/T1187.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1187", "81cfdd7f-1f41-4cc5-9845-bb5149438e37", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*rpcping*\\\" AND powershell.script_block_text : \\\"*127.0.0.1*\\\" AND powershell.script_block_text : \\\"*connect*\\\" OR (process.command_line : \\\"*rpcping*\\\" AND process.command_line : \\\"*127.0.0.1*\\\" AND process.command_line : \\\"*connect*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1187"
+name = "Trigger an authenticated RPC call to a target server with no Sign flag set"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1187"
+
+

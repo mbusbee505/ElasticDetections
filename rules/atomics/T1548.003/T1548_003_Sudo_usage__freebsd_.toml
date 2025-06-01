@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Sudo usage (freebsd)' (GUID: 2bf9a018-4664-438a-b435-cc6f8c6f71b1) of technique T1548.003 (Abuse Elevation Control Mechanism: Sudo and Sudo Caching). Test Description: Common Sudo enumeration methods.. Command/Steps: sudo -l      \nsudo cat /usr/local/etc/sudoers\nsudo ee /usr/local/etc/sudoers\n"
+from = "now-9m"
+rule_id = "5654e5c0-0274-4677-97e3-e86856cc7675"
+language = "kql"
+name = "Atomic Test: T1548.003 - Sudo usage (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.003/T1548.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.003", "2bf9a018-4664-438a-b435-cc6f8c6f71b1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/usr/local/etc/sudoers*\\\" AND process.command_line : \\\"*/usr/local/etc/sudoers*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.003"
+name = "Sudo usage (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/003"
+
+

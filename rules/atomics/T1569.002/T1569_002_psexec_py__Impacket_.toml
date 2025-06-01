@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'psexec.py (Impacket)' (GUID: edbcd8c9-3639-4844-afad-455c91e95a35) of technique T1569.002 (System Services: Service Execution). Test Description: Will execute a command on the remote host with Impacket psexec.py script.. Command/Steps: psexec.py '#{domain}/#{username}:#{password}@#{remote_host}' '#{command}'\n"
+from = "now-9m"
+rule_id = "4970e6a6-7a2d-4b19-8369-3e22c379cef6"
+language = "kql"
+name = "Atomic Test: T1569.002 - psexec.py (Impacket)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1569.002/T1569.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1569.002", "edbcd8c9-3639-4844-afad-455c91e95a35", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*psexec.py*\\\" AND process.command_line : \\\"*/Administrator:P@ssw0rd1@127.0.0.1*\\\" AND process.command_line : \\\"*whoami*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1569.002"
+name = "psexec.py (Impacket)"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1569/002"
+
+

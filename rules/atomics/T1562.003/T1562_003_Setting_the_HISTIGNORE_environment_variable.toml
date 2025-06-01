@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Setting the HISTIGNORE environment variable' (GUID: f12acddb-7502-4ce6-a146-5b62c59592f1) of technique T1562.003 (Impair Defenses: Impair Command History Logging). Test Description: An Adversary may take advantage of the HISTIGNORE environment variable either to ignore particular commands or all commands. \n\nIn this test we 1. set HISTIGNORE to ignore ls, rm and ssh commands 2. clear this history cache 3..4 execute ls commands 5. confirm that the ls commands are not in the history cache 6. unset HISTIGNORE variable 7.. same again, but ignoring ALL commands.. Command/Steps: if ((${#HISTIGNORE[@]})); then echo \\\"\\\\$HISTIGNORE = $HISTIGNORE\\\"; else export HISTIGNORE='ls*:rm*:ssh*'; echo \\\"\\\\$HISTIGNORE = $HISTIGNORE\\\"; fi\nhistory..."
+from = "now-9m"
+rule_id = "dbc5b725-8159-4d11-8ced-443da3e7fb5b"
+language = "kql"
+name = "Atomic Test: T1562.003 - Setting the HISTIGNORE environment variable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.003/T1562.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.003", "f12acddb-7502-4ce6-a146-5b62c59592f1", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*((${#HISTIGNORE[@]}))*\\\" AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*\\\\$HISTIGNORE*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.003"
+name = "Setting the HISTIGNORE environment variable"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/003"
+
+

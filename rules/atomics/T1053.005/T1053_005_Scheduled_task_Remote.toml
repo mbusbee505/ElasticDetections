@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Scheduled task Remote' (GUID: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Create a task on a remote system.\nUpon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.. Command/Steps: SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN \\\"Atomic task\\\" /TR \\\"#{task_command}\\\" /SC daily /ST #{time}\n"
+from = "now-9m"
+rule_id = "f400e746-7b8b-4270-b8ba-f7bef88129e0"
+language = "kql"
+name = "Atomic Test: T1053.005 - Scheduled task Remote"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "2e5eac3e-327b-4a88-a0c0-c4057039a8dd", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*SCHTASKS*\\\" AND process.command_line : \\\"*/Create*\\\" AND process.command_line : \\\"*localhost*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Scheduled task Remote"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

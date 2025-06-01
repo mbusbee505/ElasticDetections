@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Replace Narrator.exe (Narrator binary) with cmd.exe' (GUID: 2002f5ea-cd13-4c82-bf73-e46722e5dc5e) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Replace Narrator.exe (Narrator binary) with cmd.exe. This allows the user to launch an elevated command prompt by toggling on the Narrator button from the Accessibility menu on the login screen.. Command/Steps: IF NOT EXIST C:\\\\Windows\\\\System32\\\\Narrator_backup.exe (copy C:\\\\Windows\\\\System32\\\\Narrator.exe C:\\\\Windows\\\\System32\\\\Narrator_backup.exe) ELSE ( pushd )\nta..."
+from = "now-9m"
+rule_id = "14631131-d8a9-42d0-beaa-7c6bd365bafa"
+language = "kql"
+name = "Atomic Test: T1546.008 - Replace Narrator.exe (Narrator binary) with cmd.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "2002f5ea-cd13-4c82-bf73-e46722e5dc5e", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*EXIST*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\Narrator_backup.exe*\\\" AND process.command_line : \\\"*(copy*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Replace Narrator.exe (Narrator binary) with cmd.exe"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

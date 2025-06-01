@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Administrative Share Creation at Startup' (GUID: 99c657aa-ebeb-4179-a665-69288fdd12b8) of technique T1070.005 (Indicator Removal on Host: Network Share Connection Removal). Test Description: Administrative shares are hidden network shares created by Microsoft’s Windows NT operating systems that grant system administrators \nremote access to every disk volume on a network-connected system. These shares are automatically created at started unless they have been\npurposefully disabled as is done in this Atomic test. As Microsoft puts it, \\\"Missing administrative shares typically \nindicate that the computer in question has been compromised by malicious software.\\\"\nhttps://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/. Command/Steps: reg add \\\"HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\LanmanServer\\\\Parameters\\\" /v AutoShareServer /t REG_DWORD /d 0 /f\nreg add \\\"HKEY_LOCAL_MAC..."
+from = "now-9m"
+rule_id = "6e1c82e2-2ef5-4ad9-a5ae-b880e1f674d2"
+language = "kql"
+name = "Atomic Test: T1070.005 - Disable Administrative Share Creation at Startup"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.005/T1070.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.005", "99c657aa-ebeb-4179-a665-69288fdd12b8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\LanmanServer\\\\Parameters*\\\" AND process.command_line : \\\"*AutoShareServer*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.005"
+name = "Disable Administrative Share Creation at Startup"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+

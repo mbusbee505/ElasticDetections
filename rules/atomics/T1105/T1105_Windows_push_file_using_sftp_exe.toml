@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows push file using sftp.exe' (GUID: 205e676e-0401-4bae-83a5-94b8c5daeb22) of technique T1105 (Ingress Tool Transfer). Test Description: This test simulates pushing files using SFTP on a Windows environment.. Command/Steps: # Check if the folder exists, create it if it doesn't\n$folderPath = \\\"#{local_path}\\\"\nif (-Not (Test-Path -Path $folderPath)) {\n    New-Item -Path $fold..."
+from = "now-9m"
+rule_id = "28d58db0-9881-4d5c-b0c4-4becf9fc7a6d"
+language = "kql"
+name = "Atomic Test: T1105 - Windows push file using sftp.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "205e676e-0401-4bae-83a5-94b8c5daeb22", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Check*\\\" AND powershell.script_block_text : \\\"*folder*\\\" AND powershell.script_block_text : \\\"*exists*\\\" OR (process.command_line : \\\"*Check*\\\" AND process.command_line : \\\"*folder*\\\" AND process.command_line : \\\"*exists*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Windows push file using sftp.exe"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

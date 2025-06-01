@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)' (GUID: 4a41089a-48e0-47aa-82cb-5b81a463bc78) of technique T1497.001 (Virtualization/Sandbox Evasion: System Checks). Test Description: Windows Management Instrumentation(WMI) objects contain system information which helps to detect virtualization. This test will get the model and manufacturer of the machine to determine if it is a virtual machine, such as through VMware or VirtualBox.. Command/Steps: $Manufacturer = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty \\\"Manufacturer\\\"\n$Model = Get-WmiObject -Class Win32_ComputerS..."
+from = "now-9m"
+rule_id = "fb8ed92c-a9e0-4b1a-b434-f75a4fc27f5a"
+language = "kql"
+name = "Atomic Test: T1497.001 - Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1497.001/T1497.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1497.001", "4a41089a-48e0-47aa-82cb-5b81a463bc78", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Manufacturer*\\\" AND powershell.script_block_text : \\\"*Get-WmiObject*\\\" AND powershell.script_block_text : \\\"*-Class*\\\" OR (process.command_line : \\\"*$Manufacturer*\\\" AND process.command_line : \\\"*Get-WmiObject*\\\" AND process.command_line : \\\"*-Class*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1497.001"
+name = "Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+

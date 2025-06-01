@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persist, Download, & Execute' (GUID: 62a06ec5-5754-47d2-bcfc-123d8314c6ae) of technique T1197 (BITS Jobs). Test Description: This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.\nNote that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.\nThis has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of \\\"svchost.exe\\\" and an Initiating Process Command Line of \\\"svchost.exe -k netsvcs -p -s BITS\\\"\nThis job will remain in the BITS queue until complete or for up to 90 days by default if not removed.. Command/Steps: bitsadmin.exe /create #{bits_job_name}\nbitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}\nbitsadmin.exe /setnotifycmdline #{bits_job..."
+from = "now-9m"
+rule_id = "d88bd3ef-0c87-4245-8362-1ca00276b1bc"
+language = "kql"
+name = "Atomic Test: T1197 - Persist, Download, & Execute"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1197/T1197.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1197", "62a06ec5-5754-47d2-bcfc-123d8314c6ae", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*bitsadmin.exe*\\\" AND process.command_line : \\\"*/create*\\\" AND process.command_line : \\\"*AtomicBITS*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1197"
+name = "Persist, Download, & Execute"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure Persistence Automation Runbook Created or Modified' (GUID: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac) of technique T1078.004 (Valid Accounts: Cloud Accounts). Test Description: Identifies when an Azure Automation runbook is created or modified. An adversary may create or modify an Azure\nAutomation runbook to execute malicious code and maintain persistence in their target's environment.. Command/Steps: New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountN..."
+from = "now-9m"
+rule_id = "e634c8ab-e5c0-4311-a2e7-ed53bdc55945"
+language = "kql"
+name = "Atomic Test: T1078.004 - Azure Persistence Automation Runbook Created or Modified"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.004/T1078.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.004", "348f4d14-4bd3-4f6b-bd8a-61237f78b3ac", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-AzAutomationRunbook*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*ART-RunbookName-T1078-004*\\\" OR (process.command_line : \\\"*New-AzAutomationRunbook*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*ART-RunbookName-T1078-004*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.004"
+name = "Azure Persistence Automation Runbook Created or Modified"
+reference = "https://attack.mitre.org/techniques/T1078/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/004"
+
+

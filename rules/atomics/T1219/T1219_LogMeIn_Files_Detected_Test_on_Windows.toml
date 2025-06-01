@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LogMeIn Files Detected Test on Windows' (GUID: d03683ec-aae0-42f9-9b4c-534780e0f8e1) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading LogMeIn and use to establish C2. Download of LogMeIn installer will be at the destination location and ran when sucessfully executed.. Command/Steps: Invoke-WebRequest -OutFile C:\\\\Users\\\\$env:username\\\\Desktop\\\\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi\n$file1 = \\\"C:\\\\Users\\\\\\\" + $e..."
+from = "now-9m"
+rule_id = "870f6940-48e3-4073-a4d9-76152202dd4b"
+language = "kql"
+name = "Atomic Test: T1219 - LogMeIn Files Detected Test on Windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "d03683ec-aae0-42f9-9b4c-534780e0f8e1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-WebRequest*\\\" AND powershell.script_block_text : \\\"*-OutFile*\\\" AND powershell.script_block_text : \\\"*https://secure.logmein.com/LogMeInIgnition.msi*\\\" OR (process.command_line : \\\"*Invoke-WebRequest*\\\" AND process.command_line : \\\"*-OutFile*\\\" AND process.command_line : \\\"*https://secure.logmein.com/LogMeInIgnition.msi*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "LogMeIn Files Detected Test on Windows"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

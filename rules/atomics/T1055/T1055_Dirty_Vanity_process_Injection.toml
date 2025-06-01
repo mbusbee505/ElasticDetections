@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dirty Vanity process Injection' (GUID: 49543237-25db-497b-90df-d0a0a6e8fe2c) of technique T1055 (Process Injection). Test Description: This test used the Windows undocumented remote-fork API RtlCreateProcessReflection to create a cloned process of the parent process\nwith shellcode written in its memory. The shellcode is executed after being forked to the child process. The technique was first presented at \nBlackHat Europe 2022. Shellcode will open a messsage box and a notepad.. Command/Steps: Start-Process \\"$PathToAtomicsFolder\\T1055\\bin\\u0064\\\\redVanity.exe\\\" #{pid}\n"
+from = "now-9m"
+rule_id = "7421874c-ed52-4f25-94c2-e5a003fcb5e4"
+language = "kql"
+name = "Atomic Test: T1055 - Dirty Vanity process Injection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "49543237-25db-497b-90df-d0a0a6e8fe2c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*(Start-Process*\\\" AND powershell.script_block_text : \\\"*calc.exe*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*(Start-Process*\\\" AND process.command_line : \\\"*calc.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "Dirty Vanity process Injection"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

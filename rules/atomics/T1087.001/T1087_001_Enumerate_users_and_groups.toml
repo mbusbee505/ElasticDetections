@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate users and groups' (GUID: 319e9f6c-7a9e-432e-8c62-9385c803b6f2) of technique T1087.001 (Account Discovery: Local Account). Test Description: Utilize local utilities to enumerate users and groups. Command/Steps: dscl . list /Groups\ndscl . list /Users\ndscl . list /Users | grep -v '_'\ndscacheutil -q group\ndscacheutil -q user\n"
+from = "now-9m"
+rule_id = "95dc7a85-cc3d-4978-83c3-40e2c5bcd3e2"
+language = "kql"
+name = "Atomic Test: T1087.001 - Enumerate users and groups"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.001/T1087.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.001", "319e9f6c-7a9e-432e-8c62-9385c803b6f2", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*dscl*\\\" AND process.command_line : \\\"*list*\\\" AND process.command_line : \\\"*/Groups*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.001"
+name = "Enumerate users and groups"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/001"
+
+

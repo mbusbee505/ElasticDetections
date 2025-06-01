@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable root account using dsenableroot utility - MacOS' (GUID: 20b40ea9-0e17-4155-b8e6-244911a678ac) of technique T1078.003 (Valid Accounts: Local Accounts). Test Description: After execution the current/new user will have root access. Command/Steps: dsenableroot #current user\ndsenableroot -u art-tester -p art-tester -r art-root #new user"
+from = "now-9m"
+rule_id = "6b3886bb-99f8-4ae1-9224-cc487a58a6c8"
+language = "kql"
+name = "Atomic Test: T1078.003 - Enable root account using dsenableroot utility - MacOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.003/T1078.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.003", "20b40ea9-0e17-4155-b8e6-244911a678ac", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*dsenableroot*\\\" AND process.command_line : \\\"*#current*\\\" AND process.command_line : \\\"*dsenableroot*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.003"
+name = "Enable root account using dsenableroot utility - MacOS"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+

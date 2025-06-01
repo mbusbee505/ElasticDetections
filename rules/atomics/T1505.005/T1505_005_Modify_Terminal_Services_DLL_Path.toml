@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify Terminal Services DLL Path' (GUID: 18136e38-0530-49b2-b309-eed173787471) of technique T1505.005 (Server Software Component: Terminal Services DLL). Test Description: This atomic test simulates the modification of the ServiceDll value in HKLM\\\\System\\\\CurrentControlSet\\\\services\\\\TermService\\\\Parameters. This technique may be leveraged by adversaries to establish persistence by loading a patched version of the DLL containing malicious code.. Command/Steps: $termsrvDll = \\\"C:\\\\Windows\\\\System32\\\\termsrv.dll\\\"\n\n$ACL = Get-Acl $termsrvDll\n$permission = \\\"Administrators\\\",\\\"FullControl\\\",\\\"Allow\\\"\n$accessRule = New-Obj..."
+from = "now-9m"
+rule_id = "76433e99-7064-438b-a634-6430e5940d60"
+language = "kql"
+name = "Atomic Test: T1505.005 - Modify Terminal Services DLL Path"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1505.005/T1505.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1505.005", "18136e38-0530-49b2-b309-eed173787471", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$termsrvDll*\\\" AND powershell.script_block_text : \\\"*C:\\\\Windows\\\\System32\\\\termsrv.dll*\\\" AND powershell.script_block_text : \\\"*$ACL*\\\" OR (process.command_line : \\\"*$termsrvDll*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\termsrv.dll*\\\" AND process.command_line : \\\"*$ACL*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1505.005"
+name = "Modify Terminal Services DLL Path"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1505/005"
+
+

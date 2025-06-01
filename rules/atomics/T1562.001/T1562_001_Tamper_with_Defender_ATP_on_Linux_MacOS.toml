@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Tamper with Defender ATP on Linux/MacOS' (GUID: 40074085-dbc8-492b-90a3-11bcfc52fda8) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: With root privileges, an adversary can disable real time protection. Note, this test assumes Defender is not in passive mode and real-time protection is enabled. The use of a managed.json on Linux or Defender .plist on MacOS will prevent these changes. Tamper protection will also prevent this (available on MacOS, but not Linux at the time of writing). Installation of MDATP is a prerequisite. Installation steps vary across MacOS and Linux distros. See Microsoft public documentation for instructions: https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/mac-install-manually?view=o365-worldwide https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/linux-install-manually?view=o365-worldwide. Command/Steps: sudo mdatp config real-time-protection --value disabled\n"
+from = "now-9m"
+rule_id = "fe195dca-18c8-4ef5-a47d-19e00caec1ab"
+language = "kql"
+name = "Atomic Test: T1562.001 - Tamper with Defender ATP on Linux/MacOS"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "40074085-dbc8-492b-90a3-11bcfc52fda8", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mdatp*\\\" AND process.command_line : \\\"*config*\\\" AND process.command_line : \\\"*real-time-protection*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Tamper with Defender ATP on Linux/MacOS"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

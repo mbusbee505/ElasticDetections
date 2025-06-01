@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure AD Application Hijacking - Service Principal' (GUID: b8e747c3-bdf7-4d71-bce2-f1df2a057406) of technique T1098.001 (Account Manipulation: Additional Cloud Credentials). Test Description: Add a certificate to an Application through its Service Principal. The certificate can then be used to authenticate as the application.\nThis can be used for persistence, and also for privilege escalation by benefiting from the Application's rights.\nAn account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.. Command/Steps: Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString -String \\\"#{password}\\\" -AsPlainText -Force\n$Credential = New-Object -TypeName System.Manage..."
+from = "now-9m"
+rule_id = "5df96c4d-d024-4dfd-9028-c2a4fe2ee2f5"
+language = "kql"
+name = "Atomic Test: T1098.001 - Azure AD Application Hijacking - Service Principal"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1098.001/T1098.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1098.001", "b8e747c3-bdf7-4d71-bce2-f1df2a057406", "azure-ad",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*AzureAD*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*AzureAD*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1098.001"
+name = "Azure AD Application Hijacking - Service Principal"
+reference = "https://attack.mitre.org/techniques/T1098/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1098/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1098/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1098/001"
+
+

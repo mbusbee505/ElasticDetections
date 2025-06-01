@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Event Monitor Daemon Persistence' (GUID: 11979f23-9b9d-482a-9935-6fc9cd022c3e) of technique T1543.001 (Create or Modify System Process: Launch Agent). Test Description: This test adds persistence via a plist to execute via the macOS Event Monitor Daemon.. Command/Steps: sudo cp #{script_location} #{script_destination}\nsudo touch /private/var/db/emondClients/#{empty_file}\n"
+from = "now-9m"
+rule_id = "97357d14-f89f-4f61-a55d-4d05287dfff8"
+language = "kql"
+name = "Atomic Test: T1543.001 - Event Monitor Daemon Persistence"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.001/T1543.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.001", "11979f23-9b9d-482a-9935-6fc9cd022c3e", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*touch*\\\" AND process.command_line : \\\"*/private/var/db/emondClients/randomflag*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.001"
+name = "Event Monitor Daemon Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Indirect Command Execution - conhost.exe' (GUID: cf3391e0-b482-4b02-87fc-ca8362269b29) of technique T1202 (Indirect Command Execution). Test Description: conhost.exe refers to a host process for the console window. It provide an interface between command prompt and Windows explorer.\nExecuting it through command line can create process ancestry anomalies\n[Reference] (http://www.hexacorn.com/blog/2020/05/25/how-to-con-your-host/). Command/Steps: conhost.exe \\\"#{process}\\\"\n"
+from = "now-9m"
+rule_id = "abf5b189-5e3f-4a99-8ab5-652b2de0837e"
+language = "kql"
+name = "Atomic Test: T1202 - Indirect Command Execution - conhost.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1202/T1202.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1202", "cf3391e0-b482-4b02-87fc-ca8362269b29", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*conhost.exe*\\\" AND process.command_line : \\\"*notepad.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1202"
+name = "Indirect Command Execution - conhost.exe"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1202"
+
+

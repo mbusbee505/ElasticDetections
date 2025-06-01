@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Discover domain trusts with dsquery' (GUID: 4700a710-c821-4e17-a3ec-9e4c81d6845f) of technique T1482 (Domain Trust Discovery). Test Description: Uses the dsquery command to discover domain trusts.\nRequires the installation of dsquery via Windows RSAT or the Windows Server AD DS role.. Command/Steps: dsquery * -filter \\\"(objectClass=trustedDomain)\\\" -attr *\n"
+from = "now-9m"
+rule_id = "f92cf15e-89da-495f-86d9-1b9c1550d350"
+language = "kql"
+name = "Atomic Test: T1482 - Windows - Discover domain trusts with dsquery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1482/T1482.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1482", "4700a710-c821-4e17-a3ec-9e4c81d6845f", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*dsquery*\\\" AND process.command_line : \\\"*-filter*\\\" AND process.command_line : \\\"*(objectClass=trustedDomain)*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1482"
+name = "Windows - Discover domain trusts with dsquery"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1482"
+
+

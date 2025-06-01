@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Launchctl' (GUID: 6fb61988-724e-4755-a595-07743749d4e2) of technique T1569.001 (System Services: Launchctl). Test Description: Utilize launchctl. Command/Steps: launchctl submit -l #{label_name} -- #{executable_path}\n"
+from = "now-9m"
+rule_id = "28264bc4-91fe-48bd-8956-c3856e1ca048"
+language = "kql"
+name = "Atomic Test: T1569.001 - Launchctl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1569.001/T1569.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1569.001", "6fb61988-724e-4755-a595-07743749d4e2", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*launchctl*\\\" AND process.command_line : \\\"*submit*\\\" AND process.command_line : \\\"*evil*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1569.001"
+name = "Launchctl"
+reference = "https://attack.mitre.org/techniques/T1569/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1569/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1569/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1569/001"
+
+

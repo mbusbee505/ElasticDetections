@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Port Scan Nmap' (GUID: 515942b0-a09f-4163-a7bb-22fefb6f185f) of technique T1046 (Network Service Discovery). Test Description: Scan ports to check for listening ports with Nmap.\nUpon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of addresses on port 80 to determine if listening. Results will be via stdout.. Command/Steps: sudo nmap -sS #{network_range} -p #{port}\ntelnet #{host} #{port}\nnc -nv #{host} #{port}\n"
+from = "now-9m"
+rule_id = "5579cfb4-cad3-4ede-a553-8696b4d9cac0"
+language = "kql"
+name = "Atomic Test: T1046 - Port Scan Nmap"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1046/T1046.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1046", "515942b0-a09f-4163-a7bb-22fefb6f185f", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*nmap*\\\" AND process.command_line : \\\"*192.168.1.0/24*\\\" AND process.command_line : \\\"*telnet*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1046"
+name = "Port Scan Nmap"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1046"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remote System Discovery - adidnsdump' (GUID: 95e19466-469e-4316-86d2-1dc401b5a959) of technique T1018 (Remote System Discovery). Test Description: This tool enables enumeration and exporting of all DNS records in the zone for recon purposes of internal networks\nPython 3 and adidnsdump must be installed, use the get_prereq_command's to meet the prerequisites for this test.\nSuccessful execution of this test will list dns zones in the terminal.. Command/Steps: \\\"#{venv_path}\\\\Scripts\\\\adidnsdump\\\" -u #{user_name} -p #{acct_pass} --print-zones #{host_name}\n"
+from = "now-9m"
+rule_id = "9f6fbfbc-1723-4ca1-a071-5726ce353bb2"
+language = "kql"
+name = "Atomic Test: T1018 - Remote System Discovery - adidnsdump"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1018/T1018.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1018", "95e19466-469e-4316-86d2-1dc401b5a959", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*domain\\\\user*\\\" AND process.command_line : \\\"*password*\\\" AND process.command_line : \\\"*--print-zones*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1018"
+name = "Remote System Discovery - adidnsdump"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1018"
+
+

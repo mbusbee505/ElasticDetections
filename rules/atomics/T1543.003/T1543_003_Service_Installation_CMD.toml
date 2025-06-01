@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Service Installation CMD' (GUID: 981e2942-e433-44e9-afc1-8c957a1496b6) of technique T1543.003 (Create or Modify System Process: Windows Service). Test Description: Download an executable from github and start it as a service.\nUpon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.. Command/Steps: sc.exe create #{service_name} binPath= \\\"#{binary_path}\\\" start=#{startup_type}  type=#{service_type}\nsc.exe start #{service_name}\n"
+from = "now-9m"
+rule_id = "175cda74-c23c-424c-b388-75efbf9b3700"
+language = "kql"
+name = "Atomic Test: T1543.003 - Service Installation CMD"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1543.003/T1543.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1543.003", "981e2942-e433-44e9-afc1-8c957a1496b6", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*sc.exe*\\\" AND process.command_line : \\\"*create*\\\" AND process.command_line : \\\"*AtomicTestService_CMD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1543.003"
+name = "Service Installation CMD"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1543/003"
+
+

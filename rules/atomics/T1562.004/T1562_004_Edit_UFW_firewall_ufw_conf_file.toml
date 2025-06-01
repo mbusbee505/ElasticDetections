@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Edit UFW firewall ufw.conf file' (GUID: c1d8c4eb-88da-4927-ae97-c7c25893803b) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Edit the Uncomplicated Firewall (UFW) configuration file /etc/ufw/ufw.conf \nwhich controls if the firewall starts on boot and its logging level.. Command/Steps: echo \\\"# THIS IS A COMMENT\\\" >> /etc/ufw/ufw.conf\ngrep \\\"# THIS IS A COMMENT\\\" /etc/ufw/ufw.conf\n"
+from = "now-9m"
+rule_id = "a640b082-1e3e-4b1a-b4c9-417f1ce9512c"
+language = "kql"
+name = "Atomic Test: T1562.004 - Edit UFW firewall ufw.conf file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "c1d8c4eb-88da-4927-ae97-c7c25893803b", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*THIS*\\\" AND process.command_line : \\\"*COMMENT*\\\" AND process.command_line : \\\"*/etc/ufw/ufw.conf*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Edit UFW firewall ufw.conf file"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

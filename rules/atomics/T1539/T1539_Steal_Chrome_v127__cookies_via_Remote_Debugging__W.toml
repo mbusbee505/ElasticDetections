@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Steal Chrome v127+ cookies via Remote Debugging (Windows)' (GUID: b647f4ee-88de-40ac-9419-f17fac9489a7) of technique T1539 (Steal Web Session Cookie). Test Description: Chrome v127+ uses app-bound encryption to protect cookies. This test bypasses that protection to obtain the cookies. If successful, the test outputs cookie values to the console.\nNote: Will stop any instances of Chrome already running\nAdapted from https://embracethered.com/blog/posts/2024/cookie-theft-in-2024-and-what-todo. Command/Steps: $devToolsPort = 9222\n$testUrl = \\\"https://www.google.com\\\"\nstop-process -name \\\"chrome\\\" -force -erroraction silentlycontinue\n$chromeProcess = Start-Proce..."
+from = "now-9m"
+rule_id = "7c0dac25-4eef-4022-ab5a-7a31b6346268"
+language = "kql"
+name = "Atomic Test: T1539 - Steal Chrome v127+ cookies via Remote Debugging (Windows)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1539/T1539.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1539", "b647f4ee-88de-40ac-9419-f17fac9489a7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$devToolsPort*\\\" AND powershell.script_block_text : \\\"*$testUrl*\\\" AND powershell.script_block_text : \\\"*https://www.google.com*\\\" OR (process.command_line : \\\"*$devToolsPort*\\\" AND process.command_line : \\\"*$testUrl*\\\" AND process.command_line : \\\"*https://www.google.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1539"
+name = "Steal Chrome v127+ cookies via Remote Debugging (Windows)"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1539"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Use of SecEdit.exe to export the local security policy (including the password policy)' (GUID: 510cc97f-56ac-4cd3-a198-d3218c23d889) of technique T1201 (Password Policy Discovery). Test Description: SecEdit.exe can be used to export the current local security policy applied to a host.\n[Reference](https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d). Command/Steps: secedit.exe /export /areas SECURITYPOLICY /cfg output_mysecpol.txt\n"
+from = "now-9m"
+rule_id = "3bb1ff52-5656-4725-8b92-87f7216f33e3"
+language = "kql"
+name = "Atomic Test: T1201 - Use of SecEdit.exe to export the local security policy (including the password policy)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1201/T1201.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1201", "510cc97f-56ac-4cd3-a198-d3218c23d889", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*secedit.exe*\\\" AND process.command_line : \\\"*/export*\\\" AND process.command_line : \\\"*/areas*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1201"
+name = "Use of SecEdit.exe to export the local security policy (including the password policy)"
+reference = "https://attack.mitre.org/techniques/T1201"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1201"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1201"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1201"
+
+

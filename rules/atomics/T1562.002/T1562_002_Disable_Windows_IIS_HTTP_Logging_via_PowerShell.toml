@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows IIS HTTP Logging via PowerShell' (GUID: a957fb0f-1e85-49b2-a211-413366784b1e) of technique T1562.002 (Impair Defenses: Disable Windows Event Logging). Test Description: Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).\nThis action requires HTTP logging configurations in IIS to be unlocked.\n\nUse the cleanup commands to restore some default auditpol settings (your original settings will be lost). Command/Steps: set-WebConfigurationProperty -PSPath \\\"IIS:\\\\Sites\\\\#{website_name}\\\\\\\" -filter \\\"system.webServer/httpLogging\\\" -name dontLog -value $true\n"
+from = "now-9m"
+rule_id = "a2dc6954-8b51-4e10-a345-8055f5797287"
+language = "kql"
+name = "Atomic Test: T1562.002 - Disable Windows IIS HTTP Logging via PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.002/T1562.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.002", "a957fb0f-1e85-49b2-a211-413366784b1e", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*set-WebConfigurationProperty*\\\" AND powershell.script_block_text : \\\"*-PSPath*\\\" AND powershell.script_block_text : \\\"*IIS:\\\\Sites\\\\Default*\\\" OR (process.command_line : \\\"*set-WebConfigurationProperty*\\\" AND process.command_line : \\\"*-PSPath*\\\" AND process.command_line : \\\"*IIS:\\\\Sites\\\\Default*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.002"
+name = "Disable Windows IIS HTTP Logging via PowerShell"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/002"
+
+

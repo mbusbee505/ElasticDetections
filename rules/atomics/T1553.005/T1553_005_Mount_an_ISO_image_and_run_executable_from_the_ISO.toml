@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Mount an ISO image and run executable from the ISO' (GUID: 42f22b00-0242-4afc-a61b-0da05041f9cc) of technique T1553.005 (Subvert Trust Controls: Mark-of-the-Web Bypass). Test Description: Mounts an ISO image downloaded from internet to evade Mark-of-the-Web and run hello.exe executable from the ISO. \nUpon successful execution, powershell will download the .iso from the Atomic Red Team repo, mount the image, and run the executable from the ISO image that will open command prompt echoing \\\"Hello, World!\\\". \nISO provided by:https://twitter.com/mattifestation/status/1398323532988399620 Reference:https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/,. Command/Steps: Mount-DiskImage -ImagePath \\\"#{path_of_iso}\\\" -StorageType ISO -Access ReadOnly\n$keep = Get-Volume -FileSystemLabel \\\"TestIso\\\"\n$driveLetter = ($keep | Ge..."
+from = "now-9m"
+rule_id = "2fdf428e-0661-469f-a06d-1f9975441abf"
+language = "kql"
+name = "Atomic Test: T1553.005 - Mount an ISO image and run executable from the ISO"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.005/T1553.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.005", "42f22b00-0242-4afc-a61b-0da05041f9cc", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Mount-DiskImage*\\\" AND powershell.script_block_text : \\\"*-ImagePath*\\\" AND powershell.script_block_text : \\\"*-StorageType*\\\" OR (process.command_line : \\\"*Mount-DiskImage*\\\" AND process.command_line : \\\"*-ImagePath*\\\" AND process.command_line : \\\"*-StorageType*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.005"
+name = "Mount an ISO image and run executable from the ISO"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/005"
+
+

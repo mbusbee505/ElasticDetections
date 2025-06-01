@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create and Execute Bash Shell Script' (GUID: 7e7ac3ed-f795-4fa5-b711-09d6fbe9b873) of technique T1059.004 (Command and Scripting Interpreter: Bash). Test Description: Creates and executes a simple sh script.. Command/Steps: sh -c \\\"echo 'echo Hello from the Atomic Red Team' > #{script_path}\\\"\nsh -c \\\"echo 'ping -c 4 #{host}' >> #{script_path}\\\"\nchmod +x #{script_path}\nsh #{sc..."
+from = "now-9m"
+rule_id = "d1abb936-52a3-4f8b-85d2-5a5c658c92ef"
+language = "kql"
+name = "Atomic Test: T1059.004 - Create and Execute Bash Shell Script"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.004/T1059.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.004", "7e7ac3ed-f795-4fa5-b711-09d6fbe9b873", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\" AND process.command_line : \\\"*Team*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.004"
+name = "Create and Execute Bash Shell Script"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/004"
+
+

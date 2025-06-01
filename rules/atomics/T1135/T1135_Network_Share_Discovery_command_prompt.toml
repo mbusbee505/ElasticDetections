@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Network Share Discovery command prompt' (GUID: 20f1097d-81c1-405c-8380-32174d493bbb) of technique T1135 (Network Share Discovery). Test Description: Network Share Discovery utilizing the command prompt. The computer name variable may need to be modified to point to a different host\nUpon execution available network shares will be displayed in the powershell session. Command/Steps: net view \\\\\\\\#{computer_name}\n"
+from = "now-9m"
+rule_id = "b62b8d09-058f-464a-8e7c-05550a91315f"
+language = "kql"
+name = "Atomic Test: T1135 - Network Share Discovery command prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1135/T1135.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1135", "20f1097d-81c1-405c-8380-32174d493bbb", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*view*\\\" AND process.command_line : \\\"*\\\\\\\\localhost*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1135"
+name = "Network Share Discovery command prompt"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+

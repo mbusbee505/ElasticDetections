@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add Network Share' (GUID: 14c38f32-6509-46d8-ab43-d53e32d2b131) of technique T1070.005 (Indicator Removal on Host: Network Share Connection Removal). Test Description: Add a Network Share utilizing the command_prompt. Command/Steps: net use c: #{share_name}\nnet share test=#{share_name} /REMARK:\\\"test share\\\" /CACHE:No\n"
+from = "now-9m"
+rule_id = "a65eacad-f547-4b08-bedd-9a457f6203b7"
+language = "kql"
+name = "Atomic Test: T1070.005 - Add Network Share"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.005/T1070.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.005", "14c38f32-6509-46d8-ab43-d53e32d2b131", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*\\\\\\\\test\\\\share*\\\" AND process.command_line : \\\"*share*\\\" AND process.command_line : \\\"*test=\\\\\\\\test\\\\share*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.005"
+name = "Add Network Share"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+

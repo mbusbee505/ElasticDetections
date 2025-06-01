@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Base64 decoding with shell utilities (freebsd)' (GUID: b6097712-c42e-4174-b8f2-4b1e1a5bbb3d) of technique T1140 (Deobfuscate/Decode Files or Information). Test Description: Use common shell utilities to decode a base64-encoded text string and echo it to the console. Command/Steps: ENCODED=$(echo '#{message}' | b64encode -r -)\nprintf $ENCODED | b64decode -r\necho $ENCODED | b64decode -r\necho $(echo $ENCODED) | b64decode -r\necho $E..."
+from = "now-9m"
+rule_id = "8d80a12a-6e05-40cb-a724-3744f11caf78"
+language = "kql"
+name = "Atomic Test: T1140 - Base64 decoding with shell utilities (freebsd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1140/T1140.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1140", "b6097712-c42e-4174-b8f2-4b1e1a5bbb3d", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ENCODED=$(echo*\\\" AND process.command_line : \\\"*Hello*\\\" AND process.command_line : \\\"*from*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1140"
+name = "Base64 decoding with shell utilities (freebsd)"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1140"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Dylib Injection via DYLD_INSERT_LIBRARIES' (GUID: 4d66029d-7355-43fd-93a4-b63ba92ea1be) of technique T1574.006 (Hijack Execution Flow: LD_PRELOAD). Test Description: injects a dylib that opens calculator via env variable. Command/Steps: DYLD_INSERT_LIBRARIES=#{dylib_file} #{file_to_inject}\n"
+from = "now-9m"
+rule_id = "a2309049-6d63-409a-b20e-e208a22f4ad5"
+language = "kql"
+name = "Atomic Test: T1574.006 - Dylib Injection via DYLD_INSERT_LIBRARIES"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.006/T1574.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.006", "4d66029d-7355-43fd-93a4-b63ba92ea1be", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/Applications/Firefox.app/Contents/MacOS/firefox*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.006"
+name = "Dylib Injection via DYLD_INSERT_LIBRARIES"
+reference = "https://attack.mitre.org/techniques/T1574/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/006"
+
+

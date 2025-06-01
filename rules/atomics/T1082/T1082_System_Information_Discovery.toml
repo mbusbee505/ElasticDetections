@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Information Discovery' (GUID: 4060ee98-01ae-4c8e-8aad-af8300519cc7) of technique T1082 (System Information Discovery). Test Description: The script gathernetworkinfo.vbs is employed to collect system information such as the operating system, DNS details, firewall configuration, etc. Outputs are stored in c:\\\\Windows\\\\System32\\\\config or c:\\\\Windows\\\\System32\\\\reg. https://www.verboon.info/2011/06/the-gathernetworkinfo-vbs-script/. Command/Steps: wscript.exe C:\\\\Windows\\\\System32\\\\gatherNetworkInfo.vbs\n"
+from = "now-9m"
+rule_id = "3fb39dbb-7d03-4ec0-9a85-3610432b1f6d"
+language = "kql"
+name = "Atomic Test: T1082 - System Information Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1082/T1082.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1082", "4060ee98-01ae-4c8e-8aad-af8300519cc7", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wscript.exe*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\gatherNetworkInfo.vbs*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1082"
+name = "System Information Discovery"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1082"
+
+

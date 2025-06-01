@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Users Not Requiring Pre Auth (ASRepRoast)' (GUID: 870ba71e-6858-4f6d-895c-bb6237f6121b) of technique T1069.002 (Permission Groups Discovery: Domain Groups). Test Description: When successful, accounts that do not require kerberos pre-auth will be returned. Command/Steps: get-aduser -f * -pr DoesNotRequirePreAuth | where {$_.DoesNotRequirePreAuth -eq $TRUE}\n"
+from = "now-9m"
+rule_id = "a3ad8260-5824-42fd-81ca-6052f51f20cf"
+language = "kql"
+name = "Atomic Test: T1069.002 - Enumerate Users Not Requiring Pre Auth (ASRepRoast)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1069.002/T1069.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1069.002", "870ba71e-6858-4f6d-895c-bb6237f6121b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*get-aduser*\\\" AND powershell.script_block_text : \\\"*DoesNotRequirePreAuth*\\\" AND powershell.script_block_text : \\\"*where*\\\" OR (process.command_line : \\\"*get-aduser*\\\" AND process.command_line : \\\"*DoesNotRequirePreAuth*\\\" AND process.command_line : \\\"*where*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1069.002"
+name = "Enumerate Users Not Requiring Pre Auth (ASRepRoast)"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1069/002"
+
+

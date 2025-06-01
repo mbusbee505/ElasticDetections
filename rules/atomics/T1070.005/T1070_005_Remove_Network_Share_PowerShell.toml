@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Remove Network Share PowerShell' (GUID: 0512d214-9512-4d22-bde7-f37e058259b3) of technique T1070.005 (Indicator Removal on Host: Network Share Connection Removal). Test Description: Removes a Network Share utilizing PowerShell. Command/Steps: Remove-SmbShare -Name #{share_name}\nRemove-FileShare -Name #{share_name}\n"
+from = "now-9m"
+rule_id = "b50ac881-30fd-4bfb-85cc-e7dabb86a67b"
+language = "kql"
+name = "Atomic Test: T1070.005 - Remove Network Share PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.005/T1070.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.005", "0512d214-9512-4d22-bde7-f37e058259b3", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Remove-SmbShare*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*\\\\\\\\test\\\\share*\\\" OR (process.command_line : \\\"*Remove-SmbShare*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*\\\\\\\\test\\\\share*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.005"
+name = "Remove Network Share PowerShell"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/005"
+
+

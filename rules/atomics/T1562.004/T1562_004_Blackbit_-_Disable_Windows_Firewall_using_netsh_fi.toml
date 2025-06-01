@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Blackbit - Disable Windows Firewall using netsh firewall' (GUID: 91f348e6-3760-4997-a93b-2ceee7f254ee) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: An adversary tries to modify the windows firewall configuration using the deprecated netsh firewall command (command still works).. Command/Steps: netsh firewall set opmode mode=disable\n"
+from = "now-9m"
+rule_id = "81ea8ef5-73a2-4eea-aa25-43125297b800"
+language = "kql"
+name = "Atomic Test: T1562.004 - Blackbit - Disable Windows Firewall using netsh firewall"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "91f348e6-3760-4997-a93b-2ceee7f254ee", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*netsh*\\\" AND process.command_line : \\\"*firewall*\\\" AND process.command_line : \\\"*opmode*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Blackbit - Disable Windows Firewall using netsh firewall"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

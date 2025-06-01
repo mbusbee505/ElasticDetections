@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detect Virtualization Environment via ioreg' (GUID: a960185f-aef6-4547-8350-d1ce16680d09) of technique T1497.001 (Virtualization/Sandbox Evasion: System Checks). Test Description: ioreg contains registry entries for all the device drivers in the system. If it's a virtual machine, one of the device manufacturer will be a Virtualization Software.. Command/Steps: if (ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -iE 'Oracle|VirtualBox|VMWare|Parallels') then echo 'Virtualization Environment detected';..."
+from = "now-9m"
+rule_id = "1c8cf05a-39cd-4d1f-b553-36f5eb1721f8"
+language = "kql"
+name = "Atomic Test: T1497.001 - Detect Virtualization Environment via ioreg"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1497.001/T1497.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1497.001", "a960185f-aef6-4547-8350-d1ce16680d09", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*(ioreg*\\\" AND process.command_line : \\\"*grep*\\\" AND process.command_line : \\\"*Manufacturer*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1497.001"
+name = "Detect Virtualization Environment via ioreg"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+

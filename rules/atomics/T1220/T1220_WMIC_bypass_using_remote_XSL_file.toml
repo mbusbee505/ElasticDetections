@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'WMIC bypass using remote XSL file' (GUID: 7f5be499-33be-4129-a560-66021f379b9b) of technique T1220 (XSL Script Processing). Test Description: Executes the code specified within a XSL script using a remote payload. Open Calculator.exe when test successfully executed, while AV turned off.. Command/Steps: wmic #{wmic_command} /FORMAT:\\\"#{remote_xsl_file}\\\"\n"
+from = "now-9m"
+rule_id = "6ab5ab8b-4539-48a8-8336-ae989edfefc0"
+language = "kql"
+name = "Atomic Test: T1220 - WMIC bypass using remote XSL file"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1220/T1220.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1220", "7f5be499-33be-4129-a560-66021f379b9b", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*wmic*\\\" AND process.command_line : \\\"*process*\\\" AND process.command_line : \\\"*list*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1220"
+name = "WMIC bypass using remote XSL file"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1220"
+
+

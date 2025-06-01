@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Search Through Bash History' (GUID: 3cfde62b-7c33-4b26-a61e-755d6131c8ce) of technique T1552.003 (Unsecured Credentials: Bash History). Test Description: Search through bash history for specifice commands we want to capture. Command/Steps: cat #{bash_history_filename} | grep #{bash_history_grep_args} > #{output_file}\n"
+from = "now-9m"
+rule_id = "a2559162-0e40-4a72-af21-80087b7a69fc"
+language = "kql"
+name = "Atomic Test: T1552.003 - Search Through Bash History"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.003/T1552.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.003", "3cfde62b-7c33-4b26-a61e-755d6131c8ce", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*~/.bash_history*\\\" AND process.command_line : \\\"*grep*\\\" AND process.command_line : \\\"*pass*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.003"
+name = "Search Through Bash History"
+reference = "https://attack.mitre.org/techniques/T1552/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/003"
+
+

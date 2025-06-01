@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate Root Domain linked policies Discovery' (GUID: 00c652e2-0750-4ca6-82ff-0204684a6fe4) of technique T1087.002 (Account Discovery: Domain Account). Test Description: The following Atomic test will utilize ADSISearcher to enumerate root domain unit within Active Directory.\nUpon successful execution a listing of users will output with their paths in AD.\nReference: https://medium.com/@pentesttas/discover-hidden-gpo-s-on-active-directory-using-ps-adsi-a284b6814c81. Command/Steps: (([adsisearcher]'').SearchRooT).Path | %{if(([ADSI]\\\"$_\\\").gPlink){Write-Host \\\"[+] Domain Path:\\\"([ADSI]\\\"$_\\\").Path;$a=((([ADSI]\\\"$_\\\").gplink) -replace \\\"[[..."
+from = "now-9m"
+rule_id = "9edb3cfe-3102-41af-be90-a4f44e4af447"
+language = "kql"
+name = "Atomic Test: T1087.002 - Enumerate Root Domain linked policies Discovery"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "00c652e2-0750-4ca6-82ff-0204684a6fe4", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(([adsisearcher]'').SearchRooT).Path*\\\" AND powershell.script_block_text : \\\"*%{if(([ADSI]\\\"$_\\\").gPlink){Write-Host*\\\" AND powershell.script_block_text : \\\"*Domain*\\\" OR (process.command_line : \\\"*(([adsisearcher]'').SearchRooT).Path*\\\" AND process.command_line : \\\"*%{if(([ADSI]\\\"$_\\\").gPlink){Write-Host*\\\" AND process.command_line : \\\"*Domain*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Enumerate Root Domain linked policies Discovery"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

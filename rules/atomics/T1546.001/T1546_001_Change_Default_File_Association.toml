@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Change Default File Association' (GUID: 10a08978-2045-4d62-8c42-1957bbbea102) of technique T1546.001 (Event Triggered Execution: Change Default File Association). Test Description: Change Default File Association From cmd.exe of hta to notepad.\n\nUpon successful execution, cmd.exe will change the file association of .hta to notepad.exe.. Command/Steps: assoc #{extension_to_change}=#{target_extension_handler}\n"
+from = "now-9m"
+rule_id = "1f31634e-57b4-4737-bd4a-0cfe75ad74ac"
+language = "kql"
+name = "Atomic Test: T1546.001 - Change Default File Association"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.001/T1546.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.001", "10a08978-2045-4d62-8c42-1957bbbea102", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*assoc*\\\" AND process.command_line : \\\"*.hta=txtfile*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.001"
+name = "Change Default File Association"
+reference = "https://attack.mitre.org/techniques/T1546/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/001"
+
+

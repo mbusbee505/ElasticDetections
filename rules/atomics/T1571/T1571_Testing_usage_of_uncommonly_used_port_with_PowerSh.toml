@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Testing usage of uncommonly used port with PowerShell' (GUID: 21fe622f-8e53-4b31-ba83-6d333c2583f4) of technique T1571 (Non-Standard Port). Test Description: Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon execution, details about the successful\nport check will be displayed.. Command/Steps: Test-NetConnection -ComputerName #{domain} -port #{port}\n"
+from = "now-9m"
+rule_id = "048fadda-25bc-454b-bd7b-68805c80c416"
+language = "kql"
+name = "Atomic Test: T1571 - Testing usage of uncommonly used port with PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1571/T1571.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1571", "21fe622f-8e53-4b31-ba83-6d333c2583f4", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Test-NetConnection*\\\" AND powershell.script_block_text : \\\"*-ComputerName*\\\" AND powershell.script_block_text : \\\"*google.com*\\\" OR (process.command_line : \\\"*Test-NetConnection*\\\" AND process.command_line : \\\"*-ComputerName*\\\" AND process.command_line : \\\"*google.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1571"
+name = "Testing usage of uncommonly used port with PowerShell"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1571"
+
+

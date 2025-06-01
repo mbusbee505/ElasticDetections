@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'UACME Bypass Method 31' (GUID: b0f76240-9f33-4d34-90e8-3a7d501beb15) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.\nNote: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor: Enigma0x3\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\\\system32\\\\sdclt.exe\n\nComponent: Attacker defined\n\nImplementation:\tucmSdcltIsolatedCommandMethod\n\nUCM Method:\tUacMethodShellSdclt\n\nhttps://github.com/hfiref0x/UACME. Command/Steps: \\\"#{uacme_exe}\\\"\n"
+from = "now-9m"
+rule_id = "daf14e91-e65e-4d04-9015-d92b9360e41e"
+language = "kql"
+name = "Atomic Test: T1548.002 - UACME Bypass Method 31"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "b0f76240-9f33-4d34-90e8-3a7d501beb15", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*Akagi64.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "UACME Bypass Method 31"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

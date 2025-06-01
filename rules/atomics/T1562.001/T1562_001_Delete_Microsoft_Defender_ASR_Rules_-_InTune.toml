@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delete Microsoft Defender ASR Rules - InTune' (GUID: eea0a6c2-84e9-4e8c-a242-ac585d28d0d1) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: This test simulates the deletion of the ASR rules loaded by Microsoft Defender using the registry. Depending on the deployment, rules can be pushed either using GPO or InTune, This test simulates an InTune-based rules deployment.. Command/Steps: $registryPath = \\\"HKLM:\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows Defender\\\\Policy Manager\\\"\n\nif (-not (Test-Path $registryPath)) {\n  New-Item -Path $registryP..."
+from = "now-9m"
+rule_id = "01d49c67-5ae3-4f95-a126-b9ae8f30d563"
+language = "kql"
+name = "Atomic Test: T1562.001 - Delete Microsoft Defender ASR Rules - InTune"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "eea0a6c2-84e9-4e8c-a242-ac585d28d0d1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$registryPath*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows*\\\" AND powershell.script_block_text : \\\"*Defender\\\\Policy*\\\" OR (process.command_line : \\\"*$registryPath*\\\" AND process.command_line : \\\"*HKLM:\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows*\\\" AND process.command_line : \\\"*Defender\\\\Policy*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Delete Microsoft Defender ASR Rules - InTune"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

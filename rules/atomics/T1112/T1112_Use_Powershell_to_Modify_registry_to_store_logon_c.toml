@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Use Powershell to Modify registry to store logon credentials' (GUID: 68254a85-aa42-4312-a695-38b7276307f8) of technique T1112 (Modify Registry). Test Description: Sets registry key using Powershell that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).\nOpen Registry Editor to view the modified entry in HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\SecurityProviders\\\\WDigest.. Command/Steps: Set-ItemProperty -Force -Path  'HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\SecurityProviders\\\\WDigest' -Name  'UseLogonCredential' -Value '1' -ErrorAction ..."
+from = "now-9m"
+rule_id = "543cd719-ca50-4c72-aa7c-3980bb6e0003"
+language = "kql"
+name = "Atomic Test: T1112 - Use Powershell to Modify registry to store logon credentials"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "68254a85-aa42-4312-a695-38b7276307f8", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" OR (process.command_line : \\\"*Set-ItemProperty*\\\" AND process.command_line : \\\"*-Force*\\\" AND process.command_line : \\\"*-Path*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Use Powershell to Modify registry to store logon credentials"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'chmod - Change file or folder mode (symbolic mode) recursively' (GUID: 0451125c-b5f6-488f-993b-5a32b09f7d8f) of technique T1222.002 (File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification). Test Description: Changes a file or folder's permissions recursively using chmod and a specified symbolic mode.. Command/Steps: chmod -R #{symbolic_mode} #{file_or_folder}\n"
+from = "now-9m"
+rule_id = "8a899dd3-93ba-48a8-af2c-6ff78212f9b9"
+language = "kql"
+name = "Atomic Test: T1222.002 - chmod - Change file or folder mode (symbolic mode) recursively"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222.002/T1222.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222.002", "0451125c-b5f6-488f-993b-5a32b09f7d8f", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*chmod*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222.002"
+name = "chmod - Change file or folder mode (symbolic mode) recursively"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222/002"
+
+

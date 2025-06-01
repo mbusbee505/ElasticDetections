@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Office Application Startup - Outlook as a C2' (GUID: bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c) of technique T1137 (Office Application Startup). Test Description: As outlined in MDSEC's Blog post https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/ \nit is possible to use Outlook Macro as a way to achieve persistance and execute arbitrary commands. This transform Outlook into a C2.\nToo achieve this two things must happened on the syste\n- The macro security registry value must be set to '4'\n- A file called VbaProject.OTM must be created in the Outlook Folder.. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Outlook\\\\Security\\\\Level\\\" /t REG_DWORD /d 1 /f\nmkdir  %APPDATA%\\\\Microsoft\\\\Outlook\\\\ >nul 2>&1\ne..."
+from = "now-9m"
+rule_id = "0e4a57b0-8cf2-41d9-8007-9eb3b7359d47"
+language = "kql"
+name = "Atomic Test: T1137 - Office Application Startup - Outlook as a C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1137/T1137.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1137", "bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Office\\\\16.0\\\\Outlook\\\\Security\\\\Level*\\\" AND process.command_line : \\\"*REG_DWORD*\\\" AND process.command_line : \\\"*mkdir*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1137"
+name = "Office Application Startup - Outlook as a C2"
+reference = "https://attack.mitre.org/techniques/T1137"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1137"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1137"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1137"
+
+

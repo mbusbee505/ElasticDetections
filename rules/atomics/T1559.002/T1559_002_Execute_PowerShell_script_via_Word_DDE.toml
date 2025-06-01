@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute PowerShell script via Word DDE' (GUID: 47c21fb6-085e-4b0d-b4d2-26d72c3830b3) of technique T1559.002 (Inter-Process Communication: Dynamic Data Exchange). Test Description: When the word document opens it will prompt the user to click ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download and execute a powershell script. Command/Steps: start \\\"$PathToAtomicsFolder\\\\T1559.002\\\\bin\\\\DDE_Document.docx\\\"\n"
+from = "now-9m"
+rule_id = "4abcfb49-7ad3-4e25-a5f9-9826dc77657f"
+language = "kql"
+name = "Atomic Test: T1559.002 - Execute PowerShell script via Word DDE"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1559.002/T1559.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1559.002", "47c21fb6-085e-4b0d-b4d2-26d72c3830b3", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*start*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1559.002"
+name = "Execute PowerShell script via Word DDE"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1559/002"
+
+

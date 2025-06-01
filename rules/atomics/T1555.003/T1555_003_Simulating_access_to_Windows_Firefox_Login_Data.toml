@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Simulating access to Windows Firefox Login Data' (GUID: eb8da98a-2e16-4551-b3dd-83de49baa14c) of technique T1555.003 (Credentials from Password Stores: Credentials from Web Browsers). Test Description: Simulates an adversary accessing encrypted credentials from firefox web browser's login database.\nmore info in https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data. Command/Steps: Copy-Item \\\"$env:APPDATA\\\\Mozilla\\\\Firefox\\\\Profiles\\\\\\\" -Destination \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\" -Force -Recurse\n"
+from = "now-9m"
+rule_id = "10465eed-0905-45c3-87e1-016aca0db078"
+language = "kql"
+name = "Atomic Test: T1555.003 - Simulating access to Windows Firefox Login Data"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1555.003/T1555.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1555.003", "eb8da98a-2e16-4551-b3dd-83de49baa14c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy-Item*\\\" AND powershell.script_block_text : \\\"*$env:APPDATA\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*\\\" AND powershell.script_block_text : \\\"*-Destination*\\\" OR (process.command_line : \\\"*Copy-Item*\\\" AND process.command_line : \\\"*$env:APPDATA\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*\\\" AND process.command_line : \\\"*-Destination*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1555.003"
+name = "Simulating access to Windows Firefox Login Data"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+

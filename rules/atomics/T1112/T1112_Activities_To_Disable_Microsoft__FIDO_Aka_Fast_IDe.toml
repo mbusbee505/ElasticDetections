@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value.' (GUID: ffeddced-bb9f-49c6-97f0-3d07a509bf94) of technique T1112 (Modify Registry). Test Description: Detect the Microsoft FIDO authentication disable activities that adversary attempt to gains access to login credentials (e.g., passwords), they may be able to impersonate the user and access sensitive accounts or data and also increases the risk of falling victim to phishing attacks.\nSee the related article (https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.FidoAuthentication::AllowFidoDeviceSignon).. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\FIDO\\\" /v \\\"AllowExternalDeviceSignon\\\" /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "743f2e0f-f59a-459f-b143-e07d862270cc"
+language = "kql"
+name = "Atomic Test: T1112 - Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value."
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "ffeddced-bb9f-49c6-97f0-3d07a509bf94", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\FIDO*\\\" AND process.command_line : \\\"*AllowExternalDeviceSignon*\\\" AND process.command_line : \\\"*REG_DWORD*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value."
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

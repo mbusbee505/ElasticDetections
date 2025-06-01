@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Changing RDP Port to Non Standard Port via Powershell' (GUID: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771) of technique T1021.001 (Remote Services: Remote Desktop Protocol). Test Description: Changing RDP Port to Non Standard Port via Powershell. Command/Steps: Set-ItemProperty -Path 'HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\\WinStations\\\\RDP-Tcp' -name \\\"PortNumber\\\" -Value #{NEW_Remote_Port}\nNew-N..."
+from = "now-9m"
+rule_id = "854e516c-d0a8-4926-9e87-815f269e5934"
+language = "kql"
+name = "Atomic Test: T1021.001 - Changing RDP Port to Non Standard Port via Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.001/T1021.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.001", "2f840dd4-8a2e-4f44-beb3-6b2399ea3771", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" OR (process.command_line : \\\"*Set-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.001"
+name = "Changing RDP Port to Non Standard Port via Powershell"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+

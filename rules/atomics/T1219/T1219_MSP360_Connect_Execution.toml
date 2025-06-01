@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MSP360 Connect Execution' (GUID: b1b8128b-c5d4-4de9-bf70-e60419274562) of technique T1219 (Remote Access Software). Test Description: An adversary may attempt to trick the user into downloading MSP360 Connect for use as a C2 channel.\nUpon successful execution, MSP360 Connect will be executed.. Command/Steps: Start-Process #{MSP360_Connect_Path}\n"
+from = "now-9m"
+rule_id = "4c35e377-b49e-4c6a-864d-22f7d5e795f3"
+language = "kql"
+name = "Atomic Test: T1219 - MSP360 Connect Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1219/T1219.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1219", "b1b8128b-c5d4-4de9-bf70-e60419274562", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*$env:ProgramFiles\\\\Connect\\\\Connect.exe*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*$env:ProgramFiles\\\\Connect\\\\Connect.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1219"
+name = "MSP360 Connect Execution"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1219"
+
+

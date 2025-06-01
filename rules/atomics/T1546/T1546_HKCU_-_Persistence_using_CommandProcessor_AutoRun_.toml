@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation)' (GUID: 36b8dbf9-59b1-4e9b-a3bb-36e80563ef01) of technique T1546 (Event Triggered Execution). Test Description: An adversary may abuse the CommandProcessor AutoRun registry key to persist. Every time cmd.exe is executed, the command defined in the AutoRun key also gets executed.\n[reference](https://devblogs.microsoft.com/oldnewthing/20071121-00/?p=24433). Command/Steps: $path = \\\"HKCU:\\\\Software\\\\Microsoft\\\\Command Processor\\\"\nif (!(Test-Path -path $path)){\n  New-Item -ItemType Key -Path $path\n}\nNew-ItemProperty -Path $pat..."
+from = "now-9m"
+rule_id = "d906aade-ae2a-4b73-9653-0b3704c43d74"
+language = "kql"
+name = "Atomic Test: T1546 - HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546/T1546.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546", "36b8dbf9-59b1-4e9b-a3bb-36e80563ef01", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$path*\\\" AND powershell.script_block_text : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Command*\\\" AND powershell.script_block_text : \\\"*Processor*\\\" OR (process.command_line : \\\"*$path*\\\" AND process.command_line : \\\"*HKCU:\\\\Software\\\\Microsoft\\\\Command*\\\" AND process.command_line : \\\"*Processor*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546"
+name = "HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation)"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'System Service Discovery - systemctl/service' (GUID: f4b26bce-4c2c-46c0-bcc5-fce062d38bef) of technique T1007 (System Service Discovery). Test Description: Enumerates system service using systemctl/service. Command/Steps: if [ \\\"$(uname)\\\" = 'FreeBSD' ]; then service -e; else systemctl --type=service; fi;\n"
+from = "now-9m"
+rule_id = "6e8136cc-2e9f-4b75-a048-61f994160dd9"
+language = "kql"
+name = "Atomic Test: T1007 - System Service Discovery - systemctl/service"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1007/T1007.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1007", "f4b26bce-4c2c-46c0-bcc5-fce062d38bef", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*$(uname)*\\\" AND process.command_line : \\\"*FreeBSD*\\\" AND process.command_line : \\\"*then*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1007"
+name = "System Service Discovery - systemctl/service"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1007"
+
+

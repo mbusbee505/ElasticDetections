@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable EventLog-Application Auto Logger Session Via Registry - PowerShell' (GUID: da86f239-9bd3-4e85-92ed-4a94ef111a1c) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: This atomic simulates an activity where an attacker disables the EventLog-Application ETW Auto Logger session using the powershell.exe \\\"New-ItemProperty\\\" cmdlet to update the Windows registry value \\\"Start\\\". This would effectivly disable the Event log application channel. The changes would only take effect after a restart.. Command/Steps: New-ItemProperty -Path HKLM:\\\\System\\\\CurrentControlSet\\\\Control\\\\WMI\\\\Autologger\\\\EventLog-Application -Name Start -Value 0 -PropertyType \\\"DWord\\\" -Force"
+from = "now-9m"
+rule_id = "3ca0ac66-fcf7-4387-8718-54d5b802a943"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable EventLog-Application Auto Logger Session Via Registry - PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "da86f239-9bd3-4e85-92ed-4a94ef111a1c", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\System\\\\CurrentControlSet\\\\Control\\\\WMI\\\\Autologger\\\\EventLog-Application*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\System\\\\CurrentControlSet\\\\Control\\\\WMI\\\\Autologger\\\\EventLog-Application*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable EventLog-Application Auto Logger Session Via Registry - PowerShell"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

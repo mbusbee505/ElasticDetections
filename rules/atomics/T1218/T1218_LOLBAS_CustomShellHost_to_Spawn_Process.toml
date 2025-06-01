@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LOLBAS CustomShellHost to Spawn Process' (GUID: b1eeb683-90bb-4365-bbc2-2689015782fe) of technique T1218 (Signed Binary Proxy Execution). Test Description: This test simulates an adversary copying `customshellhost.exe` and `calc.exe` from `C:\\\\windows\\\\system32\\\\` to `C:\\\\temp\\\\`, renaming `calc.exe` to `explorer.exe`.\nUpon execution, customshellhost.exe will spawn calc.exe.\nNote this will only work on Windows 10 or 11.\n[LOLBAS](https://lolbas-project.github.io/lolbas/Binaries/CustomShellHost/)\n[BishopFox](https://bishopfox.com/blog/edr-bypass-with-lolbins). Command/Steps: if (-not (Test-Path #{dest_path})) {\nNew-Item -Path #{dest_path} -ItemType Directory\n} else {\nWrite-Host \\\"Directory #{dest_path} already exists.\\\" }\nCo..."
+from = "now-9m"
+rule_id = "da96ee0a-5fb7-400e-9ca5-83d2210f1b79"
+language = "kql"
+name = "Atomic Test: T1218 - LOLBAS CustomShellHost to Spawn Process"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218/T1218.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218", "b1eeb683-90bb-4365-bbc2-2689015782fe", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*(-not*\\\" AND powershell.script_block_text : \\\"*(Test-Path*\\\" AND powershell.script_block_text : \\\"*C:\\\\test))*\\\" OR (process.command_line : \\\"*(-not*\\\" AND process.command_line : \\\"*(Test-Path*\\\" AND process.command_line : \\\"*C:\\\\test))*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218"
+name = "LOLBAS CustomShellHost to Spawn Process"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218"
+
+

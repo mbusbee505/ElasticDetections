@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'crackmapexec Pass the Hash' (GUID: eb05b028-16c8-4ad8-adea-6f5b219da9a9) of technique T1550.002 (Use Alternate Authentication Material: Pass the Hash). Test Description: command execute with crackmapexec. Command/Steps: #{crackmapexec_exe} #{domain} -u #{user_name} -H #{ntlm} -x #{command}\n"
+from = "now-9m"
+rule_id = "fc96cce4-8bc3-43e1-ac4a-e26ad9add887"
+language = "kql"
+name = "Atomic Test: T1550.002 - crackmapexec Pass the Hash"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1550.002/T1550.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1550.002", "eb05b028-16c8-4ad8-adea-6f5b219da9a9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\CrackMapExecWin\\\\crackmapexec.exe*\\\" AND process.command_line : \\\"*%userdnsdomain%*\\\" AND process.command_line : \\\"*Administrator*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1550.002"
+name = "crackmapexec Pass the Hash"
+reference = "https://attack.mitre.org/techniques/T1550/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1550/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1550/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1550/002"
+
+

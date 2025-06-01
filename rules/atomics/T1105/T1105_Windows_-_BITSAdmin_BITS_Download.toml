@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - BITSAdmin BITS Download' (GUID: a1921cd3-9a2d-47d5-a891-f1d0f2a7a31b) of technique T1105 (Ingress Tool Transfer). Test Description: This test uses BITSAdmin.exe to schedule a BITS job for the download of a file.\nThis technique is used by Qbot malware to download payloads.. Command/Steps: C:\\\\Windows\\\\System32\\\\bitsadmin.exe /transfer #{bits_job_name} /Priority HIGH #{remote_file} #{local_path}\n"
+from = "now-9m"
+rule_id = "281300a6-e930-4512-a3b0-af57ad6b1cb7"
+language = "kql"
+name = "Atomic Test: T1105 - Windows - BITSAdmin BITS Download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "a1921cd3-9a2d-47d5-a891-f1d0f2a7a31b", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\bitsadmin.exe*\\\" AND process.command_line : \\\"*/transfer*\\\" AND process.command_line : \\\"*qcxjb7*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Windows - BITSAdmin BITS Download"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'UUID custom process Injection' (GUID: 0128e48e-8c1a-433a-a11a-a5304734f1e1) of technique T1055 (Process Injection). Test Description: The UUIDs Process Injection code was first introduced by the NCC Group. The code can be stored in UUID forms on the heap and converted back to binary via UuidFromStringA at runtime. In this new custom version of UUID injection, EnumSystemLocalesA is the only API called to execute the code. We used custom UuidToString and UuidFromString implementations to avoid using UuidFromStringA and RPCRT4.dll, thereby eliminating the static signatures. This technique also avoided the use of VirtualAlloc, WriteProcessMemory and CreateThread\n\nThe injected shellcode will open a message box and a notepad.\n\nReference to NCC Group: https://research.nccgroup.com/2021/01/23/rift-analysing-a-lazarus-shellcode-execution-method/\nConcept from: http://ropgadget.com/posts/abusing_win_functions.html. Command/Steps: Start-Process \\\"#{exe_binary}\\\"\nStart-Sleep -Seconds 7\nGet-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force"
+from = "now-9m"
+rule_id = "3fc9efb8-5e63-44fb-aa51-da66dde42e24"
+language = "kql"
+name = "Atomic Test: T1055 - UUID custom process Injection"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055/T1055.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055", "0128e48e-8c1a-433a-a11a-a5304734f1e1", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*Start-Sleep*\\\" AND powershell.script_block_text : \\\"*-Seconds*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*Start-Sleep*\\\" AND process.command_line : \\\"*-Seconds*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055"
+name = "UUID custom process Injection"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055"
+
+

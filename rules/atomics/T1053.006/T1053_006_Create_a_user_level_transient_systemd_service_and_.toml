@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a user level transient systemd service and timer' (GUID: 3de33f5b-62e5-4e63-a2a0-6fd8808c80ec) of technique T1053.006 (Scheduled Task/Job: Systemd Timers). Test Description: Schedule a user level transient task (will not survive a reboot) without having to create the .timer or .service files by using the systemd-run command.. Command/Steps: systemd-run --user --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'echo \\\"$(date) $(whoami)\\\" >>/tmp/log'\n"
+from = "now-9m"
+rule_id = "8b16aec3-57eb-48aa-aadb-10e5539d38b0"
+language = "kql"
+name = "Atomic Test: T1053.006 - Create a user level transient systemd service and timer"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.006/T1053.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.006", "3de33f5b-62e5-4e63-a2a0-6fd8808c80ec", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*systemd-run*\\\" AND process.command_line : \\\"*--user*\\\" AND process.command_line : \\\"*--unit=Atomic-Red-Team*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.006"
+name = "Create a user level transient systemd service and timer"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/006"
+
+

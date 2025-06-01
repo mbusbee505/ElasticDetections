@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate All Network Shares with SharpShares' (GUID: d1fa2a69-b0a2-4e8a-9112-529b00c19a41) of technique T1135 (Network Share Discovery). Test Description: SharpShares is a command line tool that can be integrated with Cobalt Strike's execute-assembly module, allowing for the enumeration of network shares. \nThis technique has been utilized by various ransomware groups, including BianLian.\n[Reference](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-136a). Command/Steps: cmd /c '#{sharp_path}' /ldap:all | out-file -filepath \\\"#{output_path}\\\""
+from = "now-9m"
+rule_id = "013433a9-375a-4385-b1fe-2cc2169def27"
+language = "kql"
+name = "Atomic Test: T1135 - Enumerate All Network Shares with SharpShares"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1135/T1135.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1135", "d1fa2a69-b0a2-4e8a-9112-529b00c19a41", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*/ldap:all*\\\" AND powershell.script_block_text : \\\"*out-file*\\\" AND powershell.script_block_text : \\\"*-filepath*\\\" OR (process.command_line : \\\"*/ldap:all*\\\" AND process.command_line : \\\"*out-file*\\\" AND process.command_line : \\\"*-filepath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1135"
+name = "Enumerate All Network Shares with SharpShares"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1135"
+
+

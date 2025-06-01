@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Loadable Kernel Module based Rootkit (Diamorphine)' (GUID: 0b996469-48c6-46e2-8155-a17f8b6c2247) of technique T1014 (Rootkit). Test Description: Loads Diamorphine kernel module, which hides itself and a processes.. Command/Steps: sudo modprobe #{rootkit_name}\nping -c 10 localhost >/dev/null & TARGETPID=\\\"$!\\\"\nps $TARGETPID\nkill -31 $TARGETPID\nps $TARGETPID || echo \\\"process ${TARG..."
+from = "now-9m"
+rule_id = "34b88c98-913f-405d-8594-0900a292a780"
+language = "kql"
+name = "Atomic Test: T1014 - Loadable Kernel Module based Rootkit (Diamorphine)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1014/T1014.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1014", "0b996469-48c6-46e2-8155-a17f8b6c2247", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*modprobe*\\\" AND process.command_line : \\\"*diamorphine*\\\" AND process.command_line : \\\"*ping*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1014"
+name = "Loadable Kernel Module based Rootkit (Diamorphine)"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+

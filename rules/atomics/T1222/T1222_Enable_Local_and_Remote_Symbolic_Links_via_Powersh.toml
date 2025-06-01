@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enable Local and Remote Symbolic Links via Powershell' (GUID: 6cd715aa-20ac-4be1-a8f1-dda7bae160bd) of technique T1222 (File and Directory Permissions Modification). Test Description: Use Powershell to enable both ‘remote to local’ and ‘remote to remote’ symbolic links. This allows access to files from local shortcuts with local or remote paths.\n[reference](https://symantec-enterprise-blogs.security.com/threat-intelligence/noberus-blackcat-alphv-rust-ransomware/). Command/Steps: New-ItemProperty -Path HKLM:\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\Filesystems\\\\NTFS -Name SymlinkRemoteToLocalEvaluation -PropertyType DWORD -Value 1 -F..."
+from = "now-9m"
+rule_id = "39c3bd0b-0496-4811-9733-cdfb85cb140c"
+language = "kql"
+name = "Atomic Test: T1222 - Enable Local and Remote Symbolic Links via Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1222/T1222.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1222", "6cd715aa-20ac-4be1-a8f1-dda7bae160bd", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*-Path*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\Filesystems\\\\NTFS*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*-Path*\\\" AND process.command_line : \\\"*HKLM:\\\\Software\\\\Policies\\\\Microsoft\\\\Windows\\\\Filesystems\\\\NTFS*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1222"
+name = "Enable Local and Remote Symbolic Links via Powershell"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1222"
+
+

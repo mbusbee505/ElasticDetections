@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Inspect SystemStartOptions Value in Registry' (GUID: 96257079-cdc1-4aba-8705-3146e94b6dce) of technique T1012 (Query Registry). Test Description: The objective of this test is to query the SystemStartOptions key under HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control in the Windows registry. This action could be used to uncover specific details about how the system is configured to start, potentially aiding in understanding boot parameters or identifying security-related settings. key is.. Command/Steps: reg.exe query HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control /v SystemStartOptions\n"
+from = "now-9m"
+rule_id = "4813584c-7f1f-4e96-8bad-de6a2620b4c1"
+language = "kql"
+name = "Atomic Test: T1012 - Inspect SystemStartOptions Value in Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1012/T1012.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1012", "96257079-cdc1-4aba-8705-3146e94b6dce", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*query*\\\" AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1012"
+name = "Inspect SystemStartOptions Value in Registry"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1012"
+
+

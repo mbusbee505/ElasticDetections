@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Detect Virtualization Environment (Linux)' (GUID: dfbd1a21-540d-4574-9731-e852bd6fe840) of technique T1497.001 (Virtualization/Sandbox Evasion: System Checks). Test Description: systemd-detect-virt detects execution in a virtualized environment.\nAt boot, dmesg stores a log if a hypervisor is detected.. Command/Steps: if (systemd-detect-virt) then echo \\\"Virtualization Environment detected\\\"; fi;\nif (sudo dmidecode | egrep -i 'manufacturer|product|vendor' | grep -iE '..."
+from = "now-9m"
+rule_id = "e6d122e3-ec63-4130-a67c-e23954935d8d"
+language = "kql"
+name = "Atomic Test: T1497.001 - Detect Virtualization Environment (Linux)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1497.001/T1497.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1497.001", "dfbd1a21-540d-4574-9731-e852bd6fe840", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*(systemd-detect-virt)*\\\" AND process.command_line : \\\"*then*\\\" AND process.command_line : \\\"*Virtualization*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1497.001"
+name = "Detect Virtualization Environment (Linux)"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1497/001"
+
+

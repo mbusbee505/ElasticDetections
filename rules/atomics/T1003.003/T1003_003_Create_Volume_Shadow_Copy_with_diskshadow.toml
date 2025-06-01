@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Volume Shadow Copy with diskshadow' (GUID: b385996c-0e7d-4e27-95a4-aca046b119a7) of technique T1003.003 (OS Credential Dumping: NTDS). Test Description: This test is intended to be run on a domain controller\nAn alternative to using vssadmin to create a Volume Shadow Copy for extracting ntds.dit. Command/Steps: mkdir c:\\\\exfil\ndiskshadow.exe /s #{filename}\n"
+from = "now-9m"
+rule_id = "99632f56-ec0c-4e9d-84e2-10dcaba71ea6"
+language = "kql"
+name = "Atomic Test: T1003.003 - Create Volume Shadow Copy with diskshadow"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.003/T1003.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.003", "b385996c-0e7d-4e27-95a4-aca046b119a7", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*mkdir*\\\" AND process.command_line : \\\"*c:\\\\exfil*\\\" AND process.command_line : \\\"*diskshadow.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.003"
+name = "Create Volume Shadow Copy with diskshadow"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/003"
+
+

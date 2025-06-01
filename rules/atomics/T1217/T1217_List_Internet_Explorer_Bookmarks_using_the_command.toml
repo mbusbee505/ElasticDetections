@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Internet Explorer Bookmarks using the command prompt' (GUID: 727dbcdb-e495-4ab1-a6c4-80c7f77aef85) of technique T1217 (Browser Bookmark Discovery). Test Description: This test will list the bookmarks for Internet Explorer that are found in the Favorites folder. Command/Steps: dir /s /b %USERPROFILE%\\\\Favorites\n"
+from = "now-9m"
+rule_id = "46e14887-ec43-4802-8c90-032f69677412"
+language = "kql"
+name = "Atomic Test: T1217 - List Internet Explorer Bookmarks using the command prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1217/T1217.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1217", "727dbcdb-e495-4ab1-a6c4-80c7f77aef85", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%USERPROFILE%\\\\Favorites*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1217"
+name = "List Internet Explorer Bookmarks using the command prompt"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1217"
+
+

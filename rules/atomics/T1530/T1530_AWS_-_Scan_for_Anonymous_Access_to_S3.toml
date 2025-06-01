@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - Scan for Anonymous Access to S3' (GUID: 979356b9-b588-4e49-bba4-c35517c484f5) of technique T1530 (Data from Cloud Storage Object). Test Description: Upon successful execution, this test will test for anonymous access to AWS S3 buckets and dumps all the files to a local folder.. Command/Steps: aws --no-sign-request s3 cp --recursive s3://#{s3_bucket_name} /tmp/#{s3_bucket_name}\n"
+from = "now-9m"
+rule_id = "9e25c1cb-c09e-4712-9aa5-054e37381de9"
+language = "kql"
+name = "Atomic Test: T1530 - AWS - Scan for Anonymous Access to S3"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1530/T1530.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1530", "979356b9-b588-4e49-bba4-c35517c484f5", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*--no-sign-request*\\\" AND process.command_line : \\\"*--recursive*\\\" AND process.command_line : \\\"*s3://redatomic-test2*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1530"
+name = "AWS - Scan for Anonymous Access to S3"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1530"
+
+

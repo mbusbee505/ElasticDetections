@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus' (GUID: 22d89a2f-d475-4895-b2d4-68626d49c029) of technique T1562.008 (Impair Defenses: Disable Cloud Logs). Test Description: This Atomic test will use the Stratus Red Team will first setup a CloudTrail logging into an S3 bucket and will then make an API call to update the lifecycle rule on that S3 bucket with an expiration date of 1 day. This will essentially delete all the logs after one day. Adversaries often do this actiivity to evade detection. Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-lifecycle-rule/. Command/Steps: export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \\\"starting warmup\\\"\n./stratus warmup aws.defense-evasion.cloudtrail-lifecycle-rule\necho \\\"starti..."
+from = "now-9m"
+rule_id = "a370b115-2653-485e-93ef-2ca0be7cc48c"
+language = "kql"
+name = "Atomic Test: T1562.008 - AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.008/T1562.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.008", "22d89a2f-d475-4895-b2d4-68626d49c029", "linux", "macos", "iaas:aws",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*export*\\\" AND process.command_line : \\\"*AWS_REGION=us-west-2*\\\" AND process.command_line : \\\"*starting*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.008"
+name = "AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/008"
+
+

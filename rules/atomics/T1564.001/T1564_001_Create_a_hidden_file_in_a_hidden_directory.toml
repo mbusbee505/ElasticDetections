@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create a hidden file in a hidden directory' (GUID: 61a782e5-9a19-40b5-8ba4-69a4b9f3d7be) of technique T1564.001 (Hide Artifacts: Hidden Files and Directories). Test Description: Creates a hidden file inside a hidden directory. Command/Steps: mkdir /var/tmp/.hidden-directory\necho \\\"T1564.001\\\" > /var/tmp/.hidden-directory/.hidden-file\n"
+from = "now-9m"
+rule_id = "2e6457e1-5565-464b-844a-79f83db3782c"
+language = "kql"
+name = "Atomic Test: T1564.001 - Create a hidden file in a hidden directory"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1564.001/T1564.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1564.001", "61a782e5-9a19-40b5-8ba4-69a4b9f3d7be", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*mkdir*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1564.001"
+name = "Create a hidden file in a hidden directory"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1564/001"
+
+

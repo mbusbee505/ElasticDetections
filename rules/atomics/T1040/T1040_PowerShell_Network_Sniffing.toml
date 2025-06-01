@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Network Sniffing' (GUID: 9c15a7de-de14-46c3-bc2a-6d94130986ae) of technique T1040 (Network Sniffing). Test Description: PowerShell Built-in Cmdlets to capture network traffic.\nhttps://learn.microsoft.com/en-us/powershell/module/neteventpacketcapture/new-neteventsession?view=windowsserver2022-ps. Command/Steps: New-NetEventSession -Name Capture007 -LocalFilePath \\\"$ENV:Temp\\\\sniff.etl\\\"\nAdd-NetEventPacketCaptureProvider -SessionName Capture007 -TruncationLength ..."
+from = "now-9m"
+rule_id = "23da82a1-c9d1-43b7-a4dd-6d92e6cd05f0"
+language = "kql"
+name = "Atomic Test: T1040 - PowerShell Network Sniffing"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "9c15a7de-de14-46c3-bc2a-6d94130986ae", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-NetEventSession*\\\" AND powershell.script_block_text : \\\"*-Name*\\\" AND powershell.script_block_text : \\\"*Capture007*\\\" OR (process.command_line : \\\"*New-NetEventSession*\\\" AND process.command_line : \\\"*-Name*\\\" AND process.command_line : \\\"*Capture007*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "PowerShell Network Sniffing"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

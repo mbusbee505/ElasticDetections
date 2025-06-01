@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Office Application Startup Test Persistence (HKCU)' (GUID: c3e35b58-fe1c-480b-b540-7600fb612563) of technique T1137.002 (Office Application Startup: Office Test). Test Description: Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office\napplication is started. Key is used for debugging purposes. Not created by default & exist in HKCU & HKLM hives.. Command/Steps: $wdApp = New-Object -COMObject \\\"Word.Application\\\"\nif(-not $wdApp.path.contains(\\\"Program Files (x86)\\\"))  \n{\n  Write-Host \\\"64-bit Office\\\"\n  reg add \\\"HKE..."
+from = "now-9m"
+rule_id = "87a3a005-c62b-4b0b-b264-096a7c335da3"
+language = "kql"
+name = "Atomic Test: T1137.002 - Office Application Startup Test Persistence (HKCU)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1137.002/T1137.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1137.002", "c3e35b58-fe1c-480b-b540-7600fb612563", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$wdApp*\\\" AND powershell.script_block_text : \\\"*New-Object*\\\" AND powershell.script_block_text : \\\"*-COMObject*\\\" OR (process.command_line : \\\"*$wdApp*\\\" AND process.command_line : \\\"*New-Object*\\\" AND process.command_line : \\\"*-COMObject*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1137.002"
+name = "Office Application Startup Test Persistence (HKCU)"
+reference = "https://attack.mitre.org/techniques/T1137/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1137/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1137/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1137/002"
+
+

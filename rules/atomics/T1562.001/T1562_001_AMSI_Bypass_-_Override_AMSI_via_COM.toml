@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'AMSI Bypass - Override AMSI via COM' (GUID: 17538258-5699-4ff1-92d1-5ac9b0dc21f5) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: With administrative rights, an adversary can disable AMSI via registry value in HKCU\\\\Software\\\\Classes\\\\CLSID\\\\{fdb00e52-a214-4aa1-8fba-4357bb0072ec} by overriding the Microsoft Defender COM object for AMSI and points it to a DLL that does not exist.\nThis is currently being used by AsyncRAT and others. \nhttps://strontic.github.io/xcyclopedia/library/clsid_fdb00e52-a214-4aa1-8fba-4357bb0072ec.html\nhttps://securitynews.sonicwall.com/xmlpost/asyncrat-variant-includes-cryptostealer-capabilites/. Command/Steps: REG ADD HKCU\\\\Software\\\\Classes\\\\CLSID\\\\{fdb00e52-a214-4aa1-8fba-4357bb0072ec}\\\\InProcServer32 /ve /t REG_SZ /d C:\\\\IDontExist.dll /f\n"
+from = "now-9m"
+rule_id = "d86a2e85-f28f-4921-8584-2d24cbd45a00"
+language = "kql"
+name = "Atomic Test: T1562.001 - AMSI Bypass - Override AMSI via COM"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "17538258-5699-4ff1-92d1-5ac9b0dc21f5", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKCU\\\\Software\\\\Classes\\\\CLSID\\\\{fdb00e52-a214-4aa1-8fba-4357bb0072ec}\\\\InProcServer32*\\\" AND process.command_line : \\\"*REG_SZ*\\\" AND process.command_line : \\\"*C:\\\\IDontExist.dll*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "AMSI Bypass - Override AMSI via COM"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

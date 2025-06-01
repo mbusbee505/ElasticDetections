@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Adding custom debugger for Windows Error Reporting' (GUID: 17d1a3cc-3373-495a-857a-e5dd005fb302) of technique T1546 (Event Triggered Execution). Test Description: When applications hang, the Windows Error Reporting framework allows us to attach a debugger, if it is set up in the Registry.\nAdding executable of choice will let the executable to auto-execute when during any application crash due to functioning of WER framework. Command/Steps: reg add \\\"HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\Windows Error Reporting\\\\Hangs\\\" /v Debugger /t REG_SZ /d \\\"C:\\\\Windows\\\\System32\\\\notepad.exe\\\" /f\n"
+from = "now-9m"
+rule_id = "d18108a5-68e8-4ba3-91e6-b5f4d132d1cd"
+language = "kql"
+name = "Atomic Test: T1546 - Adding custom debugger for Windows Error Reporting"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546/T1546.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546", "17d1a3cc-3373-495a-857a-e5dd005fb302", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\Windows*\\\" AND process.command_line : \\\"*Error*\\\" AND process.command_line : \\\"*Reporting\\\\Hangs*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546"
+name = "Adding custom debugger for Windows Error Reporting"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546"
+
+

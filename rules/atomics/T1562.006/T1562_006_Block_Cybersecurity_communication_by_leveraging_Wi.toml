@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table' (GUID: 1174b5df-2c33-490f-8854-f5eb80c907ca) of technique T1562.006 (Impair Defenses: Indicator Blocking). Test Description: Adversaries are redirecting DNS queries to an incorrect or malicious DNS server IP, thereby blocking legitimate communications and potentially compromising the security infrastructure. This atomic test aims to respond with 127.0.0.1 when a DNS query is made for endpoint.security.microsoft.com.. Command/Steps: Add-DnsClientNrptRule -Namespace \\\".endpoint.security.microsoft.com\\\" -NameServers 127.0.0.1 -Comment \\\"Silenced by Name Resolution Policy Table\\\"\nAdd-Dns..."
+from = "now-9m"
+rule_id = "beb447a2-6af2-4ae9-b60b-6b823f5cb26a"
+language = "kql"
+name = "Atomic Test: T1562.006 - Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.006/T1562.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.006", "1174b5df-2c33-490f-8854-f5eb80c907ca", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Add-DnsClientNrptRule*\\\" AND powershell.script_block_text : \\\"*-Namespace*\\\" AND powershell.script_block_text : \\\"*.endpoint.security.microsoft.com*\\\" OR (process.command_line : \\\"*Add-DnsClientNrptRule*\\\" AND process.command_line : \\\"*-Namespace*\\\" AND process.command_line : \\\"*.endpoint.security.microsoft.com*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.006"
+name = "Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+

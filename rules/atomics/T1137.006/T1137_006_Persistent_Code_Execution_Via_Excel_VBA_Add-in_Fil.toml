@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Persistent Code Execution Via Excel VBA Add-in File (XLAM)' (GUID: 082141ed-b048-4c86-99c7-2b8da5b5bf48) of technique T1137.006 (Office Application Startup: Add-ins). Test Description: Creates an Excel VBA Add-in file (XLAM) which runs automatically when Excel is started\nThe sample XLAM provided launches the notepad as a proof-of-concept for persistent execution from Office.. Command/Steps: Copy \\\"PathToAtomicsFolder\\\\T1137.006\\\\bin\\\\Addins\\\\ExcelVBAaddin.xlam\\\" \\\"$env:APPDATA\\\\Microsoft\\\\Excel\\\\XLSTART\\\\notepad.xlam\\\"        \nStart-Process \\\"Excel\\\"\n"
+from = "now-9m"
+rule_id = "bd2eec48-0cb6-4532-ae03-beba73c566eb"
+language = "kql"
+name = "Atomic Test: T1137.006 - Persistent Code Execution Via Excel VBA Add-in File (XLAM)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1137.006/T1137.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1137.006", "082141ed-b048-4c86-99c7-2b8da5b5bf48", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Copy*\\\" AND powershell.script_block_text : \\\"*$env:APPDATA\\\\Microsoft\\\\Excel\\\\XLSTART\\\\notepad.xlam*\\\" AND powershell.script_block_text : \\\"*Start-Process*\\\" OR (process.command_line : \\\"*Copy*\\\" AND process.command_line : \\\"*$env:APPDATA\\\\Microsoft\\\\Excel\\\\XLSTART\\\\notepad.xlam*\\\" AND process.command_line : \\\"*Start-Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1137.006"
+name = "Persistent Code Execution Via Excel VBA Add-in File (XLAM)"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1137/006"
+
+

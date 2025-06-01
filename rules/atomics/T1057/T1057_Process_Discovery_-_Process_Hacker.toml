@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Discovery - Process Hacker' (GUID: 966f4c16-1925-4d9b-8ce0-01334ee0867d) of technique T1057 (Process Discovery). Test Description: Process Hacker can be exploited to infiltrate system processes, identify weak points, or achieve unauthorized control over systems. However, its malicious use can often be flagged by security defenses, rendering it a perilous tool for illegitimate purposes.. Command/Steps: Start-Process -FilePath \\\"$Env:ProgramFiles\\\\Process Hacker 2\\\\#{processhacker_exe}\\\""
+from = "now-9m"
+rule_id = "6059e537-6737-4750-8a69-ec3610c1d778"
+language = "kql"
+name = "Atomic Test: T1057 - Process Discovery - Process Hacker"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "966f4c16-1925-4d9b-8ce0-01334ee0867d", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*-FilePath*\\\" AND powershell.script_block_text : \\\"*$Env:ProgramFiles\\\\Process*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*-FilePath*\\\" AND process.command_line : \\\"*$Env:ProgramFiles\\\\Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Process Discovery - Process Hacker"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create local account with admin privileges' (GUID: a524ce99-86de-4db6-b4f9-e08f35a47a15) of technique T1078.003 (Valid Accounts: Local Accounts). Test Description: After execution the new account will be active and added to the Administrators group. Command/Steps: net user art-test /add\nnet user art-test #{password}\nnet localgroup administrators art-test /add"
+from = "now-9m"
+rule_id = "4cd49aa8-724e-4339-9dee-81564810a4d9"
+language = "kql"
+name = "Atomic Test: T1078.003 - Create local account with admin privileges"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1078.003/T1078.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1078.003", "a524ce99-86de-4db6-b4f9-e08f35a47a15", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*art-test*\\\" AND process.command_line : \\\"*/add*\\\" AND process.command_line : \\\"*art-test*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1078.003"
+name = "Create local account with admin privileges"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1078/003"
+
+

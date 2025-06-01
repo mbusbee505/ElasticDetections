@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create Symbolic Link From osk.exe to cmd.exe' (GUID: 51ef369c-5e87-4f33-88cd-6d61be63edf2) of technique T1546.008 (Event Triggered Execution: Accessibility Features). Test Description: Replace accessiblity executable with cmd.exe to provide elevated command prompt from login screen without logging in.. Command/Steps: IF NOT EXIST %windir%\\\\System32\\\\osk.exe.bak (copy %windir%\\\\System32\\\\osk.exe %windir%\\\\System32\\\\osk.exe.bak) ELSE ( pushd )\ntakeown /F %windir%\\\\System32\\\\..."
+from = "now-9m"
+rule_id = "359d4876-174e-4946-b43f-e393c9e52bc5"
+language = "kql"
+name = "Atomic Test: T1546.008 - Create Symbolic Link From osk.exe to cmd.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.008/T1546.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.008", "51ef369c-5e87-4f33-88cd-6d61be63edf2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*EXIST*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\osk.exe.bak*\\\" AND process.command_line : \\\"*(copy*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.008"
+name = "Create Symbolic Link From osk.exe to cmd.exe"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/008"
+
+

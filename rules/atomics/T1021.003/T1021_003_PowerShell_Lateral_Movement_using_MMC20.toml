@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Lateral Movement using MMC20' (GUID: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673) of technique T1021.003 (Remote Services: Distributed Component Object Model). Test Description: Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon successful execution, cmd will spawn calc.exe on a remote computer.. Command/Steps: [activator]::CreateInstance([type]::GetTypeFromProgID(\\\"MMC20.application\\\",\\\"#{computer_name}\\\")).Document.ActiveView.ExecuteShellCommand(\\\"c:\\\\windows\\\\sys..."
+from = "now-9m"
+rule_id = "7b65f913-b2a6-4553-a1ec-433b6e2d2f85"
+language = "kql"
+name = "Atomic Test: T1021.003 - PowerShell Lateral Movement using MMC20"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.003/T1021.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.003", "6dc74eb1-c9d6-4c53-b3b5-6f50ae339673", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*[activator]::CreateInstance([type]::GetTypeFromProgID(\\\"MMC20.application\\\",\\\"localhost\\\")).Document.ActiveView.ExecuteShellCommand(\\\"c:\\\\windows\\\\system32\\\\calc.exe\\\"*\\\" AND powershell.script_block_text : \\\"*$null*\\\" AND powershell.script_block_text : \\\"*$null*\\\" OR (process.command_line : \\\"*[activator]::CreateInstance([type]::GetTypeFromProgID(\\\"MMC20.application\\\",\\\"localhost\\\")).Document.ActiveView.ExecuteShellCommand(\\\"c:\\\\windows\\\\system32\\\\calc.exe\\\"*\\\" AND process.command_line : \\\"*$null*\\\" AND process.command_line : \\\"*$null*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.003"
+name = "PowerShell Lateral Movement using MMC20"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/003"
+
+

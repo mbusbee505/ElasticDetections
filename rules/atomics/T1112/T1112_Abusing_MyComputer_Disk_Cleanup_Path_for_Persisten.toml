@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Abusing MyComputer Disk Cleanup Path for Persistence' (GUID: f2915249-4485-42e2-96b7-9bf34328d497) of technique T1112 (Modify Registry). Test Description: Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity. Command/Steps: reg add \\\"HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\MyComputer\\\\cleanuppath\\\" /t REG_EXPAND_SZ /d \\\"%systemroot%\\\\system32\\\\notepad.exe\\\" /f\n"
+from = "now-9m"
+rule_id = "32329314-ea17-48e5-8c14-0d1e4838e5f5"
+language = "kql"
+name = "Atomic Test: T1112 - Abusing MyComputer Disk Cleanup Path for Persistence"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "f2915249-4485-42e2-96b7-9bf34328d497", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\MyComputer\\\\cleanuppath*\\\" AND process.command_line : \\\"*REG_EXPAND_SZ*\\\" AND process.command_line : \\\"*%systemroot%\\\\system32\\\\notepad.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Abusing MyComputer Disk Cleanup Path for Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

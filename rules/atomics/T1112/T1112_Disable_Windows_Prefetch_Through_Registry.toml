@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows Prefetch Through Registry' (GUID: 7979dd41-2045-48b2-a54e-b1bc2415c9da) of technique T1112 (Modify Registry). Test Description: Modify the registry of the machine to disable prefetch. Disabling prefetch will remove one artifact for evidence of application execution. Restart is required post modification. Command/Steps: reg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Memory Management\\\\PrefetchParameters\\\" /v \\\"EnablePrefetcher\\\" /t REG_DWORD /d 0 /f\n"
+from = "now-9m"
+rule_id = "1a2f8410-fc51-4dd0-93bb-6fea79f0ce0b"
+language = "kql"
+name = "Atomic Test: T1112 - Disable Windows Prefetch Through Registry"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "7979dd41-2045-48b2-a54e-b1bc2415c9da", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session*\\\" AND process.command_line : \\\"*Manager\\\\Memory*\\\" AND process.command_line : \\\"*Management\\\\PrefetchParameters*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Disable Windows Prefetch Through Registry"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

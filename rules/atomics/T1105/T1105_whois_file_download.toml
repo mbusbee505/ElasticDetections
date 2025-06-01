@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'whois file download' (GUID: c99a829f-0bb8-4187-b2c6-d47d1df74cab) of technique T1105 (Ingress Tool Transfer). Test Description: Download a remote file using the whois utility. Command/Steps: timeout --preserve-status #{timeout} whois -h #{remote_host} -p #{remote_port} \\\"#{query}\\\" > #{output_file}\n"
+from = "now-9m"
+rule_id = "77e1bac9-f5d2-40a8-b32c-69b828a454e6"
+language = "kql"
+name = "Atomic Test: T1105 - whois file download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "c99a829f-0bb8-4187-b2c6-d47d1df74cab", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*timeout*\\\" AND process.command_line : \\\"*--preserve-status*\\\" AND process.command_line : \\\"*whois*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "whois file download"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

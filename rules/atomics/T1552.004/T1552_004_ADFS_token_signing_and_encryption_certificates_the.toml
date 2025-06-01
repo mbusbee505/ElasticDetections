@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'ADFS token signing and encryption certificates theft - Remote' (GUID: cab413d8-9e4a-4b8d-9b84-c985bd73a442) of technique T1552.004 (Unsecured Credentials: Private Keys). Test Description: Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as a Domain Administrators user on a domain-joined computer.\nBased on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.. Command/Steps: Import-Module ActiveDirectory -Force \nImport-Module AADInternals -Force | Out-Null\n#Get Configuration\n$dcServerName = (Get-ADDomainController).HostNam..."
+from = "now-9m"
+rule_id = "735163ab-985f-4eac-bc64-db543f3d18ab"
+language = "kql"
+name = "Atomic Test: T1552.004 - ADFS token signing and encryption certificates theft - Remote"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1552.004/T1552.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1552.004", "cab413d8-9e4a-4b8d-9b84-c985bd73a442", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*ActiveDirectory*\\\" AND powershell.script_block_text : \\\"*-Force*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*ActiveDirectory*\\\" AND process.command_line : \\\"*-Force*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1552.004"
+name = "ADFS token signing and encryption certificates theft - Remote"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1552/004"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Unload Sysmon Filter Driver' (GUID: 811b3e76-c41b-430c-ac0d-e2380bfaa164) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution,\nrun the prereq_command's and it should fail with an error of \\\"sysmon filter must be loaded\\\".. Command/Steps: fltmc.exe unload #{sysmon_driver}\n"
+from = "now-9m"
+rule_id = "0ea2f0d4-09b6-42fc-915c-7e8b8ca72194"
+language = "kql"
+name = "Atomic Test: T1562.001 - Unload Sysmon Filter Driver"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "811b3e76-c41b-430c-ac0d-e2380bfaa164", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*fltmc.exe*\\\" AND process.command_line : \\\"*unload*\\\" AND process.command_line : \\\"*SysmonDrv*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Unload Sysmon Filter Driver"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

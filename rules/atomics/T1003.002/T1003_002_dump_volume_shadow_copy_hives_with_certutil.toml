@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'dump volume shadow copy hives with certutil' (GUID: eeb9751a-d598-42d3-b11c-c122d9c3f6c7) of technique T1003.002 (OS Credential Dumping: Security Account Manager). Test Description: Dump hives from volume shadow copies with the certutil utility, exploiting a vulnerability known as \\\"HiveNightmare\\\" or \\\"SeriousSAM\\\".\nThis can be done with a non-admin user account. [CVE-2021-36934](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-36934). Command/Steps: for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex \\\"\\\\\\\\?\\\\GLOBALROOT\\\\Device\\\\HarddiskVolumeShadowCopy%a\\\\Windows\\\\System32\\\\config\\\\#{target_hive}\\\" %..."
+from = "now-9m"
+rule_id = "aec5091b-59cb-4501-ba82-cd92aefbd044"
+language = "kql"
+name = "Atomic Test: T1003.002 - dump volume shadow copy hives with certutil"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.002/T1003.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.002", "eeb9751a-d598-42d3-b11c-c122d9c3f6c7", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*(1,1,10)*\\\" AND process.command_line : \\\"*@(certutil*\\\" AND process.command_line : \\\"*-encodehex*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.002"
+name = "dump volume shadow copy hives with certutil"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/002"
+
+

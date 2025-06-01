@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Steganographic Tarball Embedding' (GUID: c7921449-8b62-4c4d-8a83-d9281ac0190b) of technique T1001.002 (Data Obfuscation via Steganography). Test Description: This atomic test, named \\\"Steganographic Tarball Embedding\\\", simulates the technique of data obfuscation via steganography by embedding a tar archive file (tarball) \nwithin an image.\n\nThe test begins by ensuring the availability of the image file and the tarball file containing data . It then generates random passwords and saves them to a \nfile. Subsequently, the tarball file is created, containing the passwords file. The test executor command reads the contents of the image \nfile and the tarball file as byte arrays and appends them together to form a new image file. This process effectively embeds the tarball \nfile within the image, utilizing steganography techniques for data obfuscation.\n\nThis atomic test simulates the technique of data obfuscation via steganography, enabling attackers to clandestinely transfer files across systems undetected. \nBy embedding the tarball file within the image, adversaries can obscure their activities, facilitating covert communication and data exfiltration.. Command/Steps: Get-Content \\\"#{image_file}\\\", \\\"#{tar_file}\\\" -Encoding byte -ReadCount 0 | Set-Content \\\"#{new_image_file}\\\" -Encoding byte\n"
+from = "now-9m"
+rule_id = "f629209e-d1b3-4a2d-9b75-e89bb8cb094b"
+language = "kql"
+name = "Atomic Test: T1001.002 - Steganographic Tarball Embedding"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1001.002/T1001.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1001.002", "c7921449-8b62-4c4d-8a83-d9281ac0190b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-Content*\\\" AND powershell.script_block_text : \\\"*-Encoding*\\\" AND powershell.script_block_text : \\\"*byte*\\\" OR (process.command_line : \\\"*Get-Content*\\\" AND process.command_line : \\\"*-Encoding*\\\" AND process.command_line : \\\"*byte*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1001.002"
+name = "Steganographic Tarball Embedding"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Stop service using Service Controller' (GUID: 21dfb440-830d-4c86-a3e5-2a491d5a8d04) of technique T1489 (Service Stop). Test Description: Stops a specified service using the sc.exe command. Upon execution, if the spooler service was running infomration will be displayed saying\nit has changed to a state of STOP_PENDING. If the spooler service was not running \\\"The service has not been started.\\\" will be displayed and it can be\nstarted by running the cleanup command.. Command/Steps: sc.exe stop #{service_name}\n"
+from = "now-9m"
+rule_id = "99d9cb7b-f214-4d92-ae20-47a35e360303"
+language = "kql"
+name = "Atomic Test: T1489 - Windows - Stop service using Service Controller"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1489/T1489.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1489", "21dfb440-830d-4c86-a3e5-2a491d5a8d04", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*sc.exe*\\\" AND process.command_line : \\\"*stop*\\\" AND process.command_line : \\\"*spooler*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1489"
+name = "Windows - Stop service using Service Controller"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1489"
+
+

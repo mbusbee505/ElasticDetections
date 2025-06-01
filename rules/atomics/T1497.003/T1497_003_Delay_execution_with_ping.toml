@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Delay execution with ping' (GUID: 8b87dd03-8204-478c-bac3-3959f6528de3) of technique T1497.003 (Time Based Evasion). Test Description: Uses the ping command to introduce a delay before executing a malicious payload.. Command/Steps: ping -c #{ping_count} 8.8.8.8 > /dev/null\n#{evil_command}\n"
+from = "now-9m"
+rule_id = "fe0e9fbf-ec9f-4d1a-96d3-aac5a0ffe123"
+language = "kql"
+name = "Atomic Test: T1497.003 - Delay execution with ping"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1497.003/T1497.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1497.003", "8b87dd03-8204-478c-bac3-3959f6528de3", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ping*\\\" AND process.command_line : \\\"*8.8.8.8*\\\" AND process.command_line : \\\"*/dev/null*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1497.003"
+name = "Delay execution with ping"
+reference = "https://attack.mitre.org/techniques/T1497/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1497/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1497/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1497/003"
+
+

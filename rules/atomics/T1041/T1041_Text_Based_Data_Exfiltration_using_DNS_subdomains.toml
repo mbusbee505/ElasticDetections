@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Text Based Data Exfiltration using DNS subdomains' (GUID: c9207f3e-213d-4cc7-ad2a-7697a7237df9) of technique T1041 (Exfiltration Over C2 Channel). Test Description: Simulates an adversary using DNS tunneling to exfiltrate data over a Command and Control (C2) channel.. Command/Steps: $dnsServer = \\\"#{dns_server}\\\"\n$exfiltratedData = \\\"#{exfiltrated_data}\\\"\n$chunkSize = #{chunk_size}\n\n$encodedData = [System.Text.Encoding]::UTF8.GetBytes..."
+from = "now-9m"
+rule_id = "844b6a76-51f9-4ead-b570-9314cdd5f781"
+language = "kql"
+name = "Atomic Test: T1041 - Text Based Data Exfiltration using DNS subdomains"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1041/T1041.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1041", "c9207f3e-213d-4cc7-ad2a-7697a7237df9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$dnsServer*\\\" AND powershell.script_block_text : \\\"*dns.example.com*\\\" AND powershell.script_block_text : \\\"*$exfiltratedData*\\\" OR (process.command_line : \\\"*$dnsServer*\\\" AND process.command_line : \\\"*dns.example.com*\\\" AND process.command_line : \\\"*$exfiltratedData*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1041"
+name = "Text Based Data Exfiltration using DNS subdomains"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1041"
+
+

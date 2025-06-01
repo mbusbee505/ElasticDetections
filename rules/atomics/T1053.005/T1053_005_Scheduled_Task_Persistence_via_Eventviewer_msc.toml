@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Scheduled Task Persistence via Eventviewer.msc' (GUID: 02124c37-767e-4b76-9383-c9fc366d9d4c) of technique T1053.005 (Scheduled Task/Job: Scheduled Task). Test Description: Adds persistence by abusing `eventviewer.msc` via a scheduled task.\nWhen the eventviewer console is opened, it will run a malicious payload (in this case, `calc.exe`).. Command/Steps: reg add \\\"HKEY_CURRENT_USER\\\\Software\\\\Classes\\\\mscfile\\\\shell\\\\open\\\\command\\\" /ve /t REG_EXPAND_SZ /d \\\"c:\\\\windows\\\\System32\\\\#{payload}\\\" /f\nschtasks /Create /..."
+from = "now-9m"
+rule_id = "6f4d87dc-2ca8-452b-9c48-414b99a5eb9f"
+language = "kql"
+name = "Atomic Test: T1053.005 - Scheduled Task Persistence via Eventviewer.msc"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1053.005/T1053.005.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1053.005", "02124c37-767e-4b76-9383-c9fc366d9d4c", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CURRENT_USER\\\\Software\\\\Classes\\\\mscfile\\\\shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*REG_EXPAND_SZ*\\\" AND process.command_line : \\\"*c:\\\\windows\\\\System32\\\\calc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1053.005"
+name = "Scheduled Task Persistence via Eventviewer.msc"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1053/005"
+
+

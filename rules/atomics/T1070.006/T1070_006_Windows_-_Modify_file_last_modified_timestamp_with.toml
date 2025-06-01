@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Windows - Modify file last modified timestamp with PowerShell' (GUID: f8f6634d-93e1-4238-8510-f8a90a20dcf2) of technique T1070.006 (Indicator Removal on Host: Timestomp). Test Description: Modifies the file last modified timestamp of a specified file. This technique was seen in use by the Stitch RAT.\nTo verify execution, use File Explorer to view the Properties of the file and observe that the Modified time is the year 1970.. Command/Steps: Get-ChildItem \\\"#{file_path}\\\" | % { $_.LastWriteTime = \\\"#{target_date_time}\\\" }\n"
+from = "now-9m"
+rule_id = "38038bc5-8707-4927-890b-619f82028c78"
+language = "kql"
+name = "Atomic Test: T1070.006 - Windows - Modify file last modified timestamp with PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1070.006/T1070.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1070.006", "f8f6634d-93e1-4238-8510-f8a90a20dcf2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-ChildItem*\\\" AND powershell.script_block_text : \\\"*$_.LastWriteTime*\\\" AND powershell.script_block_text : \\\"*01/01/1970*\\\" OR (process.command_line : \\\"*Get-ChildItem*\\\" AND process.command_line : \\\"*$_.LastWriteTime*\\\" AND process.command_line : \\\"*01/01/1970*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1070.006"
+name = "Windows - Modify file last modified timestamp with PowerShell"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1070/006"
+
+

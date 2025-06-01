@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Deploy Docker container' (GUID: 59aa6f26-7620-417e-9318-589e0fb7a372) of technique T1610 (Deploy a container). Test Description: Adversaries may deploy containers based on retrieved or built malicious images or from benign images that download and execute malicious payloads at runtime. They can do this using docker create and docker start commands. Kinsing & Doki was exploited using this technique.. Command/Steps: docker build -t t1610 $PathtoAtomicsFolder/T1610/src/\ndocker run --name t1610_container --rm -itd t1610 bash /tmp/script.sh\n"
+from = "now-9m"
+rule_id = "0844b568-8331-442b-879e-fbfad50bf822"
+language = "kql"
+name = "Atomic Test: T1610 - Deploy Docker container"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1610/T1610.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1610", "59aa6f26-7620-417e-9318-589e0fb7a372", "containers",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*docker*\\\" AND process.command_line : \\\"*build*\\\" AND process.command_line : \\\"*t1610*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1610"
+name = "Deploy Docker container"
+reference = "https://attack.mitre.org/techniques/T1610"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1610"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1610"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1610"
+
+

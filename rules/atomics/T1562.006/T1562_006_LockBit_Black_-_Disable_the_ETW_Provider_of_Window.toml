@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'LockBit Black - Disable the ETW Provider of Windows Defender -Powershell' (GUID: 69fc085b-5444-4879-8002-b24c8e1a3e02) of technique T1562.006 (Impair Defenses: Indicator Blocking). Test Description: An adversary can disable the ETW Provider of Windows Defender,\nso nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.\nhttps://www.cisa.gov/news-events/cybersecurity-advisories/aa23-075a. Command/Steps: New-ItemProperty \\\"HKLM:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\WINEVT\\\\Channels\\\\Microsoft-Windows-Windows Defender/Operational\\\" -Name Enabled  -Prop..."
+from = "now-9m"
+rule_id = "753ecaee-a2df-4253-b081-b93800ad31eb"
+language = "kql"
+name = "Atomic Test: T1562.006 - LockBit Black - Disable the ETW Provider of Windows Defender -Powershell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.006/T1562.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.006", "69fc085b-5444-4879-8002-b24c8e1a3e02", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*New-ItemProperty*\\\" AND powershell.script_block_text : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\WINEVT\\\\Channels\\\\Microsoft-Windows-Windows*\\\" AND powershell.script_block_text : \\\"*Defender/Operational*\\\" OR (process.command_line : \\\"*New-ItemProperty*\\\" AND process.command_line : \\\"*HKLM:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\WINEVT\\\\Channels\\\\Microsoft-Windows-Windows*\\\" AND process.command_line : \\\"*Defender/Operational*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.006"
+name = "LockBit Black - Disable the ETW Provider of Windows Defender -Powershell"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/006"
+
+

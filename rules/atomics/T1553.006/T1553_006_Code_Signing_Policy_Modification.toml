@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Code Signing Policy Modification' (GUID: bb6b51e1-ab92-45b5-aeea-e410d06405f8) of technique T1553.006 (Subvert Trust Controls: Code Signing Policy Modification). Test Description: Allows adversaries to subvert trust controls by modifying the code signing policy, enabling the execution of unsigned drivers.. Command/Steps: bcdedit /set testsigning on"
+from = "now-9m"
+rule_id = "e34e2948-6746-42b5-ab98-90555bfda3e2"
+language = "kql"
+name = "Atomic Test: T1553.006 - Code Signing Policy Modification"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1553.006/T1553.006.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1553.006", "bb6b51e1-ab92-45b5-aeea-e410d06405f8", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*bcdedit*\\\" AND process.command_line : \\\"*/set*\\\" AND process.command_line : \\\"*testsigning*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1553.006"
+name = "Code Signing Policy Modification"
+reference = "https://attack.mitre.org/techniques/T1553/006"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1553/006"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1553/006"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1553/006"
+
+

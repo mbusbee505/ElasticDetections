@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'certutil download (verifyctl)' (GUID: ffd492e3-0455-4518-9fb1-46527c9f241b) of technique T1105 (Ingress Tool Transfer). Test Description: Use certutil -verifyctl argument to download a file from the web. Note - /verifyctl also works!. Command/Steps: $datePath = \\\"certutil-$(Get-Date -format yyyy_MM_dd)\\\"\nNew-Item -Path $datePath -ItemType Directory\nSet-Location $datePath\ncertutil -verifyctl -split -..."
+from = "now-9m"
+rule_id = "81f8957d-3ae0-4b73-83b3-6b764ae579af"
+language = "kql"
+name = "Atomic Test: T1105 - certutil download (verifyctl)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "ffd492e3-0455-4518-9fb1-46527c9f241b", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$datePath*\\\" AND powershell.script_block_text : \\\"*certutil-$(Get-Date*\\\" AND powershell.script_block_text : \\\"*-format*\\\" OR (process.command_line : \\\"*$datePath*\\\" AND process.command_line : \\\"*certutil-$(Get-Date*\\\" AND process.command_line : \\\"*-format*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "certutil download (verifyctl)"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

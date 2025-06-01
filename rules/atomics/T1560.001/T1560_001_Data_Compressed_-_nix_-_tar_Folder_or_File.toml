@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Data Compressed - nix - tar Folder or File' (GUID: 7af2b51e-ad1c-498c-aca8-d3290c19535a) of technique T1560.001 (Archive Collected Data: Archive via Utility). Test Description: An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard gzip compression.. Command/Steps: tar -cvzf #{output_file} #{input_file_folder}\n"
+from = "now-9m"
+rule_id = "17e078a5-e8d5-4f2d-b793-4db2d15710bb"
+language = "kql"
+name = "Atomic Test: T1560.001 - Data Compressed - nix - tar Folder or File"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1560.001/T1560.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1560.001", "7af2b51e-ad1c-498c-aca8-d3290c19535a", "linux", "macos",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*-cvzf*\\\" AND process.command_line : \\\"*$HOME/data.tar.gz*\\\" AND process.command_line : \\\"*$HOME/$USERNAME*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1560.001"
+name = "Data Compressed - nix - tar Folder or File"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1560/001"
+
+

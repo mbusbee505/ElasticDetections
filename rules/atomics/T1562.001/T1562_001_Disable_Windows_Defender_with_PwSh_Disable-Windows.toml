@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable Windows Defender with PwSh Disable-WindowsOptionalFeature' (GUID: f542ffd3-37b4-4528-837f-682874faa012) of technique T1562.001 (Impair Defenses: Disable or Modify Tools). Test Description: The following Atomic will attempt to disable Windows-Defender using the built in PowerShell cmdlet Disable-WindowsOptionalFeature, Deployment Image Servicing and Management tool. \nSimilar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images.\nA successful execution will not standard-out any details. Remove the quiet switch if verbosity is needed.\nThis method will remove Defender and it's packages.\nReference: https://docs.microsoft.com/en-us/powershell/module/dism/disable-windowsoptionalfeature?view=windowsserver2022-ps. Command/Steps: Disable-WindowsOptionalFeature -Online -FeatureName \\\"Windows-Defender-Gui\\\" -NoRestart -ErrorAction Ignore\nDisable-WindowsOptionalFeature -Online -Feat..."
+from = "now-9m"
+rule_id = "6c3ec538-307c-4b64-9029-23d5c6b2bafd"
+language = "kql"
+name = "Atomic Test: T1562.001 - Disable Windows Defender with PwSh Disable-WindowsOptionalFeature"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.001/T1562.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.001", "f542ffd3-37b4-4528-837f-682874faa012", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Disable-WindowsOptionalFeature*\\\" AND powershell.script_block_text : \\\"*-Online*\\\" AND powershell.script_block_text : \\\"*-FeatureName*\\\" OR (process.command_line : \\\"*Disable-WindowsOptionalFeature*\\\" AND process.command_line : \\\"*-Online*\\\" AND process.command_line : \\\"*-FeatureName*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.001"
+name = "Disable Windows Defender with PwSh Disable-WindowsOptionalFeature"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/001"
+
+

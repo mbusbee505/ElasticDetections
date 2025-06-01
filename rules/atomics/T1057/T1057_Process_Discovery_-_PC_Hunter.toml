@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Discovery - PC Hunter' (GUID: b4ca838d-d013-4461-bf2c-f7132617b409) of technique T1057 (Process Discovery). Test Description: PC Hunter is a toolkit with access to hundreds of settings including kernels, kernel modules, processes, network, startup, and more. When abused, this tool can allow threat actors to effectively access sensitive processes, collect system information, and terminate security software.. Command/Steps: Start-Process -FilePath \\\"C:\\\\Temp\\\\ExternalPayloads\\\\PCHunter_free\\\\#{pchunter64_exe}\\\""
+from = "now-9m"
+rule_id = "9a383ecd-7ebb-4b41-a9d3-75eac902de0a"
+language = "kql"
+name = "Atomic Test: T1057 - Process Discovery - PC Hunter"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1057/T1057.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1057", "b4ca838d-d013-4461-bf2c-f7132617b409", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*-FilePath*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*-FilePath*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1057"
+name = "Process Discovery - PC Hunter"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1057"
+
+

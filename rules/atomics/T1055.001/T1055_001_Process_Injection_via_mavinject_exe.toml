@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Process Injection via mavinject.exe' (GUID: 74496461-11a1-4982-b439-4d87a550d254) of technique T1055.001 (Process Injection: Dynamic-link Library Injection). Test Description: Windows 10 Utility To Inject DLLS.\n\nUpon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.\nWith default arguments, expect to see a MessageBox, with notepad's icon in taskbar.. Command/Steps: $mypid = #{process_id}\nmavinject $mypid /INJECTRUNNING \\\"#{dll_payload}\\\"\nStop-Process -processname notepad\n"
+from = "now-9m"
+rule_id = "1fcc82fd-a329-4eaf-b616-4d303affbebc"
+language = "kql"
+name = "Atomic Test: T1055.001 - Process Injection via mavinject.exe"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1055.001/T1055.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1055.001", "74496461-11a1-4982-b439-4d87a550d254", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$mypid*\\\" AND powershell.script_block_text : \\\"*(Start-Process*\\\" AND powershell.script_block_text : \\\"*notepad*\\\" OR (process.command_line : \\\"*$mypid*\\\" AND process.command_line : \\\"*(Start-Process*\\\" AND process.command_line : \\\"*notepad*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1055.001"
+name = "Process Injection via mavinject.exe"
+reference = "https://attack.mitre.org/techniques/T1055/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1055/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1055/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1055/001"
+
+

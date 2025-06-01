@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Enumerate PlugNPlay Camera' (GUID: d430bf85-b656-40e7-b238-42db01df0183) of technique T1592.001 (Gather Victim Host Information: Hardware). Test Description: Enumerate PlugNPlay Camera using powershell commandlet. this technique was seen in dcrat malware backdoor capabilities where it enumerate the camera info mounted on the compromised host. reference: https://www.mandiant.com/resources/analyzing-dark-crystal-rat-backdoor. Command/Steps: Get-CimInstance -Query \\\"SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')\\\"\n"
+from = "now-9m"
+rule_id = "5a6e07a5-d08f-4717-8d7a-2d5f0e88ffe1"
+language = "kql"
+name = "Atomic Test: T1592.001 - Enumerate PlugNPlay Camera"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1592.001/T1592.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1592.001", "d430bf85-b656-40e7-b238-42db01df0183", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Get-CimInstance*\\\" AND powershell.script_block_text : \\\"*-Query*\\\" AND powershell.script_block_text : \\\"*SELECT*\\\" OR (process.command_line : \\\"*Get-CimInstance*\\\" AND process.command_line : \\\"*-Query*\\\" AND process.command_line : \\\"*SELECT*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1592.001"
+name = "Enumerate PlugNPlay Camera"
+reference = "https://attack.mitre.org/techniques/T1592/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1592/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1592/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1592/001"
+
+

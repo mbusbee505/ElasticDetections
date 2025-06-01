@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Add persistence via Windows Context Menu' (GUID: de47f4a0-2acb-416d-9a6b-cee584a4c4d1) of technique T1547.001 (Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder). Test Description: This atomic test add persistence taking advantage of the  Windows Context Menu [Hexacorn](https://www.hexacorn.com/blog/2018/07/29/beyond-good-ol-run-key-part-82/)\nUser have to right click on the main screen or in the white space of the opened folder (e.g. Size Modify).. Command/Steps: reg add \\\"HKEY_CLASSES_ROOT\\\\Directory\\\\Background\\\\shell\\\\Size Modify\\\\command\\\" /ve /t REG_SZ /d \\\"C:\\\\Windows\\\\System32\\\\calc.exe\\\" /f"
+from = "now-9m"
+rule_id = "2c9f11cb-8ae6-451c-b446-7f3f86a4da65"
+language = "kql"
+name = "Atomic Test: T1547.001 - Add persistence via Windows Context Menu"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.001/T1547.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.001", "de47f4a0-2acb-416d-9a6b-cee584a4c4d1", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_CLASSES_ROOT\\\\Directory\\\\Background\\\\shell\\\\Size*\\\" AND process.command_line : \\\"*Modify\\\\command*\\\" AND process.command_line : \\\"*REG_SZ*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.001"
+name = "Add persistence via Windows Context Menu"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/001"
+
+

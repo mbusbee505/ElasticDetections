@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DNS Long Domain Query' (GUID: fef31710-223a-40ee-8462-a396d6b66978) of technique T1071.004 (Application Layer Protocol: DNS). Test Description: This test simulates an infected host returning data to a command and control server using long domain names.\nThe simulation involves sending DNS queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DNS queries for long domain names over a set threshold.\n Upon execution, DNS information about the domain will be displayed for each callout.. Command/Steps: Set-Location \\\"PathToAtomicsFolder\\\"\n.\\\\T1071.004\\\\src\\\\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}\n"
+from = "now-9m"
+rule_id = "656728f2-cb0a-4f12-8a68-b053d5874aee"
+language = "kql"
+name = "Atomic Test: T1071.004 - DNS Long Domain Query"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1071.004/T1071.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1071.004", "fef31710-223a-40ee-8462-a396d6b66978", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Set-Location*\\\" AND powershell.script_block_text : \\\"*-Domain*\\\" AND powershell.script_block_text : \\\"*127.0.0.1.nip.io*\\\" OR (process.command_line : \\\"*Set-Location*\\\" AND process.command_line : \\\"*-Domain*\\\" AND process.command_line : \\\"*127.0.0.1.nip.io*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1071.004"
+name = "DNS Long Domain Query"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1071/004"
+
+

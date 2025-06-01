@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Linux ICMP Reverse Shell using icmp-cnc' (GUID: 8e139e1f-1f3a-4be7-901d-afae9738c064) of technique T1095 (Non-Application Layer Protocol). Test Description: ICMP C2 (Command and Control) utilizes the Internet Control Message Protocol (ICMP), traditionally used for network diagnostics, as a covert communication channel for attackers. By using ICMP, adversaries can send commands, exfiltrate data, or maintain access to compromised systems without triggering network detection systems.\nThis method allows attackers to communicate and control compromised devices while remaining undetected.\n\nFor more details, check this blog: [ICMP Reverse Shell Blog](https://cryptsus.com/blog/icmp-reverse-shell.html)\n\n**Important Notes:**\n- Use `[icmp-cnc]` for the C2 server (Attacker) and `[icmpdoor]` for the C2 client (Victim).\n- Binaries work on Ubuntu 22.04.5 LTS; for CentOS Stream or other, use the Python file from the GitHub link [https://github.com/krabelize/icmpdoor].\n- Root access is required.. Command/Steps: 1. Run the following command on both the attacker and victim machines to download the required binaries.\n\n    mkdir -p /tmp/icmpdoor && wget -P /tmp/i..."
+from = "now-9m"
+rule_id = "322c6359-5cad-4f28-ae2b-e3a23455d5fe"
+language = "kql"
+name = "Atomic Test: T1095 - Linux ICMP Reverse Shell using icmp-cnc"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1095/T1095.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1095", "8e139e1f-1f3a-4be7-901d-afae9738c064", "linux",]
+type = "query"
+query = "process.command_line : \\\"*following*\\\" AND process.command_line : \\\"*command*\\\" AND process.command_line : \\\"*both*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1095"
+name = "Linux ICMP Reverse Shell using icmp-cnc"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+

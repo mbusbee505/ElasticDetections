@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PDQ Deploy RAT' (GUID: e447b83b-a698-4feb-bed1-a7aaf45c3443) of technique T1072 (Software Deployment Tools). Test Description: An adversary may use PDQ Deploy Software to deploy the Remote Adminstartion Tool, this will start the PDQ console.. Command/Steps: \\\"%PROGRAMFILES(x86)%/#{PDQ_Deploy_exe}\\\"\n"
+from = "now-9m"
+rule_id = "2d17e106-df5c-494f-80d1-40466e2fa87c"
+language = "kql"
+name = "Atomic Test: T1072 - PDQ Deploy RAT"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1072/T1072.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1072", "e447b83b-a698-4feb-bed1-a7aaf45c3443", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*%PROGRAMFILES(x86)%/Admin*\\\" AND process.command_line : \\\"*Arsenal/PDQ*\\\" AND process.command_line : \\\"*Deploy/PDQDeployConsole.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1072"
+name = "PDQ Deploy RAT"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1072"
+
+

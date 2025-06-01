@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Execute base64-encoded PowerShell' (GUID: a50d5a97-2531-499e-a1de-5544c74432c6) of technique T1027 (Obfuscated Files or Information). Test Description: Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.\n\nUpon successful execution, powershell will execute an encoded command and stdout default is \\\"Write-Host \\\"Hey, Atomic!\\\". Command/Steps: $OriginalCommand = '#{powershell_command}'\n$Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)\n$EncodedCommand =[Convert]::ToBase64Str..."
+from = "now-9m"
+rule_id = "48618077-495a-4d78-b385-f9ed3bbb028c"
+language = "kql"
+name = "Atomic Test: T1027 - Execute base64-encoded PowerShell"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1027/T1027.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1027", "a50d5a97-2531-499e-a1de-5544c74432c6", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$OriginalCommand*\\\" AND powershell.script_block_text : \\\"*Write-Host*\\\" AND powershell.script_block_text : \\\"*Atomic!\\\"*\\\" OR (process.command_line : \\\"*$OriginalCommand*\\\" AND process.command_line : \\\"*Write-Host*\\\" AND process.command_line : \\\"*Atomic!\\\"*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1027"
+name = "Execute base64-encoded PowerShell"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1027"
+
+

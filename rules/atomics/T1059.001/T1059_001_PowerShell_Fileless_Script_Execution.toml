@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'PowerShell Fileless Script Execution' (GUID: fa050f5e-bc75-4230-af73-b6fd7852cd73) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Execution of a PowerShell payload from the Windows Registry similar to that seen in fileless malware infections. Upon exection, open \\\"C:\\\\Windows\\\\Temp\\\" and verify that\nart-marker.txt is in the folder.. Command/Steps: # Encoded payload in next command is the following \\\"Set-Content -path \\\"$env:SystemRoot/Temp/art-marker.txt\\\" -value \\\"Hello from the Atomic Red Team\\\"\\\"\nr..."
+from = "now-9m"
+rule_id = "a95d15d0-99e4-47e3-be7f-2d705295dbd8"
+language = "kql"
+name = "Atomic Test: T1059.001 - PowerShell Fileless Script Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "fa050f5e-bc75-4230-af73-b6fd7852cd73", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Encoded*\\\" AND powershell.script_block_text : \\\"*payload*\\\" AND powershell.script_block_text : \\\"*next*\\\" OR (process.command_line : \\\"*Encoded*\\\" AND process.command_line : \\\"*payload*\\\" AND process.command_line : \\\"*next*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "PowerShell Fileless Script Execution"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

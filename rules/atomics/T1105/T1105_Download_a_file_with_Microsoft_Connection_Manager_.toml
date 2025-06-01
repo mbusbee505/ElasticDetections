@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Download a file with Microsoft Connection Manager Auto-Download' (GUID: d239772b-88e2-4a2e-8473-897503401bcc) of technique T1105 (Ingress Tool Transfer). Test Description: Uses the cmdl32 to download arbitrary file from the internet. The cmdl32 package is allowed to install the profile used to launch the VPN connection. However, the config is modified to download the arbitary file. \nThe issue of cmdl32.exe detecting and deleting the payload by identifying it as not a VPN Servers profile is avoided by setting a temporary TMP folder and denying the delete permission to all files for the user.\nUpon successful execution the test will open calculator and Notepad executable for 10 seconds.\nreference:\nhttps://twitter.com/ElliotKillick/status/1455897435063074824\nhttps://github.com/LOLBAS-Project/LOLBAS/pull/151\nhttps://lolbas-project.github.io/lolbas/Binaries/Cmdl32/\nhttps://strontic.github.io/xcyclopedia/library/cmdl32.exe-FA1D5B8802FFF4A85B6F52A52C871BBB.html. Command/Steps: \\\"#{Path_to_file}\\\" 1>NUL \n"
+from = "now-9m"
+rule_id = "57b24ee2-2f01-427f-8530-f1230b65a5ef"
+language = "kql"
+name = "Atomic Test: T1105 - Download a file with Microsoft Connection Manager Auto-Download"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "d239772b-88e2-4a2e-8473-897503401bcc", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*1>NUL*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "Download a file with Microsoft Connection Manager Auto-Download"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

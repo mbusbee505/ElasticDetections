@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'DNS over HTTPS Large Query Volume' (GUID: ae9ef4b0-d8c1-49d4-8758-06206f19af0a) of technique T1572 (Protocol Tunneling). Test Description: This test simulates an infected host sending a large volume of DoH queries to a command and control server.\nThe intent of this test is to trigger threshold based detection on the number of DoH queries either from a single source system or to a single targe domain.\nA custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.. Command/Steps: for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest \\\"#{doh_server}?name=#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}&type=..."
+from = "now-9m"
+rule_id = "1dd29f44-f0b9-4deb-9c1a-d724bf3ef1c5"
+language = "kql"
+name = "Atomic Test: T1572 - DNS over HTTPS Large Query Volume"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1572/T1572.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1572", "ae9ef4b0-d8c1-49d4-8758-06206f19af0a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*for($i=0*\\\" AND powershell.script_block_text : \\\"*$i++)*\\\" AND powershell.script_block_text : \\\"*(Invoke-WebRequest*\\\" OR (process.command_line : \\\"*for($i=0*\\\" AND process.command_line : \\\"*$i++)*\\\" AND process.command_line : \\\"*(Invoke-WebRequest*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1572"
+name = "DNS over HTTPS Large Query Volume"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1572"
+
+

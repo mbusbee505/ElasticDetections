@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Launches an executable using Rundll32 and pcwutl.dll' (GUID: 9f5d081a-ee5a-42f9-a04e-b7bdc487e676) of technique T1218.011 (Signed Binary Proxy Execution: Rundll32). Test Description: Executes the LaunchApplication function in pcwutl.dll to proxy execution of an executable.. Command/Steps: rundll32.exe pcwutl.dll,LaunchApplication #{exe_to_launch}\n"
+from = "now-9m"
+rule_id = "b5b0fe62-797a-4771-9376-646927524806"
+language = "kql"
+name = "Atomic Test: T1218.011 - Launches an executable using Rundll32 and pcwutl.dll"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.011/T1218.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.011", "9f5d081a-ee5a-42f9-a04e-b7bdc487e676", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*rundll32.exe*\\\" AND process.command_line : \\\"*pcwutl.dll,LaunchApplication*\\\" AND process.command_line : \\\"*%windir%\\\\System32\\\\notepad.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.011"
+name = "Launches an executable using Rundll32 and pcwutl.dll"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/011"
+
+

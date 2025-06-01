@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Access /etc/{shadow,passwd,master.passwd} with a standard bin that's not cat' (GUID: df1a55ae-019d-4120-bc35-94f4bc5c4b0a) of technique T1003.008 (OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow). Test Description: Dump /etc/passwd, /etc/master.passwd and /etc/shadow using ed. Command/Steps: unamestr=$(uname)\nif [ \\\"$unamestr\\\" = 'Linux' ]; then echo -e \\\"e /etc/passwd\\\\n,p\\\\ne /etc/shadow\\\\n,p\\\\n\\\" | ed > #{output_file}; elif [ \\\"$unamestr\\\" = 'Fre..."
+from = "now-9m"
+rule_id = "f067a4eb-d8e6-4274-8532-fd03319b0d7b"
+language = "kql"
+name = "Atomic Test: T1003.008 - Access /etc/{shadow,passwd,master.passwd} with a standard bin that's not cat"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1003.008/T1003.008.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1003.008", "df1a55ae-019d-4120-bc35-94f4bc5c4b0a", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*unamestr=$(uname)*\\\" AND process.command_line : \\\"*$unamestr*\\\" AND process.command_line : \\\"*Linux*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1003.008"
+name = "Access /etc/{shadow,passwd,master.passwd} with a standard bin that's not cat"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1003/008"
+
+

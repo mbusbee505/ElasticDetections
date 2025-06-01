@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Invoke CHM with default Shortcut Command Execution' (GUID: 29d6f0d7-be63-4482-8827-ea77126c1ef7) of technique T1218.001 (Signed Binary Proxy Execution: Compiled HTML File). Test Description: Executes a CHM file with the default Shortcut Command method.. Command/Steps: Invoke-ATHCompiledHelp -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}"
+from = "now-9m"
+rule_id = "fc8da326-d102-4606-950a-ea69585bdf2e"
+language = "kql"
+name = "Atomic Test: T1218.001 - Invoke CHM with default Shortcut Command Execution"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1218.001/T1218.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1218.001", "29d6f0d7-be63-4482-8827-ea77126c1ef7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Invoke-ATHCompiledHelp*\\\" AND powershell.script_block_text : \\\"*-HHFilePath*\\\" AND powershell.script_block_text : \\\"*$env:windir\\\\hh.exe*\\\" OR (process.command_line : \\\"*Invoke-ATHCompiledHelp*\\\" AND process.command_line : \\\"*-HHFilePath*\\\" AND process.command_line : \\\"*$env:windir\\\\hh.exe*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1218.001"
+name = "Invoke CHM with default Shortcut Command Execution"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1218/001"
+
+

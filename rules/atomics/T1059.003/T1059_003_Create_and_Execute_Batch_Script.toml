@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create and Execute Batch Script' (GUID: 9e8894c0-50bd-4525-a96c-d4ac78ece388) of technique T1059.003 (Command and Scripting Interpreter: Windows Command Shell). Test Description: Creates and executes a simple batch script. Upon execution, CMD will briefly launch to run the batch script then close again.. Command/Steps: Start-Process \\\"#{script_path}\\\"\n"
+from = "now-9m"
+rule_id = "3236b107-e554-4542-b829-09ea37c44cf7"
+language = "kql"
+name = "Atomic Test: T1059.003 - Create and Execute Batch Script"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.003/T1059.003.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.003", "9e8894c0-50bd-4525-a96c-d4ac78ece388", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" OR (process.command_line : \\\"*Start-Process*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.003"
+name = "Create and Execute Batch Script"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/003"
+
+

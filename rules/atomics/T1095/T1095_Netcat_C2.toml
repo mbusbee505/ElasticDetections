@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Netcat C2' (GUID: bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37) of technique T1095 (Non-Application Layer Protocol). Test Description: Start C2 Session Using Ncat\nTo start the listener on a Linux device, type the following: \nnc -l -p <port>. Command/Steps: cmd /c \\\"#{ncat_exe}\\\" #{server_ip} #{server_port}\n"
+from = "now-9m"
+rule_id = "6a01a789-356c-4f8f-97a2-2c62486d5658"
+language = "kql"
+name = "Atomic Test: T1095 - Netcat C2"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1095/T1095.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1095", "bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*127.0.0.1*\\\" OR (process.command_line : \\\"*127.0.0.1*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1095"
+name = "Netcat C2"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1095"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Account Enumeration with LDAPDomainDump' (GUID: a54d497e-8dbe-4558-9895-44944baa395f) of technique T1087.002 (Account Discovery: Domain Account). Test Description: This test uses LDAPDomainDump to perform account enumeration on a domain.\n[Reference](https://securityonline.info/ldapdomaindump-active-directory-information-dumper-via-ldap/). Command/Steps: ldapdomaindump -u #{username} -p #{password} #{target_ip} -o /tmp/T1087"
+from = "now-9m"
+rule_id = "d1a92339-451e-4aaf-a2f9-960af3bea3c8"
+language = "kql"
+name = "Atomic Test: T1087.002 - Account Enumeration with LDAPDomainDump"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1087.002/T1087.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1087.002", "a54d497e-8dbe-4558-9895-44944baa395f", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*ldapdomaindump*\\\" AND process.command_line : \\\"*domain\\\\user*\\\" AND process.command_line : \\\"*password*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1087.002"
+name = "Account Enumeration with LDAPDomainDump"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1087/002"
+
+

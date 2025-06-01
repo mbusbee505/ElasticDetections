@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'List Process Main Windows - C# .NET' (GUID: fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4) of technique T1010 (Application Window Discovery). Test Description: Compiles and executes C# code to list main window titles associated with each process.\n\nUpon successful execution, powershell will download the .cs from the Atomic Red Team repo, and cmd.exe will compile and execute T1010.exe. Upon T1010.exe execution, expected output will be via stdout.. Command/Steps: C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\csc.exe -out:#{output_file_name} \\\"#{input_source_code}\\\"\n#{output_file_name}\n"
+from = "now-9m"
+rule_id = "f5d434bf-14ea-4069-8b32-f3691847cbdf"
+language = "kql"
+name = "Atomic Test: T1010 - List Process Main Windows - C# .NET"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1010/T1010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1010", "fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\csc.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1010"
+name = "List Process Main Windows - C# .NET"
+reference = "https://attack.mitre.org/techniques/T1010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1010"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'linux rename /proc/pid/comm using prctl' (GUID: f0e3aaea-5cd9-4db6-a077-631dd19b27a8) of technique T1036.004 (Masquerading: Masquerade Task or Service). Test Description: Runs a C program that calls prctl(PR_SET_NAME) to modify /proc/pid/comm value to \\\"totally_legit\\\".  This will show up as process name in simple 'ps' listings.. Command/Steps: #{exe_path} & ps\nTMP=`ps | grep totally_legit`\nif [ -z \\\"${TMP}\\\" ] ; then echo \\\"renamed process NOT FOUND in process list\\\" && exit 1; fi\nexit 0\n"
+from = "now-9m"
+rule_id = "49d1afe4-361c-4a16-8fc1-dacb7fd063fc"
+language = "kql"
+name = "Atomic Test: T1036.004 - linux rename /proc/pid/comm using prctl"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1036.004/T1036.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1036.004", "f0e3aaea-5cd9-4db6-a077-631dd19b27a8", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*TMP=`ps*\\\" AND process.command_line : \\\"*grep*\\\" AND process.command_line : \\\"*totally_legit`*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1036.004"
+name = "linux rename /proc/pid/comm using prctl"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1036/004"
+
+

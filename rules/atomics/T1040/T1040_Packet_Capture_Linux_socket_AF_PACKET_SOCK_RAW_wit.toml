@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo' (GUID: b1cbdf8b-6078-48f5-a890-11ea19d7f8e9) of technique T1040 (Network Sniffing). Test Description: Captures packets with domain=AF_PACKET,type=SOCK_RAW for a few seconds.\nSets a BPF filter on the socket to filter for UDP traffic.. Command/Steps: sudo #{program_path} -a -f -t 3\n"
+from = "now-9m"
+rule_id = "89cb5e5b-f97d-4698-8ab3-8b5fdb86f372"
+language = "kql"
+name = "Atomic Test: T1040 - Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1040/T1040.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1040", "b1cbdf8b-6078-48f5-a890-11ea19d7f8e9", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1040"
+name = "Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1040"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'MAZE Propagation Script' (GUID: 70f4d07c-5c3e-4d53-bb0a-cdf3ada14baf) of technique T1105 (Ingress Tool Transfer). Test Description: This test simulates MAZE ransomware's propogation script that searches through a list of computers, tests connectivity to them, and copies a binary file to the Windows\\\\Temp directory of each one. \nUpon successful execution, a specified binary file will attempt to be copied to each online machine, a list of the online machines, as well as a list of offline machines will be output to a specified location.\nReference: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html. Command/Steps: $machine_list = \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\T1105MachineList.txt\\\"\n$offline_list = \\\"PathToAtomicsFolder\\\\..\\\\ExternalPayloads\\\\T1105OfflineHo..."
+from = "now-9m"
+rule_id = "a69c3820-35b0-4c74-bc30-7d6d1609dc66"
+language = "kql"
+name = "Atomic Test: T1105 - MAZE Propagation Script"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1105/T1105.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1105", "70f4d07c-5c3e-4d53-bb0a-cdf3ada14baf", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$machine_list*\\\" AND powershell.script_block_text : \\\"*$offline_list*\\\" AND powershell.script_block_text : \\\"*$completed_list*\\\" OR (process.command_line : \\\"*$machine_list*\\\" AND process.command_line : \\\"*$offline_list*\\\" AND process.command_line : \\\"*$completed_list*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1105"
+name = "MAZE Propagation Script"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1105"
+
+

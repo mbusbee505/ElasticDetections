@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Modify Registry of Local Machine - cmd' (GUID: 282f929a-6bc5-42b8-bd93-960c3ba35afe) of technique T1112 (Modify Registry). Test Description: Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when\nCMD is ran as Administrative rights. Upon execution, the message \\\"The operation completed successfully.\\\"\nwill be displayed. Additionally, open Registry Editor to view the modified entry in HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run.. Command/Steps: reg add HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run /t REG_EXPAND_SZ /v SecurityHealth /d #{new_executable} /f\n"
+from = "now-9m"
+rule_id = "fd1b1119-71e8-483a-979f-2184cea8bc9c"
+language = "kql"
+name = "Atomic Test: T1112 - Modify Registry of Local Machine - cmd"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1112/T1112.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1112", "282f929a-6bc5-42b8-bd93-960c3ba35afe", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run*\\\" AND process.command_line : \\\"*REG_EXPAND_SZ*\\\" AND process.command_line : \\\"*SecurityHealth*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1112"
+name = "Modify Registry of Local Machine - cmd"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1112"
+
+

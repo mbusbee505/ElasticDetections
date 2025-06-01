@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Run Bloodhound from Memory using Download Cradle' (GUID: bf8c1441-4674-4dab-8e4e-39d93d08f9b7) of technique T1059.001 (Command and Scripting Interpreter: PowerShell). Test Description: Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to the temp directory. If system is unable to contact a domain, proper execution will not occur.\n\nSuccessful execution will produce stdout message stating \\\"SharpHound Enumeration Completed\\\". Upon completion, final output will be a *BloodHound.zip file.. Command/Steps: write-host \\\"Remote download of SharpHound.ps1 into memory, followed by execution of the script\\\" -ForegroundColor Cyan\nIEX (New-Object Net.Webclient).D..."
+from = "now-9m"
+rule_id = "6efff54b-13ca-4e3d-90d4-ecb0fe68bed7"
+language = "kql"
+name = "Atomic Test: T1059.001 - Run Bloodhound from Memory using Download Cradle"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1059.001/T1059.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1059.001", "bf8c1441-4674-4dab-8e4e-39d93d08f9b7", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*write-host*\\\" AND powershell.script_block_text : \\\"*Remote*\\\" AND powershell.script_block_text : \\\"*download*\\\" OR (process.command_line : \\\"*write-host*\\\" AND process.command_line : \\\"*Remote*\\\" AND process.command_line : \\\"*download*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1059.001"
+name = "Run Bloodhound from Memory using Download Cradle"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1059/001"
+
+

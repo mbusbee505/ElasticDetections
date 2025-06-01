@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Service Registry Permissions Weakness' (GUID: f7536d63-7fd4-466f-89da-7e48d550752a) of technique T1574.011 (Hijack Execution Flow: Services Registry Permissions Weakness). Test Description: Service registry permissions weakness check and then which can lead to privilege escalation with ImagePath. eg.\nreg add \\\"HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\#{weak_service_name}\\\" /f /v ImagePath /d \\\"C:\\\\temp\\\\AtomicRedteam.exe\\\". Command/Steps: get-acl REGISTRY::HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\* |FL\nget-acl REGISTRY::HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\#{weak_service_name} |FL\n"
+from = "now-9m"
+rule_id = "f2f75f26-421b-4a4c-a377-9da6a4cc1984"
+language = "kql"
+name = "Atomic Test: T1574.011 - Service Registry Permissions Weakness"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1574.011/T1574.011.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1574.011", "f7536d63-7fd4-466f-89da-7e48d550752a", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*get-acl*\\\" AND powershell.script_block_text : \\\"*REGISTRY::HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*\\\" AND powershell.script_block_text : \\\"*get-acl*\\\" OR (process.command_line : \\\"*get-acl*\\\" AND process.command_line : \\\"*REGISTRY::HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*\\\" AND process.command_line : \\\"*get-acl*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1574.011"
+name = "Service Registry Permissions Weakness"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1574/011"
+
+

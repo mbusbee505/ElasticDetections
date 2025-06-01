@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Create shortcut to cmd in startup folders' (GUID: cfdc954d-4bb0-4027-875b-a1893ce406f2) of technique T1547.009 (Boot or Logon Autostart Execution: Shortcut Modification). Test Description: LNK file to launch CMD placed in startup folder. Upon execution, open File Explorer and browse to \\\"%APPDATA%\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\\\\"\nto view the new shortcut.. Command/Steps: $Shell = New-Object -ComObject (\\\"WScript.Shell\\\")\n$ShortCut = $Shell.CreateShortcut(\\\"$env:APPDATA\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\T1547.0..."
+from = "now-9m"
+rule_id = "944c6c9d-a91b-469a-8ab4-c1122b5086ca"
+language = "kql"
+name = "Atomic Test: T1547.009 - Create shortcut to cmd in startup folders"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1547.009/T1547.009.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1547.009", "cfdc954d-4bb0-4027-875b-a1893ce406f2", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*$Shell*\\\" AND powershell.script_block_text : \\\"*New-Object*\\\" AND powershell.script_block_text : \\\"*-ComObject*\\\" OR (process.command_line : \\\"*$Shell*\\\" AND process.command_line : \\\"*New-Object*\\\" AND process.command_line : \\\"*-ComObject*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1547.009"
+name = "Create shortcut to cmd in startup folders"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1547/009"
+
+

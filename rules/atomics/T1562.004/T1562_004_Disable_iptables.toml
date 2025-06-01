@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Disable iptables' (GUID: 7784c64e-ed0b-4b65-bf63-c86db229fd56) of technique T1562.004 (Impair Defenses: Disable or Modify System Firewall). Test Description: Some Linux systems may not activate ufw, but use iptables for firewall rules instead. (ufw works on top of iptables.) \nAttackers cannot directly disable iptables, as it is not implemented as a service like ufw. But they can flush all iptables \nrules, which in fact \\\"disable\\\" iptables.. Command/Steps: iptables-save > /tmp/iptables.rules\niptables -F\n"
+from = "now-9m"
+rule_id = "2ab1d079-d65b-4068-b75d-97dcf642ab4b"
+language = "kql"
+name = "Atomic Test: T1562.004 - Disable iptables"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1562.004/T1562.004.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1562.004", "7784c64e-ed0b-4b65-bf63-c86db229fd56", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*iptables-save*\\\" AND process.command_line : \\\"*iptables*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1562.004"
+name = "Disable iptables"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1562/004"
+
+

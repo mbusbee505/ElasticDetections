@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Install AppInit Shim' (GUID: a58d9386-3080-4242-ab5f-454c16503d18) of technique T1546.010 (Event Triggered Execution: AppInit DLLs). Test Description: AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs to be loaded into each user mode process on the system. Upon succesfully execution, \nyou will see the message \\\"The operation completed successfully.\\\" Each time the DLL is loaded, you will see a message box with a message of \\\"Install AppInit Shim DLL was called!\\\" appear.\nThis will happen regularly as your computer starts up various applications and may in fact drive you crazy. A reliable way to make the message box appear and verify the \nAppInit Dlls are loading is to start the notepad application. Be sure to run the cleanup commands afterwards so you don't keep getting message boxes showing up.\n\nNote: If secure boot is enabled, this technique will not work. https://docs.microsoft.com/en-us/windows/win32/dlls/secure-boot-and-appinit-dlls. Command/Steps: reg.exe import \\\"#{registry_file}\\\"\n"
+from = "now-9m"
+rule_id = "c57c7032-2c63-4f23-85e1-674cb307b193"
+language = "kql"
+name = "Atomic Test: T1546.010 - Install AppInit Shim"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1546.010/T1546.010.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1546.010", "a58d9386-3080-4242-ab5f-454c16503d18", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*import*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1546.010"
+name = "Install AppInit Shim"
+reference = "https://attack.mitre.org/techniques/T1546/010"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1546/010"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1546/010"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1546/010"
+
+

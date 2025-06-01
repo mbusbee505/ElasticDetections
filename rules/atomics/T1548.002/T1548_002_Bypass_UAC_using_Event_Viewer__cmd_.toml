@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bypass UAC using Event Viewer (cmd)' (GUID: 5073adf8-9a50-4bd9-b298-a9bd2ead8af9) of technique T1548.002 (Abuse Elevation Control Mechanism: Bypass User Account Control). Test Description: Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/\nUpon execution command prompt should be launched with administrative privileges.. Command/Steps: reg.exe add hkcu\\\\software\\\\classes\\\\mscfile\\\\shell\\\\open\\\\command /ve /d \\\"#{executable_binary}\\\" /f\ncmd.exe /c eventvwr.msc\n"
+from = "now-9m"
+rule_id = "38711976-48fd-4ced-9504-489f0001285c"
+language = "kql"
+name = "Atomic Test: T1548.002 - Bypass UAC using Event Viewer (cmd)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1548.002/T1548.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1548.002", "5073adf8-9a50-4bd9-b298-a9bd2ead8af9", "windows",]
+type = "query"
+query = "(process.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\") OR process.parent.name : (\\\"cmd.exe\\\", \\\"cmmon32.exe\\\")) AND process.command_line : \\\"*reg.exe*\\\" AND process.command_line : \\\"*hkcu\\\\software\\\\classes\\\\mscfile\\\\shell\\\\open\\\\command*\\\" AND process.command_line : \\\"*C:\\\\Windows\\\\System32\\\\cmd.exe*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1548.002"
+name = "Bypass UAC using Event Viewer (cmd)"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1548/002"
+
+

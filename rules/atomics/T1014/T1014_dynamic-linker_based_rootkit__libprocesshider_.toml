@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'dynamic-linker based rootkit (libprocesshider)' (GUID: 1338bf0c-fd0c-48c0-9e65-329f18e2c0d3) of technique T1014 (Rootkit). Test Description: Uses libprocesshider to simulate rootkit behavior by hiding a specific process name via ld.so.preload (see also T1574.006).. Command/Steps: echo #{library_path} | tee -a /etc/ld.so.preload\n/usr/local/bin/evil_script.py localhost -c 10 >/dev/null & pgrep -l evil_script.py || echo \\\"process h..."
+from = "now-9m"
+rule_id = "cc0fb82e-db71-4f06-ae5e-77d11511dc38"
+language = "kql"
+name = "Atomic Test: T1014 - dynamic-linker based rootkit (libprocesshider)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1014/T1014.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1014", "1338bf0c-fd0c-48c0-9e65-329f18e2c0d3", "linux",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*/usr/local/lib/libprocesshider.so*\\\" AND process.command_line : \\\"*/etc/ld.so.preload*\\\" AND process.command_line : \\\"*/usr/local/bin/evil_script.py*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1014"
+name = "dynamic-linker based rootkit (libprocesshider)"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1014"
+
+

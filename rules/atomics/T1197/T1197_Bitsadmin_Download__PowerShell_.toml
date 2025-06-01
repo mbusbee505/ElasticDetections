@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Bitsadmin Download (PowerShell)' (GUID: f63b8bc4-07e5-4112-acba-56f646f3f0bc) of technique T1197 (BITS Jobs). Test Description: This test simulates an adversary leveraging bitsadmin.exe to download\nand execute a payload leveraging PowerShell\n\nUpon execution you will find a github markdown file downloaded to the Temp directory. Command/Steps: Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination #{local_file}\n"
+from = "now-9m"
+rule_id = "e0a4a68f-ab22-4b62-be45-54a5e0b5089d"
+language = "kql"
+name = "Atomic Test: T1197 - Bitsadmin Download (PowerShell)"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1197/T1197.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1197", "f63b8bc4-07e5-4112-acba-56f646f3f0bc", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-BitsTransfer*\\\" AND powershell.script_block_text : \\\"*-Priority*\\\" AND powershell.script_block_text : \\\"*foreground*\\\" OR (process.command_line : \\\"*Start-BitsTransfer*\\\" AND process.command_line : \\\"*-Priority*\\\" AND process.command_line : \\\"*foreground*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1197"
+name = "Bitsadmin Download (PowerShell)"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1197"
+
+

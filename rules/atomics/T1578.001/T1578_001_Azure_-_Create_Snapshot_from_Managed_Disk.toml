@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Azure - Create Snapshot from Managed Disk' (GUID: 89e69b4b-3458-4ec6-b819-b3008debc1bc) of technique T1578.001 (Modify Cloud Compute Infrastructure: Create Snapshot). Test Description: Creates a snapshot of a managed disk in Azure using the Azure CLI.\nSimulates adversary snapshotting behavior for persistence or data duplication.. Command/Steps: az snapshot create --resource-group #{azure_resource_group} --name #{azure_snapshot_name} --source #{azure_disk_name} --location eastus\n"
+from = "now-9m"
+rule_id = "96251c1b-9612-40b9-a9db-c09fbb2b2391"
+language = "kql"
+name = "Atomic Test: T1578.001 - Azure - Create Snapshot from Managed Disk"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1578.001/T1578.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1578.001", "89e69b4b-3458-4ec6-b819-b3008debc1bc", "iaas:azure",]
+type = "query"
+query = "(process.name : (\\\"sh\\\", \\\"bash\\\") OR process.parent.name : (\\\"sh\\\", \\\"bash\\\")) AND process.command_line : \\\"*snapshot*\\\" AND process.command_line : \\\"*create*\\\" AND process.command_line : \\\"*--resource-group*\\\""
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1578.001"
+name = "Azure - Create Snapshot from Managed Disk"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1578/001"
+
+

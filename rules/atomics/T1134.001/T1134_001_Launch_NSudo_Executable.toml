@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Launch NSudo Executable' (GUID: 7be1bc0f-d8e5-4345-9333-f5f67d742cb9) of technique T1134.001 (Access Token Manipulation: Token Impersonation/Theft). Test Description: Launches the NSudo executable for a short period of time and then exits.\nNSudo download observed after maldoc execution. NSudo is a system management tool for advanced users to launch programs with full privileges.. Command/Steps: Start-Process \\\"#{nsudo_path}\\\" -Argument \\\"-U:T -P:E cmd\\\"\nStart-Sleep -Second 5\nStop-Process -Name \\\"cmd\\\" -force -erroraction silentlycontinue\n"
+from = "now-9m"
+rule_id = "9268f5b2-41ef-4492-853f-65672d4a94ad"
+language = "kql"
+name = "Atomic Test: T1134.001 - Launch NSudo Executable"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1134.001/T1134.001.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1134.001", "7be1bc0f-d8e5-4345-9333-f5f67d742cb9", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Start-Process*\\\" AND powershell.script_block_text : \\\"*-Argument*\\\" AND powershell.script_block_text : \\\"*-U:T*\\\" OR (process.command_line : \\\"*Start-Process*\\\" AND process.command_line : \\\"*-Argument*\\\" AND process.command_line : \\\"*-U:T*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1134.001"
+name = "Launch NSudo Executable"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1134/001"
+
+

@@ -1,0 +1,39 @@
+[rule]
+author = [ "AtomicRedTeam-Automation",]
+description = "Detection for specific test 'Embedded Script in Image Execution via Extract-Invoke-PSImage' (GUID: 04bb8e3d-1670-46ab-a3f1-5cee64da29b6) of technique T1001.002 (Data Obfuscation via Steganography). Test Description: This atomic test demonstrates the technique of data obfuscation via steganography, where a PowerShell script is concealed within an image file. \nThe PowerShell script is embedded using steganography techniques, making it undetectable by traditional security measures. The script is hidden \nwithin the pixels of the image, enabling attackers to covertly transfer and execute malicious code across systems.\n\nThe test begins by ensuring the availability of the malicious image file and the Extract-Invoke-PSImage script. The test proceeds to extract the hidden \nPowerShell script (decoded.ps1) from the image file using the Extract-Invoke-PSImage tool. The extracted script is then decoded from base64 encoding and saved as a \nseparate PowerShell (textExtraction.ps1). Consequently, the textExtraction.ps1 script is executed.\n\nIn the case of this atomic test, the malicious image file which is downloaded has the powershell command Start-Process notepad embedded within in base64. This\nis done to emulate an attackers behaviour in the case they were to execute malware embedded within the image file.. Command/Steps: cd \\\"PathToAtomicsFolder\\\\ExternalPayloads\\\\\\\"\nImport-Module .\\\\Extract-Invoke-PSImage.ps1\n$extractedScript=Extract-Invoke-PSImage -Image \\\"#{image_file}\\\" -..."
+from = "now-9m"
+rule_id = "4002cd95-17a6-4947-913d-aae2c0a6a62e"
+language = "kql"
+name = "Atomic Test: T1001.002 - Embedded Script in Image Execution via Extract-Invoke-PSImage"
+output_index = ".siem-signals-default"
+references = [ "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/refs/heads/master/atomics/T1001.002/T1001.002.yaml",]
+risk_score = 50
+severity = "medium"
+tags = [ "AtomicRedTeam", "T1001.002", "04bb8e3d-1670-46ab-a3f1-5cee64da29b6", "windows",]
+type = "query"
+query = "(process.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\") OR process.parent.name : (\\\"powershell.exe\\\", \\\"pwsh.exe\\\", \\\"powershell_ise.exe\\\")) AND (powershell.script_block_text : \\\"*Import-Module*\\\" AND powershell.script_block_text : \\\"*.\\\\Extract-Invoke-PSImage.ps1*\\\" AND powershell.script_block_text : \\\"*$extractedScript=Extract-Invoke-PSImage*\\\" OR (process.command_line : \\\"*Import-Module*\\\" AND process.command_line : \\\"*.\\\\Extract-Invoke-PSImage.ps1*\\\" AND process.command_line : \\\"*$extractedScript=Extract-Invoke-PSImage*\\\"))"
+version = 1
+index = [ "logs-endpoint.events.*", "winlogbeat-*", "logs-windows.*", "logs-linux.*", "logs-macos.*",]
+[[rule.threat]]
+framework = "MITRE ATT&CK"
+[[rule.threat.technique]]
+id = "T1001.002"
+name = "Embedded Script in Image Execution via Extract-Invoke-PSImage"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+[[rule.threat.tactic]]
+id = "TA0003"
+name = "Persistence"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+[[rule.threat.tactic]]
+id = "TA0004"
+name = "Privilege Escalation"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+[[rule.threat.tactic]]
+id = "TA0005"
+name = "Defense Evasion"
+reference = "https://attack.mitre.org/techniques/T1001/002"
+
+
