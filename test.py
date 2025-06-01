@@ -24,11 +24,16 @@ def validate_tomls():
             if file.endswith(".toml"):
                 missing_fields = validate.contains_missing_fields(os.path.join(root, file))
                 print(f"{file} missing fields: {missing_fields}")
-                
+
+def upload_all_tomls():
+    for root, dirs, files in os.walk("atomics"):
+        for file in files:
+            if file.endswith(".toml"):
+                upload_toml(os.path.join(root, file))
 
 def main():
     # gather_atomic_tomls()
     # validate_tomls()
-    upload_toml("atomics/T1003/T1003_Credential_Dumping_with_NPPSpy.toml")
+    upload_all_tomls()
 if __name__ == "__main__":
     main()
