@@ -3,7 +3,7 @@ from atomics import get_atomic_techniques
 from atomic_to_elastic import generate_tomls_for_technique
 import os
 import validate
-
+from upload_to_elastic import upload_toml
 def gather_atomic_tomls():
     techniques = get_atomic_techniques()
     for technique in techniques:
@@ -27,8 +27,8 @@ def validate_tomls():
                 
 
 def main():
-    gather_atomic_tomls()
+    # gather_atomic_tomls()
     # validate_tomls()
-
+    upload_toml("atomics/T1003/T1003_Credential_Dumping_with_NPPSpy.toml")
 if __name__ == "__main__":
     main()

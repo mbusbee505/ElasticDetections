@@ -55,6 +55,13 @@ def create_detection_rule_toml_for_test(atomic_data, test_data):
         rule_description += f" Test Description: {test_description}."
     rule_description += f" Command/Steps: {command_to_detect[:150]}{'...' if len(command_to_detect) > 150 else ''}"
 
+    def escape_for_toml(text):
+        if not isinstance(text, str):
+            return text
+        return text.replace('\\', '\\\\').replace('"', '\\"')
+
+    kql_query = escape_for_toml(kql_query)
+    rule_description = escape_for_toml(rule_description)
 
     rule = {
         'rule': {

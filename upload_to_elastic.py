@@ -1,6 +1,8 @@
 import requests
 import os
 from dotenv import load_dotenv
+import tomllib
+import json
 
 load_dotenv()
 
@@ -9,75 +11,61 @@ ELASTIC_HOST = os.getenv("ELASTIC_HOST")
 
 
 
-headers = {
+HEADERS = {
     "Content-Type": "application/json;charset=UTF-8",
     "kbn-xsrf": "true",
     "Authorization": 'ApiKey ' + ELASTIC_API_KEY
 }
 
-data = """
-{
-  "id": "6541b99a-dee9-4f6d-a86d-dbd1869d73b1",
-  "to": "now",
-  "from": "now-70m",
-  "name": "MS Office child process",
-  "tags": [
-    "child process",
-    "ms office"
-  ],
-  "type": "query",
-  "query": "process.parent.name:EXCEL.EXE or process.parent.name:MSPUB.EXE or process.parent.name:OUTLOOK.EXE or process.parent.name:POWERPNT.EXE or process.parent.name:VISIO.EXE or process.parent.name:WINWORD.EXE",
-  "setup": "",
-  "threat": [],
-  "actions": [],
-  "enabled": false,
-  "filters": [
-    {
-      "query": {
-        "match": {
-          "event.action": {
-            "type": "phrase",
-            "query": "Process Create (rule: ProcessCreate)"
-          }
-        }
-      }
-    }
-  ],
-  "rule_id": "process_started_by_ms_office_program",
-  "version": 1,
-  "interval": "1h",
-  "language": "kuery",
-  "severity": "low",
-  "immutable": false,
-  "created_at": "2020-04-07T14:51:09.755Z",
-  "created_by": "elastic",
-  "references": [],
-  "risk_score": 50,
-  "updated_at": "2020-04-07T14:51:09.970Z",
-  "updated_by": "elastic",
-  "description": "Process started by MS Office program - possible payload",
-  "max_signals": 100,
-  "false_positives": [],
-  "required_fields": [
-    {
-      "ecs": true,
-      "name": "process.parent.name",
-      "type": "keyword"
-    }
-  ],
-  "related_integrations": [
-    {
-      "package": "o365",
-      "version": "^2.3.2"
-    },
-    {
-      "package": "azure",
-      "version": "^1.11.4",
-      "integration": "graphactivitylogs"
-    }
-  ]
-}
-"""
 
-elastic_data = requests.post(ELASTIC_HOST, headers=headers, data=data).json()
+
+def upload_toml(file):
+    if not file.endswith(".toml"):
+        print(f"Skipping non-TOML file: {file}")
+        return False
+        
+    try:
+        with open(file, "rb") as toml_file:
+            alert = tomllib.load(toml_file)
+            
+            # Build the payload as a proper dictionary
+            payload = {}
+            
+            if alert["rule"]["type"] == "query":
+                required_fields = ["author", "description", "name", "risk_score", "severity", "type", "query"]
+            elif alert["rule"]["type"] == "eql":
+                required_fields = ["author", "description", "name", "risk_score", "severity", "type", "query", "language"]
+            elif alert["rule"]["type"] == "threshold":
+                required_fields = ["author", "description", "name", "risk_score", "severity", "type", "query", "threshold"]
+            else:
+                print(f"Unsupported rule type found in file: {file}")
+                return False
+
+            # Copy required fields to payload
+            for field in required_fields:
+                if field in alert["rule"]:
+                    payload[field] = alert["rule"][field]
+            
+            payload["enabled"] = True
+            
+            # Convert to JSON string
+            data = json.dumps(payload)
+            
+            # Make the request
+            response = requests.post(ELASTIC_HOST, headers=HEADERS, data=data)
+            
+            # Check response
+            if response.status_code == 200:
+                print(f"Successfully uploaded: {file}")
+                print(f"Response: {response.json()}")
+                return True
+            else:
+                print(f"Failed to upload {file}")
+                print(f"Status: {response.status_code}")
+                print(f"Response: {response.text}")
+                return False
+                
+    except Exception as e:
+        print(f"Error processing {file}: {e}")
+        return False
 
